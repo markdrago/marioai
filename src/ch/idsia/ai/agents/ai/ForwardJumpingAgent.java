@@ -15,7 +15,7 @@ import ch.idsia.mario.environments.Environment;
 
 public class ForwardJumpingAgent extends RegisterableAgent implements Agent {
 
-    static final boolean superslow = true;
+    static final boolean superslow = false;
 
     public ForwardJumpingAgent()
     {
