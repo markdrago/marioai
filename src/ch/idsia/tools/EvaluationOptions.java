@@ -16,7 +16,7 @@ import java.awt.*;
  */
 public class EvaluationOptions extends SimulationOptions
 {
-    public EvaluationOptions() {        super();    }
+    public EvaluationOptions() { super(); }
 
     public void setUpOptions(String[] args) {
         for (int i = 0; i < args.length - 1; i += 2)

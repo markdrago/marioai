@@ -69,23 +69,23 @@ public class LevelScene extends Scene implements SpriteContext
         String s = "";
         if  (el == 0)
             s = "##";
-        s += (el == mario.kind) ? "MM" : el;
+        s += (el == mario.kind) ? "#MM" : el;
         while (s.length() < 4)
             s += "#";
         return s + " ";
     }
 
     private String enemyToStr(int el)
-    {
-        String s = "";
-        if  (el == 0)
-            s = "";
-//        s += (el == mario.kind) ? "-m" : el;
-        s += el;
-        while (s.length() < 2)
-            s += "#";
-        return s + " ";
-    }
+        {
+            String s = "";
+            if  (el == 0)
+                s = "";
+    //        s += (el == mario.kind) ? "-m" : el;
+            s += el;
+            while (s.length() < 2)
+                s += "#";
+            return s + " ";
+        }
 
     private byte ZLevelMapElementGeneralization(byte el, int ZLevel)
     {
@@ -99,7 +99,6 @@ public class LevelScene extends Scene implements SpriteContext
                     case(-108):
                     case(-107):
                     case(-106):
-                    case(14): // Particle
                     case(15): // Sparcle, irrelevant
                         return 0;
                     case(-128):
@@ -135,7 +134,7 @@ public class LevelScene extends Scene implements SpriteContext
                     case(-82):
                     case(-81):
                     case(4):
-                    case(30): case(46): // canon
+                    case(14): case(30): case(46): // canon
                         return -10;   // border, cannot pass through, can stand on
                     case(9):
                         return -12; // hard formation border. Pay attention!
@@ -463,13 +462,6 @@ public class LevelScene extends Scene implements SpriteContext
         return ret;
     }
 
-
-//    private void show(char el) {
-//        System.out.print("block: ");
-//        for (int i = 0;i < 8; ++i)
-//            System.out.print((el & MathX.pow(2,i) ) + " ");
-//        System.out.println("");
-//    }
 
     public List<String> LevelSceneAroundMarioASCII(boolean Enemies, boolean LevelMap,
                                                    boolean CompleteObservation,
