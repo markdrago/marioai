@@ -231,7 +231,7 @@ public class LevelScene extends Scene implements SpriteContext
         {
             for (int x = MarioXInMap - Environment.HalfObsWidth, obsY = 0; x < MarioXInMap + Environment.HalfObsWidth; x++, obsY++)
             {
-                if (x >=0 && x <= level.xExit && y >= 0 && y < level.height)
+                if (x >=0 /*  && x <= level.xExit */ && y >= 0 && y < level.height)
                 {
                     ret[obsX][obsY] = ZLevelMapElementGeneralization(level.map[x][y], ZLevel);
                 }
