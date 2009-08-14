@@ -332,7 +332,7 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
 
     public byte[][] getMergedObservation() {
         if (scene instanceof LevelScene)
-            return ((LevelScene) scene).mergedObservation(ZLevelEnemies, ZLevelMap);
+            return ((LevelScene) scene).mergedObservation(ZLevelMap, ZLevelEnemies);
         return null;
     }
 

@@ -64,7 +64,8 @@ public class GameViewer extends JFrame
                         ShowEnemiesObservation.getState(),
                         ShowLevelMapObservation.getState(),
                         ShowMergedObservation.getState(),
-                        ZLevelMapValue, ZLevelEnemiesValue) )
+                        ZLevelMapValue,
+                        ZLevelEnemiesValue) )
                 {
                     g.setColor((s.charAt(0) == '~') ? Color.YELLOW : Color.GREEN);
                     g.drawString(s, 0, y_dump += 11);
@@ -251,21 +252,21 @@ public class GameViewer extends JFrame
             {
                 if (Z0_Enemies.getState())
                     ZLevelEnemiesValue = 0;
-                Console.setText("Zoom Level Map: Z" + ZLevelEnemiesValue);
+                Console.setText("Zoom Level Enemies: Z" + ZLevelEnemiesValue);
                 gameViewerViewPanel.repaint();
             }
             else if (ob == Z1_Enemies)
             {
-                if (Z0_Enemies.getState())
+                if (Z1_Enemies.getState())
                     ZLevelEnemiesValue = 1;
-                Console.setText("Zoom Level Map: Z" + ZLevelEnemiesValue);
+                Console.setText("Zoom Level Enemies: Z" + ZLevelEnemiesValue);
                 gameViewerViewPanel.repaint();
             }
             else if (ob == Z2_Enemies)
             {
-                if (Z0_Enemies.getState())
+                if (Z2_Enemies.getState())
                     ZLevelEnemiesValue = 2;
-                Console.setText("Zoom Level Map: Z" + ZLevelEnemiesValue);
+                Console.setText("Zoom Level Enemies: Z" + ZLevelEnemiesValue);
                 gameViewerViewPanel.repaint();
             }
         }

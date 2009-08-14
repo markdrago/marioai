@@ -94,12 +94,23 @@ public class LevelScene extends Scene implements SpriteContext
                 {
                     case 16:  // brick, simple, without any surprise.
                     case 17:  // brick with a hidden coin
+                    case 18:  // brick with a hidden flower
                         return 16; // prevents cheating
+                    case 21:       // question brick, contains coin
+                    case 22:       // question brick, contains flower/mushroom
+                        return 21; // question brick, contains something
                 }
                 return el;
             case(1):
                 switch(el)
                 {
+                    case 16:  // brick, simple, without any surprise.
+                    case 17:  // brick with a hidden coin
+                    case 18:  // brick with a hidden flower
+                        return 16; // prevents cheating
+                    case 21:       // question brick, contains coin
+                    case 22:       // question brick, contains flower/mushroom
+                        return 21; // question brick, contains something                    
                     case(-108):
                     case(-107):
                     case(-106):
@@ -301,7 +312,7 @@ public class LevelScene extends Scene implements SpriteContext
         return ret;
     }
 
-    public byte[][] mergedObservation(int ZLevelEnemies, int ZLevelMap)
+    public byte[][] mergedObservation(int ZLevelMap, int ZLevelEnemies)
     {
         byte[][] ret = new byte[Environment.HalfObsWidth*2][Environment.HalfObsHeight*2];
         //TODO: Move to constants 16
@@ -520,17 +531,17 @@ public class LevelScene extends Scene implements SpriteContext
 
             if (mergedObservationFlag)
             {
-                ret.add("~ZLevel: Z" + ZLevelMap + "===========\nAll objects: (LevelScene[x,y], Sprite[x,y])==/* Mario ~> MM */=====\n");
-                for (int x = 0; x < levelScene.length; ++x)
-                {
-                    String tmpData = "";
-                    for (int y = 0; y < levelScene[0].length; ++y)
-                        tmpData += "(" + levelScene[x][y] + "," + enemiesObservation[x][y] + ")";
-                    ret.add(tmpData);
-                }
+//                ret.add("~ZLevel: Z" + ZLevelMap + "===========\nAll objects: (LevelScene[x,y], Sprite[x,y])==/* Mario ~> MM */=====\n");
+//                for (int x = 0; x < levelScene.length; ++x)
+//                {
+//                    String tmpData = "";
+//                    for (int y = 0; y < levelScene[0].length; ++y)
+//                        tmpData += "(" + levelScene[x][y] + "," + enemiesObservation[x][y] + ")";
+//                    ret.add(tmpData);
+//                }
 
                 byte[][] mergedObs = mergedObservation(ZLevelMap, ZLevelEnemies);
-                ret.add("~ZLevel: Z" + ZLevelMap + "===========\nAll objects: (LevelScene[x,y], Sprite[x,y])==/* Mario ~> MM */=====\n");
+                ret.add("~ZLevelMap: Z" + ZLevelMap + " ZLevelEnemies: Z" + ZLevelEnemies + " ; Merged observation /* Mario ~> #M.# */");
                 for (int x = 0; x < levelScene.length; ++x)
                 {
                     String tmpData = "";
