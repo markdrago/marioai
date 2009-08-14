@@ -66,9 +66,9 @@ public class LevelScene extends Scene implements SpriteContext
     private String mapElToStr(int el)
     {
         String s = "";
-        if  (el == 0)
+        if  (el == 0 || el == 1)
             s = "##";
-        s += (el == mario.kind) ? "#.M.#" : el;
+        s += (el == mario.kind) ? "#M.#" : el;
         while (s.length() < 4)
             s += "#";
         return s + " ";
@@ -79,8 +79,7 @@ public class LevelScene extends Scene implements SpriteContext
             String s = "";
             if  (el == 0)
                 s = "";
-    //        s += (el == mario.kind) ? "-m" : el;
-            s += el;
+            s += (el == mario.kind) ? "-m" : el;
             while (s.length() < 2)
                 s += "#";
             return s + " ";
@@ -91,6 +90,12 @@ public class LevelScene extends Scene implements SpriteContext
         switch (ZLevel)
         {
             case(0):
+                switch(el)
+                {
+                    case 16:  // brick, simple, without any surprise.
+                    case 17:  // brick with a hidden coin
+                        return 16; // prevents cheating
+                }
                 return el;
             case(1):
                 switch(el)
@@ -132,7 +137,7 @@ public class LevelScene extends Scene implements SpriteContext
                     case(-83):
                     case(-82):
                     case(-81):
-                    case(4):
+                    case(4):  // hidden brick
                     case(14): case(30): case(46): // canon
                         return -10;   // border, cannot pass through, can stand on
                     case(9):
@@ -607,7 +612,7 @@ public class LevelScene extends Scene implements SpriteContext
     public void tick()
     {
         if (GlobalOptions.TimerOn)
-            timeLeft--;
+                timeLeft--;
         if (timeLeft==0)
         {
             mario.die();
