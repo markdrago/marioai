@@ -270,16 +270,6 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
         }
     }
 
-//    public void keyPressed(KeyEvent arg0)
-//    {
-//        toggleKey(arg0.getKeyCode(), true);
-//    }
-//
-//    public void keyReleased(KeyEvent arg0)
-//    {
-//        toggleKey(arg0.getKeyCode(), false);
-//    }
-
     public void startLevel(long seed, int difficulty, int type, int levelLength, int timeLimit) {
         scene = new LevelScene(graphicsConfiguration, this, seed, difficulty, type, levelLength, timeLimit);
         levelScene = ((LevelScene) scene);
@@ -312,9 +302,9 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
 //        scene.init();
     }
 
-    public List<String> getTextObservation(boolean Enemies, boolean LevelMap, boolean Complete, int ZLevel) {
+    public List<String> getTextObservation(boolean Enemies, boolean LevelMap, boolean Complete, int ZLevelMap, int ZLevelEnemies) {
         if (scene instanceof LevelScene)
-            return ((LevelScene) scene).LevelSceneAroundMarioASCII(Enemies, LevelMap, Complete, ZLevel, 1);
+            return ((LevelScene) scene).LevelSceneAroundMarioASCII(Enemies, LevelMap, Complete, ZLevelMap, ZLevelEnemies);
         else {
             return new ArrayList<String>();
         }
@@ -340,9 +330,9 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
         }
     }
 
-    public byte[][] getCompleteObservation() {
+    public byte[][] getMergedObservation() {
         if (scene instanceof LevelScene)
-            return ((LevelScene) scene).completeObservation(ZLevelEnemies, ZLevelMap);
+            return ((LevelScene) scene).mergedObservation(ZLevelEnemies, ZLevelMap);
         return null;
     }
 

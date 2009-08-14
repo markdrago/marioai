@@ -14,7 +14,7 @@ import ch.idsia.tools.EvaluationInfo;
  * Package: .Simulation
  */
 
-public class BasicSimulator implements ISimulation
+public class BasicSimulator implements Simulation
 {
     SimulationOptions simulationOptions = null;
     private MarioComponent marioComponent;

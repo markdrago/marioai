@@ -10,7 +10,6 @@ package ch.idsia.mario.environments;
 
 public interface Environment
 {
-//    public static final int NumberOfActionSlots = 16;
     public static final int numberOfButtons = 5;
     public static final int numberOfObservationElements = 486 + 1;
     public static final int HalfObsWidth = 11;
@@ -18,7 +17,7 @@ public interface Environment
 
     // always the same dimensionality: 22x22
     // always centered on the agent
-    public byte[][] getCompleteObservation();
+    public byte[][] getMergedObservation();
 
     public byte[][] getEnemiesObservation();
 

@@ -11,7 +11,6 @@ import ch.idsia.utils.MathX;
 import java.awt.*;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +68,7 @@ public class LevelScene extends Scene implements SpriteContext
         String s = "";
         if  (el == 0)
             s = "##";
-        s += (el == mario.kind) ? "#MM" : el;
+        s += (el == mario.kind) ? "#.M.#" : el;
         while (s.length() < 4)
             s += "#";
         return s + " ";
@@ -154,11 +153,11 @@ public class LevelScene extends Scene implements SpriteContext
                     case(-108):
                     case(-107):
                     case(-106):
-                    case(14): // Particle
+                    case(34): // coins
                     case(15): // Sparcle, irrelevant
                         return 0;
                 }
-                return (el == 0 || el == Sprite.KIND_FIREBALL) ? el : -2;
+                return (el == 0 || el == Sprite.KIND_FIREBALL) ? el : 1;
         }
         return el; //TODO: Throw unknown ZLevel exception
     }
@@ -297,7 +296,7 @@ public class LevelScene extends Scene implements SpriteContext
         return ret;
     }
 
-    public byte[][] completeObservation(int ZLevelEnemies, int ZLevelMap)
+    public byte[][] mergedObservation(int ZLevelEnemies, int ZLevelMap)
     {
         byte[][] ret = new byte[Environment.HalfObsWidth*2][Environment.HalfObsHeight*2];
         //TODO: Move to constants 16
@@ -464,8 +463,8 @@ public class LevelScene extends Scene implements SpriteContext
 
 
     public List<String> LevelSceneAroundMarioASCII(boolean Enemies, boolean LevelMap,
-                                                   boolean CompleteObservation,
-                                                   int ZLevelMap, int ZLevelCreatures){
+                                                   boolean mergedObservationFlag,
+                                                   int ZLevelMap, int ZLevelEnemies){
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));//        bw.write("\nTotal world width = " + level.width);
         List<String> ret = new ArrayList<String>();
         if (level != null && mario != null)
@@ -494,9 +493,9 @@ public class LevelScene extends Scene implements SpriteContext
             }
 
             byte[][] enemiesObservation = null;
-            if (Enemies || CompleteObservation)
+            if (Enemies || mergedObservationFlag)
             {
-                enemiesObservation = enemiesObservation(ZLevelCreatures);
+                enemiesObservation = enemiesObservation(ZLevelEnemies);
             }
 
             if (Enemies)
@@ -514,7 +513,7 @@ public class LevelScene extends Scene implements SpriteContext
                 }
             }
 
-            if (CompleteObservation)
+            if (mergedObservationFlag)
             {
                 ret.add("~ZLevel: Z" + ZLevelMap + "===========\nAll objects: (LevelScene[x,y], Sprite[x,y])==/* Mario ~> MM */=====\n");
                 for (int x = 0; x < levelScene.length; ++x)
@@ -525,20 +524,19 @@ public class LevelScene extends Scene implements SpriteContext
                     ret.add(tmpData);
                 }
 
-                byte[][] completeObservation = completeObservation(ZLevelMap, ZLevelCreatures);
+                byte[][] mergedObs = mergedObservation(ZLevelMap, ZLevelEnemies);
                 ret.add("~ZLevel: Z" + ZLevelMap + "===========\nAll objects: (LevelScene[x,y], Sprite[x,y])==/* Mario ~> MM */=====\n");
                 for (int x = 0; x < levelScene.length; ++x)
                 {
                     String tmpData = "";
                     for (int y = 0; y < levelScene[0].length; ++y)
-                        tmpData += mapElToStr(completeObservation[x][y]);
+                        tmpData += mapElToStr(mergedObs[x][y]);
                     ret.add(tmpData);
                 }
-
             }
         }
         else
-            ret.add("~level is not available");
+            ret.add("~level or mario is not available");
         return ret;
     }
 
