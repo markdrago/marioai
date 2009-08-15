@@ -118,7 +118,7 @@ public class ForwardAgent extends RegisterableAgent implements Agent
         // this Agent requires observation.
 
         assert(observation != null);
-        byte[][] levelScene = observation.getMergedObservation(/*1, 0*/);
+        byte[][] levelScene = observation.getCompleteObservation(/*1, 0*/);
         float[] marioPos = observation.getMarioFloatPos();
         float[] enemiesPos = observation.getEnemiesFloatPos();
         String encodedState = observation.getBitmapLevelObservation();

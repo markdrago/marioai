@@ -332,7 +332,7 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
 
     // upcoming feature for Milano conf, unkomment this, if you would like to try it!
     // Chaning ZLevel during the game on-the-fly;
-    public byte[][] getMergedObservation(/*int ZLevelMap, int ZLevelEnemies*/) {
+    public byte[][] getCompleteObservation(/*int ZLevelMap, int ZLevelEnemies*/) {
 //        this.ZLevelMap = ZLevelMap;
 //        this.ZLevelEnemies = ZLevelEnemies;
         if (scene instanceof LevelScene)
