@@ -17,11 +17,16 @@ public interface Environment
 
     // always the same dimensionality: 22x22
     // always centered on the agent
-    public byte[][] getMergedObservation();
 
-    public byte[][] getEnemiesObservation();
 
-    public byte[][] getLevelSceneObservation();
+    // upcoming feature for Milano conf, unkomment this, if you would like to try it!
+    // Chaning ZLevel during the game on-the-fly;
+    // if your agent recieves too ambiguous observation, it might request for more precise for the next step
+    public byte[][] getMergedObservation(/*int ZLevelMap, int ZLevelEnemies*/);
+
+    public byte[][] getEnemiesObservation(/*int ZLevelEnemies*/);
+
+    public byte[][] getLevelSceneObservation(/*int ZLevelMap*/);
 
     public float[] getMarioFloatPos();
 

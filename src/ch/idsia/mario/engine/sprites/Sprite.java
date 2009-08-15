@@ -18,8 +18,8 @@ public class Sprite
     public static final int KIND_BULLET_BILL = 8;
     public static final int KIND_SPIKY = 9;
     public static final int KIND_SPIKY_WINGED = 10;
-    public static final int KIND_ENEMY_FLOWER = 11;
-    public static final int KIND_FLOWER_ENEMY = 12;
+//    public static final int KIND_ENEMY_FLOWER = 11;
+    public static final int KIND_ENEMY_FLOWER = 12;
     public static final int KIND_SHELL = 13;
     public static final int KIND_MUSHROOM = 14;
     public static final int KIND_FIRE_FLOWER = 15;    
@@ -48,7 +48,7 @@ public class Sprite
     public int layer = 1;
 
     public SpriteTemplate spriteTemplate;
-    
+
     public void move()
     {
         x+=xa;

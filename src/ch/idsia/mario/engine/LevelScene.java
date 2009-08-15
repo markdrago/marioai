@@ -87,6 +87,8 @@ public class LevelScene extends Scene implements SpriteContext
 
     private byte ZLevelMapElementGeneralization(byte el, int ZLevel)
     {
+        if (el == 0)
+            return 0;
         switch (ZLevel)
         {
             case(0):
@@ -115,6 +117,7 @@ public class LevelScene extends Scene implements SpriteContext
                     case(-107):
                     case(-106):
                     case(15): // Sparcle, irrelevant
+                    case(34): // Coin, irrelevant for the current contest
                         return 0;
                     case(-128):
                     case(-127):
@@ -127,7 +130,7 @@ public class LevelScene extends Scene implements SpriteContext
                     case(-116):
                     case(-115):
                     case(-114):
-                    case(-101):
+                    case(-113):
                     case(-112):
                     case(-111):
                     case(-110):
@@ -135,11 +138,13 @@ public class LevelScene extends Scene implements SpriteContext
                     case(-104):
                     case(-103):
                     case(-102):
+                    case(-101):                        
                     case(-100):
                     case(-99):
                     case(-98):
                     case(-97):
                     case(-69):
+                    case(-65):
                     case(-88):
                     case(-87):
                     case(-86):
@@ -148,24 +153,28 @@ public class LevelScene extends Scene implements SpriteContext
                     case(-83):
                     case(-82):
                     case(-81):
-                    case(4):  // hidden brick
-                    case(14): case(30): case(46): // canon
-                        return -10;   // border, cannot pass through, can stand on
+                    case(4):  // kicked hidden brick
                     case(9):
-                        return -12; // hard formation border. Pay attention!
+                        return -10;   // border, cannot pass through, can stand on
+//                    case(9):
+//                        return -12; // hard formation border. Pay attention!
                     case(-124):
                     case(-123):
                     case(-122):
                     case(-76):
                     case(-74):
                         return -11; // half-border, can jump through from bottom and can stand on
-                    case(10): case(11): case(26): case(27):
-                        return 20; // flower pot
+                    case(10): case(11): case(26): case(27): // flower pot
+                    case(14): case(30): case(46): // canon
+                        return 20;  // angry flower pot or cannon
                 }
+                System.err.println("Unknown value el = " + el + " ; Please, inform the developers");
                 return el;
             case(2):
                 switch(el)
                 {
+                    //cancel out half-borders, that could be passed through
+                    case(0):
                     case(-108):
                     case(-107):
                     case(-106):
@@ -173,8 +182,9 @@ public class LevelScene extends Scene implements SpriteContext
                     case(15): // Sparcle, irrelevant
                         return 0;
                 }
-                return (el == 0 || el == Sprite.KIND_FIREBALL) ? el : 1;
+                return 1;  // everything else is "something", so it is 1
         }
+        System.err.println("Unkown ZLevel Z" + ZLevel);
         return el; //TODO: Throw unknown ZLevel exception
     }
 
@@ -186,11 +196,13 @@ public class LevelScene extends Scene implements SpriteContext
             case(0):
                 switch(el)
                 {
+                    // cancell irrelevant sprite codes
+                    case(Sprite.KIND_COIN_ANIM): 
                     case(Sprite.KIND_PARTICLE):
                     case(Sprite.KIND_SPARCLE):
                         return Sprite.KIND_NONE;
                 }
-                return el;
+                return el;   // all the rest should go as is
             case(1):
                 switch(el)
                 {
@@ -198,6 +210,8 @@ public class LevelScene extends Scene implements SpriteContext
                     case(Sprite.KIND_PARTICLE):
                     case(Sprite.KIND_SPARCLE):
                         return Sprite.KIND_NONE;
+                    case(Sprite.KIND_FIREBALL):
+                        return Sprite.KIND_FIREBALL;                    
                     case(Sprite.KIND_BULLET_BILL):
                     case(Sprite.KIND_GOOMBA):
                     case(Sprite.KIND_GOOMBA_WINGED):
@@ -205,11 +219,13 @@ public class LevelScene extends Scene implements SpriteContext
                     case(Sprite.KIND_GREEN_KOOPA_WINGED):
                     case(Sprite.KIND_RED_KOOPA):
                     case(Sprite.KIND_RED_KOOPA_WINGED):
+                    case(Sprite.KIND_SHELL):
                         return Sprite.KIND_GOOMBA;
                     case(Sprite.KIND_SPIKY):
                     case(Sprite.KIND_ENEMY_FLOWER):
                         return Sprite.KIND_SPIKY;
                 }
+                System.err.println("UNKOWN el = " + el);
                 return el;
             case(2):
                 switch(el)
@@ -226,11 +242,13 @@ public class LevelScene extends Scene implements SpriteContext
                     case(Sprite.KIND_GREEN_KOOPA_WINGED):
                     case(Sprite.KIND_RED_KOOPA):
                     case(Sprite.KIND_RED_KOOPA_WINGED):
+                    case(Sprite.KIND_SHELL):
                     case(Sprite.KIND_SPIKY):
                     case(Sprite.KIND_ENEMY_FLOWER):
-                        return Sprite.KIND_SPIKY;
+                        return 1;
                 }
-                return (el == 0 || el == Sprite.KIND_FIREBALL) ? el : -2;
+                System.err.println("UNNNNNKNOWONN el = " + el);
+                return 1;
         }
         return el; //TODO: Throw unknown ZLevel exception
     }
@@ -268,7 +286,7 @@ public class LevelScene extends Scene implements SpriteContext
 
         for (int w = 0; w < ret.length; w++)
             for (int h = 0; h < ret[0].length; h++)
-                ret[w][h] = -1;
+                ret[w][h] = 0;
         ret[Environment.HalfObsWidth][Environment.HalfObsHeight] = mario.kind;
         for (Sprite sprite : sprites)
         {
@@ -323,7 +341,7 @@ public class LevelScene extends Scene implements SpriteContext
         {
             for (int x = MarioXInMap - Environment.HalfObsWidth, obsY = 0; x < MarioXInMap + Environment.HalfObsWidth; x++, obsY++)
             {
-                if (x >=0 && x <= level.xExit && y >= 0 && y < level.height)
+                if (x >=0 /*&& x <= level.xExit*/ && y >= 0 && y < level.height)
                 {
                     ret[obsX][obsY] = ZLevelMapElementGeneralization(level.map[x][y], ZLevelMap);
                 }
@@ -363,7 +381,6 @@ public class LevelScene extends Scene implements SpriteContext
 
         return ret;
     }
-
 
     private String encode(byte[][] state, Generalizer generalize)
     {

@@ -100,7 +100,7 @@ public class EvaluationOptions extends SimulationOptions
         return b(getParameterValue("-fastTCP"));
     }
 
-    public Boolean isTimer() {
+    public boolean isTimer() {
         return b(getParameterValue("-t"));      }
 
 }

@@ -330,21 +330,27 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
         }
     }
 
-    public byte[][] getMergedObservation() {
+    // upcoming feature for Milano conf, unkomment this, if you would like to try it!
+    // Chaning ZLevel during the game on-the-fly;
+    public byte[][] getMergedObservation(/*int ZLevelMap, int ZLevelEnemies*/) {
+//        this.ZLevelMap = ZLevelMap;
+//        this.ZLevelEnemies = ZLevelEnemies;
         if (scene instanceof LevelScene)
-            return ((LevelScene) scene).mergedObservation(ZLevelMap, ZLevelEnemies);
+            return ((LevelScene) scene).mergedObservation(this.ZLevelMap, this.ZLevelEnemies);
         return null;
     }
 
-    public byte[][] getEnemiesObservation() {
+    public byte[][] getEnemiesObservation(/*int ZLevelEnemies*/) {
+//        this.ZLevelEnemies = ZLevelEnemies;
         if (scene instanceof LevelScene)
-            return ((LevelScene) scene).enemiesObservation(ZLevelEnemies);
+            return ((LevelScene) scene).enemiesObservation(this.ZLevelEnemies);
         return null;
     }
 
-    public byte[][] getLevelSceneObservation() {
+    public byte[][] getLevelSceneObservation(/*int ZLevelMap*/) {
+//        this.ZLevelMap = ZLevelMap;
         if (scene instanceof LevelScene)
-            return ((LevelScene) scene).levelSceneObservation(ZLevelMap);
+            return ((LevelScene) scene).levelSceneObservation(this.ZLevelMap);
         return null;
     }
 
