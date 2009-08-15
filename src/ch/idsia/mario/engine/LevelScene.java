@@ -200,6 +200,7 @@ public class LevelScene extends Scene implements SpriteContext
                     case(Sprite.KIND_COIN_ANIM): 
                     case(Sprite.KIND_PARTICLE):
                     case(Sprite.KIND_SPARCLE):
+                    case(Sprite.KIND_MARIO):
                         return Sprite.KIND_NONE;
                 }
                 return el;   // all the rest should go as is
@@ -209,6 +210,7 @@ public class LevelScene extends Scene implements SpriteContext
                     case(Sprite.KIND_COIN_ANIM):
                     case(Sprite.KIND_PARTICLE):
                     case(Sprite.KIND_SPARCLE):
+                    case(Sprite.KIND_MARIO):
                         return Sprite.KIND_NONE;
                     case(Sprite.KIND_FIREBALL):
                         return Sprite.KIND_FIREBALL;                    
@@ -234,6 +236,7 @@ public class LevelScene extends Scene implements SpriteContext
                     case(Sprite.KIND_PARTICLE):
                     case(Sprite.KIND_SPARCLE):
                     case(Sprite.KIND_FIREBALL):
+                    case(Sprite.KIND_MARIO):
                         return Sprite.KIND_NONE;
                     case(Sprite.KIND_BULLET_BILL):
                     case(Sprite.KIND_GOOMBA):
@@ -247,7 +250,7 @@ public class LevelScene extends Scene implements SpriteContext
                     case(Sprite.KIND_ENEMY_FLOWER):
                         return 1;
                 }
-                System.err.println("UNNNNNKNOWONN el = " + el);
+                System.err.println("Z2 UNKNOWNN el = " + el);
                 return 1;
         }
         return el; //TODO: Throw unknown ZLevel exception
@@ -270,8 +273,8 @@ public class LevelScene extends Scene implements SpriteContext
                 }
                 else
                     ret[obsX][obsY] = 0;
-                if (x == MarioXInMap && y == MarioYInMap)
-                    ret[obsX][obsY] = mario.kind;
+//                if (x == MarioXInMap && y == MarioYInMap)
+//                    ret[obsX][obsY] = mario.kind;
             }
         }
         return ret;
@@ -287,7 +290,7 @@ public class LevelScene extends Scene implements SpriteContext
         for (int w = 0; w < ret.length; w++)
             for (int h = 0; h < ret[0].length; h++)
                 ret[w][h] = 0;
-        ret[Environment.HalfObsWidth][Environment.HalfObsHeight] = mario.kind;
+//        ret[Environment.HalfObsWidth][Environment.HalfObsHeight] = mario.kind;
         for (Sprite sprite : sprites)
         {
             if (sprite.kind == mario.kind)
