@@ -154,18 +154,18 @@ public class ForwardAgent extends RegisterableAgent implements Agent
 //            System.out.println("");
 //        }
 //
-//        System.out.println("\nLEVELScene:");
-//        for (int i = 0; i < levelScene.length; ++i)
-//        {
-//            for (int j = 0; j < levelScene[0].length; ++j)
-//            {
-//                if (levelScene[i][j] != 0)
-//                    System.out.print( "1 ");
-//                else
-//                    System.out.print( "  ");
-//            }
-//            System.out.println("");
-//        }
+        System.out.println("\nLEVELScene:");
+        for (int i = 0; i < levelScene.length; ++i)
+        {
+            for (int j = 0; j < levelScene[0].length; ++j)
+            {
+                if (levelScene[i][j] != 0)
+                    System.out.print( "1 ");
+                else
+                    System.out.print( "  ");
+            }
+            System.out.println("");
+        }
 
         
         if (levelSceneFromBitmap[11][13] != 0 || levelSceneFromBitmap[11][12] != 0 ||  DangerOfGap(levelSceneFromBitmap))

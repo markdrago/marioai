@@ -43,14 +43,14 @@ public class BasicSimulator implements Simulation
     {
         Mario.resetStatic(simulationOptions.getMarioMode());        
         prepareMarioComponent();
-        marioComponent.setZLevelMap(simulationOptions.getZLevelMap());
+        marioComponent.setZLevelScene(simulationOptions.getZLevelMap());
         marioComponent.setZLevelEnemies(simulationOptions.getZLevelEnemies());
         marioComponent.startLevel(simulationOptions.getLevelRandSeed(), simulationOptions.getLevelDifficulty()
                                  , simulationOptions.getLevelType(), simulationOptions.getLevelLength(),
                                   simulationOptions.getTimeLimit());
         marioComponent.setPaused(simulationOptions.isPauseWorld());
         marioComponent.setZLevelEnemies(simulationOptions.getZLevelEnemies());
-        marioComponent.setZLevelMap(simulationOptions.getZLevelMap());
+        marioComponent.setZLevelScene(simulationOptions.getZLevelMap());
         return marioComponent.run1(simulationOptions.currentAttempt++,
                 simulationOptions.getMaxAttempts()
         );

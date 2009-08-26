@@ -32,8 +32,8 @@ public class EvaluationInfo
     // if fire
     public String Memo = "";
     public int timeLeft = MagicNumberUndef;
-    public String agentName = "undefined";
-    public String agentType = "undefined";
+    public String agentName = "undefinedAgentName";
+    public String agentType = "undefinedAgentType";
     public int levelDifficulty = MagicNumberUndef;
     public int levelRandSeed = MagicNumberUndef;
     public int marioMode = MagicNumberUndef;

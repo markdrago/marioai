@@ -52,6 +52,10 @@ public class LevelScene extends Scene implements SpriteContext
     private int levelDifficulty;
     private int levelLength;
 
+    private static String[] LEVEL_TYPES = {"Overground(0)",
+                                           "Underground(1)",
+                                           "Castle(2)"};
+
     public LevelScene(GraphicsConfiguration graphicsConfiguration, MarioComponent renderer, long seed, int levelDifficulty, int type, int levelLength, int timeLimit)
     {
         this.graphicsConfiguration = graphicsConfiguration;
@@ -225,6 +229,7 @@ public class LevelScene extends Scene implements SpriteContext
                         return Sprite.KIND_GOOMBA;
                     case(Sprite.KIND_SPIKY):
                     case(Sprite.KIND_ENEMY_FLOWER):
+                    case(Sprite.KIND_SPIKY_WINGED):
                         return Sprite.KIND_SPIKY;
                 }
                 System.err.println("UNKOWN el = " + el);
@@ -333,7 +338,7 @@ public class LevelScene extends Scene implements SpriteContext
         return ret;
     }
 
-    public byte[][] mergedObservation(int ZLevelMap, int ZLevelEnemies)
+    public byte[][] mergedObservation(int ZLevelScene, int ZLevelEnemies)
     {
         byte[][] ret = new byte[Environment.HalfObsWidth*2][Environment.HalfObsHeight*2];
         //TODO: Move to constants 16
@@ -346,7 +351,7 @@ public class LevelScene extends Scene implements SpriteContext
             {
                 if (x >=0 /*&& x <= level.xExit*/ && y >= 0 && y < level.height)
                 {
-                    ret[obsX][obsY] = ZLevelMapElementGeneralization(level.map[x][y], ZLevelMap);
+                    ret[obsX][obsY] = ZLevelMapElementGeneralization(level.map[x][y], ZLevelScene);
                 }
                 else
                     ret[obsX][obsY] = 0;
@@ -500,7 +505,7 @@ public class LevelScene extends Scene implements SpriteContext
 
     public List<String> LevelSceneAroundMarioASCII(boolean Enemies, boolean LevelMap,
                                                    boolean mergedObservationFlag,
-                                                   int ZLevelMap, int ZLevelEnemies){
+                                                   int ZLevelScene, int ZLevelEnemies){
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));//        bw.write("\nTotal world width = " + level.width);
         List<String> ret = new ArrayList<String>();
         if (level != null && mario != null)
@@ -515,10 +520,10 @@ public class LevelScene extends Scene implements SpriteContext
             int MarioYInMap = (int)mario.y/16;
             ret.add("Calibrated Mario Position (x,y): (" + MarioXInMap + "," + MarioYInMap + ")\n");
 
-            byte[][] levelScene = levelSceneObservation(ZLevelMap);
+            byte[][] levelScene = levelSceneObservation(ZLevelScene);
             if (LevelMap)
             {
-                ret.add("~ZLevel: Z" + ZLevelMap + " map:\n");
+                ret.add("~ZLevel: Z" + ZLevelScene + " map:\n");
                 for (int x = 0; x < levelScene.length; ++x)
                 {
                     String tmpData = "";
@@ -536,7 +541,7 @@ public class LevelScene extends Scene implements SpriteContext
 
             if (Enemies)
             {
-                ret.add("~ZLevel: Z" + ZLevelMap + " Enemies Observation:\n");
+                ret.add("~ZLevel: Z" + ZLevelScene + " Enemies Observation:\n");
                 for (int x = 0; x < enemiesObservation.length; x++)
                 {
                     String tmpData = "";
@@ -551,7 +556,7 @@ public class LevelScene extends Scene implements SpriteContext
 
             if (mergedObservationFlag)
             {
-//                ret.add("~ZLevel: Z" + ZLevelMap + "===========\nAll objects: (LevelScene[x,y], Sprite[x,y])==/* Mario ~> MM */=====\n");
+//                ret.add("~ZLevel: Z" + ZLevelScene + "===========\nAll objects: (LevelScene[x,y], Sprite[x,y])==/* Mario ~> MM */=====\n");
 //                for (int x = 0; x < levelScene.length; ++x)
 //                {
 //                    String tmpData = "";
@@ -560,8 +565,8 @@ public class LevelScene extends Scene implements SpriteContext
 //                    ret.add(tmpData);
 //                }
 
-                byte[][] mergedObs = mergedObservation(ZLevelMap, ZLevelEnemies);
-                ret.add("~ZLevelMap: Z" + ZLevelMap + " ZLevelEnemies: Z" + ZLevelEnemies + " ; Merged observation /* Mario ~> #M.# */");
+                byte[][] mergedObs = mergedObservation(ZLevelScene, ZLevelEnemies);
+                ret.add("~ZLevelScene: Z" + ZLevelScene + " ZLevelEnemies: Z" + ZLevelEnemies + " ; Merged observation /* Mario ~> #M.# */");
                 for (int x = 0; x < levelScene.length; ++x)
                 {
                     String tmpData = "";
@@ -875,41 +880,27 @@ public class LevelScene extends Scene implements SpriteContext
         g.setColor(Color.BLACK);
         layer.renderExit1(g, tick, paused?0:alpha);
 
-        drawStringDropShadow(g, "MARIO: " + df.format(Mario.lives), 0, 0, 7);
+//        drawStringDropShadow(g, "MARIO: " + df.format(Mario.lives), 0, 0, 7);
 //        drawStringDropShadow(g, "#########", 0, 1, 7);
 
-        drawStringDropShadow(g, "COINS", 14, 0, 7);
-        drawStringDropShadow(g, " "+df.format(Mario.coins), 14, 1, 7);
 
-        drawStringDropShadow(g, "DIFFICULTY", 24, 0, 7);
-        drawStringDropShadow(g, " "+ this.levelDifficulty, 24, 1, 7);
+        drawStringDropShadow(g, "DIFFICULTY:   " + df.format(this.levelDifficulty), 0, 0, 7); drawStringDropShadow(g, "COINS:" + df.format(Mario.coins), 19, 0, 7);
+        drawStringDropShadow(g, "TYPE:" + LEVEL_TYPES[this.levelType], 0, 1, 7);       drawStringDropShadow(g, "CREATURES:" + (mario.world.paused ? "OFF" : "ON"), 19, 1, 7);
+        drawStringDropShadow(g, "LENGTH:      " + this.levelLength, 0, 2, 7);
 
-        drawStringDropShadow(g, "WorldPause", 24, 2, 7);
-        drawStringDropShadow(g, " "+ mario.world.paused, 24, 3, 7);
-
-
-        drawStringDropShadow(g, "TIME", 35, 0, 7);
+        drawStringDropShadow(g, "TIME", 33, 0, 7);
         int time = (timeLeft+15-1)/15;
         if (time<0) time = 0;
-        drawStringDropShadow(g, " "+df2.format(time), 35, 1, 7);
+        drawStringDropShadow(g, " "+df2.format(time), 33, 1, 7);
+
+        drawProgress(g);
+
         if (GlobalOptions.Labels)
         {
             g.drawString("xCam: " + xCam + "yCam: " + yCam, 70, 40);
             g.drawString("x : " + mario.x + "y: " + mario.y, 70, 50);
             g.drawString("xOld : " + mario.xOld + "yOld: " + mario.yOld, 70, 60);
         }
-
-//        if (mario.keys[Mario.KEY_DUMP_CURRENT_WORLD])
-//        {
-//            g.fillRect(0, 0, 640*2, 480*2);
-//            g.setColor(Color.YELLOW);
-//            int y_dump = 0;
-//            g.drawString("GAME VIEWER: ", 320, y_dump += 11 );
-//            g.setColor(Color.GREEN);
-//            for (String s: LevelSceneAroundMarioASCII(true, true, true) )
-//
-//                g.drawString(s, (y_dump > 250) ? 0 : 320, y_dump += 11 );
-//        }
 
         if (startTime > 0)
         {
@@ -949,13 +940,25 @@ public class LevelScene extends Scene implements SpriteContext
         }
     }
 
-    private void drawStringDropShadow(Graphics g, String text, int x, int y, int c)
+    private void drawProgress(Graphics g) {
+        String entirePathStr = "......................................>";
+        double physLength = (levelLength - 55)*16;
+        int progressInChars = (int) (mario.x * (entirePathStr.length()/physLength));
+        String progress_str = "";
+        for (int i = 0; i < progressInChars - 1; ++i)
+            progress_str += ".";
+        progress_str += "M";
+        drawStringDropShadow(g, entirePathStr.substring(progress_str.length()), progress_str.length(), 28, 0);
+        drawStringDropShadow(g, progress_str, 0, 28, 2);
+    }
+
+    public static void drawStringDropShadow(Graphics g, String text, int x, int y, int c)
     {
         drawString(g, text, x*8+5, y*8+5, 0);
         drawString(g, text, x*8+4, y*8+4, c);
     }
 
-    private void drawString(Graphics g, String text, int x, int y, int c)
+    private static void drawString(Graphics g, String text, int x, int y, int c)
     {
         char[] ch = text.toCharArray();
         for (int i = 0; i < ch.length; i++)

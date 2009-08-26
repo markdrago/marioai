@@ -33,7 +33,7 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
     Thread animator;
 
     private int ZLevelEnemies = 1;
-    private int ZLevelMap = 1;
+    private int ZLevelScene = 1;
 
     public void setGameViewer(GameViewer gameViewer) {
         this.gameViewer = gameViewer;
@@ -214,8 +214,8 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
                     drawString(og, msgClick, 160 - msgClick.length() * 4, 110, 7);
                 }
                 og.setColor(Color.DARK_GRAY);
-                drawString(og, "FPS: " + ((GlobalOptions.FPS > 99) ? "\\infty" : GlobalOptions.FPS.toString()), 5, 22, 0);
-                drawString(og, "FPS: " + ((GlobalOptions.FPS > 99) ? "\\infty" : GlobalOptions.FPS.toString()), 4, 21, 7);
+                LevelScene.drawStringDropShadow(og, "FPS: ", 33, 2, 7);
+                LevelScene.drawStringDropShadow(og, ((GlobalOptions.FPS > 99) ? "\\infty" : GlobalOptions.FPS.toString()), 33, 3, 7);
 
                 if (width != 320 || height != 240) {
                         g.drawImage(image, 0, 0, 640 * 2, 480 * 2, null);
@@ -330,13 +330,31 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
         }
     }
 
-    // upcoming feature for Milano conf, unkomment this, if you would like to try it!
     // Chaning ZLevel during the game on-the-fly;
-    public byte[][] getCompleteObservation(/*int ZLevelMap, int ZLevelEnemies*/) {
-//        this.ZLevelMap = ZLevelMap;
+    public byte[][] getMergedObservationZ(int zLevelScene, int zLevelEnemies) {
+        if (scene instanceof LevelScene)
+            return ((LevelScene) scene).mergedObservation(zLevelScene, zLevelEnemies);
+        return null;
+    }
+
+    public byte[][] getLevelSceneObservationZ(int zLevelScene) {
+        if (scene instanceof LevelScene)
+            return ((LevelScene) scene).levelSceneObservation(zLevelScene);
+        return null;
+    }
+
+    public byte[][] getEnemiesObservationZ(int zLevelEnemies) {
+        if (scene instanceof LevelScene)
+            return ((LevelScene) scene).enemiesObservation(zLevelEnemies);
+        return null;
+    }
+
+    // upcoming feature for Milano conf, unkomment this, if you would like to try it!
+    public byte[][] getCompleteObservation(/*int ZLevelScene, int ZLevelEnemies*/) {
+//        this.ZLevelScene = ZLevelScene;
 //        this.ZLevelEnemies = ZLevelEnemies;
         if (scene instanceof LevelScene)
-            return ((LevelScene) scene).mergedObservation(this.ZLevelMap, this.ZLevelEnemies);
+            return ((LevelScene) scene).mergedObservation(this.ZLevelScene, this.ZLevelEnemies);
         return null;
     }
 
@@ -347,10 +365,10 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
         return null;
     }
 
-    public byte[][] getLevelSceneObservation(/*int ZLevelMap*/) {
-//        this.ZLevelMap = ZLevelMap;
+    public byte[][] getLevelSceneObservation(/*int ZLevelScene*/) {
+//        this.ZLevelScene = ZLevelScene;
         if (scene instanceof LevelScene)
-            return ((LevelScene) scene).levelSceneObservation(this.ZLevelMap);
+            return ((LevelScene) scene).levelSceneObservation(this.ZLevelScene);
         return null;
     }
 
@@ -380,8 +398,8 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
         this.ZLevelEnemies = ZLevelEnemies;
     }
 
-    public void setZLevelMap(int ZLevelMap) {
-        this.ZLevelMap = ZLevelMap;
+    public void setZLevelScene(int ZLevelScene) {
+        this.ZLevelScene = ZLevelScene;
     }
 
     public float[] getMarioFloatPos()

@@ -19,14 +19,19 @@ public interface Environment
     // always centered on the agent
 
 
-    // upcoming feature for Milano conf, unkomment this, if you would like to try it!
+    // upcoming feature for CIG conf in Milano, unkomment this, if you would like to try it!
     // Chaning ZLevel during the game on-the-fly;
-    // if your agent recieves too ambiguous observation, it might request for more precise for the next step
-    public byte[][] getCompleteObservation(/*int ZLevelMap, int ZLevelEnemies*/);
+    // if your agent recieves too ambiguous observation, it might request for more precise one for the next step
 
-    public byte[][] getEnemiesObservation(/*int ZLevelEnemies*/);
+    public byte[][] getMergedObservationZ(int ZLevelScene, int ZLevelEnemies);
+    public byte[][] getLevelSceneObservationZ(int ZLevelScene);
+    public byte[][] getEnemiesObservationZ(int ZLevelEnemies);
 
-    public byte[][] getLevelSceneObservation(/*int ZLevelMap*/);
+    public byte[][] getCompleteObservation();   // default: ZLevelScene = 1, ZLevelEnemies = 0
+
+    public byte[][] getEnemiesObservation();    // default: ZLevelEnemies = 0
+
+    public byte[][] getLevelSceneObservation(); // default: ZLevelScene = 1
 
     public float[] getMarioFloatPos();
 
@@ -34,11 +39,14 @@ public interface Environment
 
     public float[] getEnemiesFloatPos();
 
+    public boolean isMarioOnGround();
+    public boolean mayMarioJump();
+    public boolean isMarioCarrying();
+
+
+    // For Server usage only, Java agents should use non-bitmap versions.
     public String getBitmapEnemiesObservation();
 
     public String getBitmapLevelObservation();
 
-    public boolean isMarioOnGround();
-    public boolean mayMarioJump();
-    public boolean isMarioCarrying();
 }
