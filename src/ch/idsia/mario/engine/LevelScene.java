@@ -51,6 +51,7 @@ public class LevelScene extends Scene implements SpriteContext
     private int levelType;
     private int levelDifficulty;
     private int levelLength;
+    public static int killedCreatures;
 
     private static String[] LEVEL_TYPES = {"Overground(0)",
                                            "Underground(1)",
@@ -65,6 +66,7 @@ public class LevelScene extends Scene implements SpriteContext
         this.levelType = type;
         this.levelLength = levelLength;
         this.setTotalTime(timeLimit);
+        this.killedCreatures = 0;
     }
 
     private String mapElToStr(int el)
@@ -789,6 +791,7 @@ public class LevelScene extends Scene implements SpriteContext
                             {
                                 mario.carried = null;
                                 shell.die();
+                                ++this.killedCreatures;
                             }
                         }
                     }
@@ -886,7 +889,7 @@ public class LevelScene extends Scene implements SpriteContext
 
         drawStringDropShadow(g, "DIFFICULTY:   " + df.format(this.levelDifficulty), 0, 0, 7); drawStringDropShadow(g, "COINS:" + df.format(Mario.coins), 19, 0, 7);
         drawStringDropShadow(g, "TYPE:" + LEVEL_TYPES[this.levelType], 0, 1, 7);       drawStringDropShadow(g, "CREATURES:" + (mario.world.paused ? "OFF" : "ON"), 19, 1, 7);
-        drawStringDropShadow(g, "LENGTH:      " + this.levelLength, 0, 2, 7);
+        drawStringDropShadow(g, "LENGTH:" + (int)mario.x/16 + " of " + this.levelLength, 0, 2, 7);   drawStringDropShadow(g, "KILLS:" + this.killedCreatures, 19, 2, 7);
 
         drawStringDropShadow(g, "TIME", 33, 0, 7);
         int time = (timeLeft+15-1)/15;
