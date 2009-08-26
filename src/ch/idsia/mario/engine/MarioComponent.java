@@ -183,17 +183,16 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
             ((LevelScene) scene).mario.cheatKeys = cheatAgent.getAction(null);
 
             if (GlobalOptions.VisualizationOn) {
-                String msg = "Attempt: " + currentAttempt + " of " + ((totalNumberOfAttempts == -1) ? "\\infty" : totalNumberOfAttempts);
+                String msg = totalNumberOfAttempts == 1 ? "" : "Attempt: " + currentAttempt + " of " + ((totalNumberOfAttempts == -1) ? "\\infty" : totalNumberOfAttempts);
+
                 drawString(og, msg, 7, 31, 0);
                 drawString(og, msg, 6, 30, 1);
 
-                msg = agent.getName();
-                drawString(og, msg, 7, 41, 0);
-                drawString(og, msg, 6, 40, 5);
+                msg = "Agent: " + agent.getName();
+                LevelScene.drawStringDropShadow(og, msg, 0, 6, 5);
 
                 msg = "Selected Actions: ";
-                drawString(og, msg, 7, 51, 0);
-                drawString(og, msg, 6, 50, 6);
+                LevelScene.drawStringDropShadow(og, msg, 0, 7, 6);
 
                 msg = "";
                 if (action != null)
@@ -204,7 +203,6 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
                 else
                     msg = "NULL";                    
                 drawString(og, msg, 6, 70, 1);
-
 
                 if (!this.hasFocus() && tick / 4 % 2 == 0) {
                     String msgClick = "CLICK TO PLAY";
@@ -236,7 +234,6 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
                 } catch (InterruptedException e) {
                     break;
                 }
-
             // Advance the frame
             frame++;
         }

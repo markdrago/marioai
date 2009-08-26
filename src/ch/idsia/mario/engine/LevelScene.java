@@ -887,9 +887,9 @@ public class LevelScene extends Scene implements SpriteContext
 //        drawStringDropShadow(g, "#########", 0, 1, 7);
 
 
-        drawStringDropShadow(g, "DIFFICULTY:   " + df.format(this.levelDifficulty), 0, 0, 7); drawStringDropShadow(g, "COINS:" + df.format(Mario.coins), 19, 0, 7);
+        drawStringDropShadow(g, "DIFFICULTY:   " + df.format(this.levelDifficulty), 0, 0, this.levelDifficulty > 6 ? 1 : this.levelDifficulty > 2 ? 4 : 7 ); drawStringDropShadow(g, "COINS:" + df.format(Mario.coins), 19, 0, 4);
         drawStringDropShadow(g, "TYPE:" + LEVEL_TYPES[this.levelType], 0, 1, 7);       drawStringDropShadow(g, "CREATURES:" + (mario.world.paused ? "OFF" : "ON"), 19, 1, 7);
-        drawStringDropShadow(g, "LENGTH:" + (int)mario.x/16 + " of " + this.levelLength, 0, 2, 7);   drawStringDropShadow(g, "KILLS:" + this.killedCreatures, 19, 2, 7);
+        drawStringDropShadow(g, "LENGTH:" + (int)mario.x/16 + " of " + this.levelLength, 0, 2, 7);   drawStringDropShadow(g, "KILLS:" + this.killedCreatures, 19, 2, 1);
 
         drawStringDropShadow(g, "TIME", 33, 0, 7);
         int time = (timeLeft+15-1)/15;
@@ -945,7 +945,7 @@ public class LevelScene extends Scene implements SpriteContext
 
     private void drawProgress(Graphics g) {
         String entirePathStr = "......................................>";
-        double physLength = (levelLength - 55)*16;
+        double physLength = (levelLength - 53)*16;
         int progressInChars = (int) (mario.x * (entirePathStr.length()/physLength));
         String progress_str = "";
         for (int i = 0; i < progressInChars - 1; ++i)
