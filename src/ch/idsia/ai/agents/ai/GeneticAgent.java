@@ -41,14 +41,57 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     }
     
     public class AddNode extends BinaryOpNode {
+    	public AddNode() {
+    		super();
+    		this.name = "add";
+    	}
+    	
     	public int execute(Number op1, Number op2) {
     		return op1.intValue() + op2.intValue();
     	}
     }
     
-    public abstract class BinaryOpNode implements Node {
-    	abstract int execute(Number op1, Number op2);
-    	public int get_num_arguments() { return 2; }
+    public class SubtractNode extends BinaryOpNode {
+    	public SubtractNode() {
+    		super();
+    		this.name = "subtract";
+    	}
+    	
+    	public int execute(Number op1, Number op2) {
+    		return op1.intValue() - op2.intValue();
+    	}
+    }
+    
+    public class MultiplyNode extends BinaryOpNode {
+    	public MultiplyNode() {
+    		super();
+    		this.name = "multiply";
+    	}
+    	
+    	public int execute(Number op1, Number op2) {
+    		return op1.intValue() * op2.intValue();
+    	}
+    }
+    
+    public class DivideNode extends BinaryOpNode {
+    	public DivideNode() {
+    		super();
+    		this.name = "divide";
+    	}
+    	
+    	public int execute(Number op1, Number op2) {
+    		if (op2.intValue() == 0) return 0;
+    		return op1.intValue() / op2.intValue();
+    	}
+    }
+    
+    public abstract class BinaryOpNode extends Node {
+    	public BinaryOpNode() {
+    		super();
+    		this.num_arguments = 2;
+    	}
+    	
+    	public abstract int execute(Number op1, Number op2);
     	public List<NodeArgType> get_argument_types() {
     		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
     		lst.add(NodeArgType.NUMERIC);
@@ -58,11 +101,45 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	public NodeArgType get_response_type() { return NodeArgType.INT; }
     }
     
-    public interface Node {
-    	int get_num_arguments();
-    	List<NodeArgType> get_argument_types();
-    	NodeArgType get_response_type();
-    	String toString();
+    public abstract class Node {
+    	ArrayList<Node> children;
+    	Node parent;
+    	int num_arguments;
+    	String name;
+    	
+    	public Node() {
+    		this.children = new ArrayList<Node>();
+    		this.num_arguments = 0;
+    		this.name = "unknown";
+    	}
+    	
+    	public abstract List<NodeArgType> get_argument_types();
+    	public abstract NodeArgType get_response_type();
+
+    	public String toString() {
+    		return this.name;
+    	}
+    	
+    	public int get_num_arguments() { return this.num_arguments; }
+
+    	List<Node> get_children() {
+    		return this.children;
+    	}
+    	
+    	void set_child(int index, Node child) {
+    		this.children.ensureCapacity(index + 1);
+    		this.children.set(index, child);
+    		
+    		child.set_parent(this);
+    	}
+    	
+    	Node get_parent() {
+    		return this.parent;
+    	}
+    	
+    	void set_parent(Node parent) {
+    		this.parent = parent;
+    	}
     }
 
     public enum NodeArgType {
