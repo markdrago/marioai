@@ -7,6 +7,7 @@ import ch.idsia.mario.environments.Environment;
 import java.util.List;
 import java.util.ArrayList;
 import java.lang.Number;
+import java.util.Random;
 
 /**
  * User: Mark Drago
@@ -38,6 +39,17 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
         catch (Exception e){}
         action[Mario.KEY_SPEED] = action[Mario.KEY_JUMP] =  observation.mayMarioJump() || !observation.isMarioOnGround();
         return action;
+    }
+    
+    public class EnvironmentHolder {
+    	Environment environ;
+    	public void set_environment(Environment environ) {
+    		this.environ = environ;
+    	}
+    	
+    	public Environment get_environment() {
+    		return this.environ;
+    	}
     }
     
     public class AddNode extends BinaryOpNode {
@@ -85,6 +97,79 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	}
     }
     
+    public class ObservationNode extends Node {
+    	EnvironmentHolder envholder;
+    	
+    	public ObservationNode(EnvironmentHolder envholder) {
+    		super();
+    		this.name = "observation";
+    		this.num_arguments = 0;
+    		this.envholder = envholder;
+    	}
+    	
+    	public List<NodeArgType> get_argument_types() {
+    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
+    		lst.add(NodeArgType.NUMERIC);
+    		lst.add(NodeArgType.NUMERIC);
+    		return lst;
+    	}
+    	
+    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
+    	
+    	public boolean execute(Number x, Number y) {
+    		Environment env = envholder.get_environment();
+    		
+    		byte[][] levelScene = env.getCompleteObservation();
+    		if (levelScene[y.intValue()][x.intValue()] != 0)
+    			return true;
+    		return false;
+    	}
+    }
+    
+    public class StaticIntNode extends IntNode {
+    	int value;
+    	
+    	public StaticIntNode() {
+    		super();
+    		this.name = "static_int";
+    	}
+    	
+    	public StaticIntNode(int value) {
+    		super();
+    		this.name = "static_int";
+    		this.set_value(value);
+    	}
+    	
+    	public void set_value(int value) {
+    		this.value = value;
+    	}
+    	
+    	public void set_random_value() {
+    		Random rnd = new Random();
+    		this.set_value(rnd.nextInt(100));
+    	}
+    	
+    	public int execute() {
+    		return this.value;
+    	}
+    }
+    
+    public abstract class IntNode extends Node {
+    	public IntNode() {
+    		super();
+    		this.num_arguments = 0;
+    	}
+    	
+    	public abstract int execute();
+    	
+    	public List<NodeArgType> get_argument_types() {
+    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
+    		return lst;
+    	}
+    	
+    	public NodeArgType get_response_type() { return NodeArgType.INT; }
+    }
+    
     public abstract class BinaryOpNode extends Node {
     	public BinaryOpNode() {
     		super();
@@ -92,12 +177,14 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	}
     	
     	public abstract int execute(Number op1, Number op2);
+    	
     	public List<NodeArgType> get_argument_types() {
     		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
     		lst.add(NodeArgType.NUMERIC);
     		lst.add(NodeArgType.NUMERIC);
     		return lst;
     	}
+    	
     	public NodeArgType get_response_type() { return NodeArgType.INT; }
     }
     
