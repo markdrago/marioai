@@ -51,7 +51,10 @@ public class LevelScene extends Scene implements SpriteContext
     private int levelType;
     private int levelDifficulty;
     private int levelLength;
-    public static int killedCreatures;
+    public static int killedCreaturesTotal;
+    public static int killedCreaturesByFireBall;
+    public static int killedCreaturesByStomp;
+    public static int killedCreaturesByShell;
 
     private static String[] LEVEL_TYPES = {"Overground(0)",
                                            "Underground(1)",
@@ -66,7 +69,10 @@ public class LevelScene extends Scene implements SpriteContext
         this.levelType = type;
         this.levelLength = levelLength;
         this.setTotalTime(timeLimit);
-        this.killedCreatures = 0;
+        killedCreaturesTotal = 0;
+        killedCreaturesByFireBall = 0;
+        killedCreaturesByStomp = 0;
+        killedCreaturesByShell = 0;
     }
 
     private String mapElToStr(int el)
@@ -791,7 +797,7 @@ public class LevelScene extends Scene implements SpriteContext
                             {
                                 mario.carried = null;
                                 shell.die();
-                                ++this.killedCreatures;
+                                ++this.killedCreaturesTotal;
                             }
                         }
                     }
@@ -887,9 +893,13 @@ public class LevelScene extends Scene implements SpriteContext
 //        drawStringDropShadow(g, "#########", 0, 1, 7);
 
 
-        drawStringDropShadow(g, "DIFFICULTY:   " + df.format(this.levelDifficulty), 0, 0, this.levelDifficulty > 6 ? 1 : this.levelDifficulty > 2 ? 4 : 7 ); drawStringDropShadow(g, "COINS:" + df.format(Mario.coins), 19, 0, 4);
-        drawStringDropShadow(g, "TYPE:" + LEVEL_TYPES[this.levelType], 0, 1, 7);       drawStringDropShadow(g, "CREATURES:" + (mario.world.paused ? "OFF" : "ON"), 19, 1, 7);
-        drawStringDropShadow(g, "LENGTH:" + (int)mario.x/16 + " of " + this.levelLength, 0, 2, 7);   drawStringDropShadow(g, "KILLS:" + this.killedCreatures, 19, 2, 1);
+        drawStringDropShadow(g, "DIFFICULTY:   " + df.format(this.levelDifficulty), 0, 0, this.levelDifficulty > 6 ? 1 : this.levelDifficulty > 2 ? 4 : 7 ); drawStringDropShadow(g, "CREATURES:" + (mario.world.paused ? "OFF" : "ON"), 19, 0, 7);
+        drawStringDropShadow(g, "TYPE:" + LEVEL_TYPES[this.levelType], 0, 1, 7);                  drawStringDropShadow(g, "ALL KILLS: " + killedCreaturesTotal, 19, 1, 1);
+        drawStringDropShadow(g, "LENGTH:" + (int)mario.x/16 + " of " + this.levelLength, 0, 2, 7); drawStringDropShadow(g, "by Fire  : " + killedCreaturesByFireBall, 19, 2, 1);
+        drawStringDropShadow(g,"COINS    : " + df.format(Mario.coins), 0, 3, 4);                      drawStringDropShadow(g, "by Shell : " + killedCreaturesByShell, 19, 3, 1);
+        drawStringDropShadow(g, "MUSHROOMS: " + df.format(Mario.gainedMushrooms), 0, 4, 4);                  drawStringDropShadow(g, "by Stomp : " + killedCreaturesByStomp, 19, 4, 1);
+        drawStringDropShadow(g, "FLOWERS  : " + df.format(Mario.gainedFlowers), 0, 5, 4);
+
 
         drawStringDropShadow(g, "TIME", 33, 0, 7);
         int time = (timeLeft+15-1)/15;

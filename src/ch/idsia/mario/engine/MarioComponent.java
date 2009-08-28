@@ -387,6 +387,11 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
         }
     }
 
+    public void setMarioInvulnerable(boolean invulnerable)
+    {
+        Mario.isMarioInvulnerable = invulnerable;
+    }
+
     public void setPaused(boolean paused) {
         levelScene.paused = paused;
     }

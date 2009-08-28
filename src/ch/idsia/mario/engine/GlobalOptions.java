@@ -28,6 +28,7 @@ public class GlobalOptions {
     public static boolean PowerRestoration;
 
     public static boolean StopSimulationIfWin;
+    public static boolean isMarioInvulnerable;
 
     public static void registerMarioComponent(MarioComponent mc)
     {

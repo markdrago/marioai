@@ -36,8 +36,8 @@ public class EvaluationOptions extends SimulationOptions
         GlobalOptions.PowerRestoration = isPowerRestoration();
         GlobalOptions.StopSimulationIfWin = isStopSimulationIfWin();
         GlobalOptions.TimerOn = isTimer();
-    }    
-
+    }
+    
     public Boolean isExitProgramWhenFinished()    {
         return b(getParameterValue("-ewf"));    }
 

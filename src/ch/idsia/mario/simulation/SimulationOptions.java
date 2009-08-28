@@ -42,6 +42,7 @@ public class SimulationOptions extends ParameterContainer
         ret.setTimeLimit(getTimeLimit());
         ret.setZLevelEnemies(getZLevelEnemies());
         ret.setZLevelMap(getZLevelMap());
+        ret.setMarioInvulnerable(isMarioInvulnerable());
         return ret;
     }
 
@@ -155,5 +156,12 @@ public class SimulationOptions extends ParameterContainer
     public void setTimeLimit(int timeLimit) {
         setParameterValue("-tl", s(timeLimit));
     }
+
+    // Invulnerability
+    public boolean isMarioInvulnerable() {
+        return b(getParameterValue("-i"));  }
+
+    public void setMarioInvulnerable(boolean invulnerable)
+    {         setParameterValue("-i", s(invulnerable));    }
 
 }

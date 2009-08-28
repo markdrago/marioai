@@ -41,6 +41,7 @@ public class ParameterContainer
 //            "-gui",
                     "-gv",
                     "-gvc",
+                    "-i",
                     "-ld",
 //            "-levelDifficulty",
 //            "-levelLength",
@@ -148,10 +149,17 @@ public class ParameterContainer
     }
 
     public String s(Agent a)
-    {   
-        if (RegisterableAgent.getAgentByName(a.getName()) == null)
-            RegisterableAgent.registerAgent(a);
-        return a.getName();
+    {
+        try
+        {
+            if (RegisterableAgent.getAgentByName(a.getName()) == null)
+                RegisterableAgent.registerAgent(a);
+            return a.getName();
+        }catch(NullPointerException e)
+        {
+            System.err.println("ERROR: Agent Not Found");
+            return "";
+        }
     }
 
     public Agent a(String s)
@@ -179,6 +187,7 @@ public class ParameterContainer
             defaultOptionsHashMap.put("-fastTCP","off"); //
             defaultOptionsHashMap.put("-gv","off"); //defaultOptionsHashMap.put("-gameViewer","off");
             defaultOptionsHashMap.put("-gvc","off"); //defaultOptionsHashMap.put("-gameViewerContinuousUpdates","off");
+            defaultOptionsHashMap.put("-i","off"); // Invulnerability
             defaultOptionsHashMap.put("-ld","0"); //defaultOptionsHashMap.put("-levelDifficulty","0");
             defaultOptionsHashMap.put("-ll","320"); //defaultOptionsHashMap.put("-levelLength","320");
             defaultOptionsHashMap.put("-ls","0"); //defaultOptionsHashMap.put("-levelRandSeed","1");

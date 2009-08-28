@@ -77,7 +77,7 @@ public class MainRun
 //            new AIwesome();
 //            new TutchekAgent();
 //            new SlowAgent();
-//            new AStarAgent();
+            new AStarAgent();
 //            new RjAgent();
         }
     }
