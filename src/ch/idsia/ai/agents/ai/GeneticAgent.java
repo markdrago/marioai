@@ -185,6 +185,49 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	public abstract boolean execute(boolean state);
     }
     
+    public class OnGroundNode extends EnvironmentNode {
+    	public OnGroundNode(EnvironmentHolder envholder) {
+    		super(envholder);
+    		this.name = "on_ground";
+    	}
+    	
+    	public boolean execute() {
+    		Environment env = envholder.get_environment();
+    		return env.isMarioOnGround();
+    	}
+    }
+    
+    public class MayJumpNode extends EnvironmentNode {
+    	public MayJumpNode(EnvironmentHolder envholder) {
+    		super(envholder);
+    		this.name = "may_jump";
+    	}
+    	
+    	public boolean execute() {
+    		Environment env = envholder.get_environment();
+    		return env.mayMarioJump();
+    	}
+    }
+    
+    public abstract class EnvironmentNode extends Node {
+    	EnvironmentHolder envholder;
+    	
+    	public EnvironmentNode(EnvironmentHolder envholder) {
+    		super();
+    		this.num_arguments = 0;
+    		this.envholder = envholder;
+    	}
+    	
+    	public List<NodeArgType> get_argument_types() {
+    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
+    		return lst;
+    	}
+    	
+    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
+    	
+    	public abstract boolean execute();
+    }
+    
     public class LevelObservationNode extends ObservationNode {
     	public LevelObservationNode(EnvironmentHolder envholder) {
     		super(envholder);
