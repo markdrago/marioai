@@ -298,12 +298,56 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	public abstract boolean execute(int x, int y);
     }
     
+    public class StaticBooleanNode extends BooleanNode {
+    	boolean value;
+    	
+    	public StaticBooleanNode() {
+    		super();
+    		this.num_arguments = 0;
+    		this.set_random_value();
+    	}
+    	
+    	public StaticBooleanNode(boolean value) {
+    		this.set_value(value);
+    	}
+    	
+    	public boolean execute() {
+    		return this.value;
+    	}
+    	
+    	public void set_value(boolean value) {
+    		this.value = value;
+    	}
+    	
+    	public void set_random_value() {
+    		Random rnd = new Random();
+    		this.set_value(rnd.nextBoolean());
+    	}
+    }
+    
+    public abstract class BooleanNode extends Node {
+    	public BooleanNode() {
+    		super();
+    		this.num_arguments = 0;
+    	}
+    	
+    	public abstract boolean execute();
+    	
+    	public List<NodeArgType> get_argument_types() {
+    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
+    		return lst;
+    	}
+    	
+    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
+    }
+    
     public class StaticIntNode extends IntNode {
     	int value;
     	
     	public StaticIntNode() {
     		super();
     		this.name = "static_int";
+    		this.set_random_value();
     	}
     	
     	public StaticIntNode(int value) {
