@@ -6,7 +6,6 @@ import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.environments.Environment;
 import java.util.List;
 import java.util.ArrayList;
-import java.lang.Number;
 import java.util.Random;
 
 /**
@@ -18,7 +17,10 @@ import java.util.Random;
 
 public class GeneticAgent extends RegisterableAgent implements Agent {
 
-    static final boolean superslow = false;
+    /* static final boolean superslow = false; */
+	Node node;
+	ActionHolder actionholder;
+	EnvironmentHolder envholder;
 
     public GeneticAgent()
     {
@@ -29,16 +31,96 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     public void reset()
     {
         action = new boolean[Environment.numberOfButtons];
-        action[Mario.KEY_RIGHT] = true;
-        action[Mario.KEY_SPEED] = true;
+
+        this.actionholder = new ActionHolder();
+        this.actionholder.set_action(action);
+        this.envholder = new EnvironmentHolder();
+        
+        this.node = get_forward_agent(this.envholder, this.actionholder);
     }
 
     public boolean[] getAction(Environment observation)
     {
-        try {Thread.sleep (39);}
+        /*
+    	try {Thread.sleep (39);}
         catch (Exception e){}
-        action[Mario.KEY_SPEED] = action[Mario.KEY_JUMP] =  observation.mayMarioJump() || !observation.isMarioOnGround();
-        return action;
+        */
+        /* action[Mario.KEY_SPEED] = action[Mario.KEY_JUMP] =  observation.mayMarioJump() || !observation.isMarioOnGround(); */
+    	
+    	this.execute_node_tree(this.node, observation);
+    	
+        return this.actionholder.get_action();
+    }
+    
+    public void execute_node_tree(Node node, Environment observation) {
+    	this.envholder.set_environment(observation);
+    	this.execute_node(node);
+    }
+    
+    public NodeArg execute_node(Node node) {
+    	List<Node> children;
+    	ArrayList<NodeArg> child_results;
+    	Node child;
+    	NodeArg result = null;
+    	int child_count;
+    	
+    	/* get results for all child nodes */
+    	child_count = node.get_num_children();
+    	child_results = new ArrayList<NodeArg>();
+    	if (child_count > 0) {
+    		children = node.get_children();
+    		for (int i = 0; i < child_count; i++) {
+    			child = children.get(i);
+    			child_results.add(this.execute_node(child));
+    		}
+    	}
+    	
+    	/* get result for this node */
+    	if (child_count == 0) {
+			result = node.execute();
+    	} else if (child_count == 1) {
+    		result = node.execute(child_results.get(0));
+    	} else if (child_count == 2) {
+    		result = node.execute(child_results.get(0), child_results.get(1));
+    	}
+    	
+    	return result;
+    }
+    
+    /* manually create some test trees */
+    public Node get_forward_agent(EnvironmentHolder envholder, ActionHolder actionholder) {
+    	Node onground, not, or, mayjump, jump, speed, right, truenode, and;
+    	
+    	/* this tree is assembled children-first for ease of assembly */
+    	
+    	/* not on ground */
+    	onground = new OnGroundNode(envholder);
+    	not = new NotNode();
+    	not.set_child(0, onground);
+    	
+    	/* or may jump */
+    	mayjump = new MayJumpNode(envholder);
+    	or = new OrNode();
+    	or.set_child(0, mayjump);
+    	or.set_child(1, not);
+    	
+    	/* jump & speed */
+    	jump = new JumpNode(actionholder);
+    	speed = new SpeedNode(actionholder);
+    	jump.set_child(0, or);
+    	speed.set_child(0, jump);
+    	
+    	/* separate branch for true & right */
+    	truenode = new StaticBooleanNode(true);
+    	right = new RightNode(actionholder);
+    	right.set_child(0, truenode);
+    	
+    	/* combine right and speed */
+    	and = new AndNode();
+    	and.set_child(0, right);
+    	and.set_child(1, speed);
+    	
+    	return and;
     }
     
     public class EnvironmentHolder {
@@ -76,8 +158,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "add";
     	}
     	
-    	public int execute(int op1, int op2) {
-    		return op1 + op2;
+    	public NodeArg execute(NodeArg op1, NodeArg op2) {
+    		return new NodeArg(op1.get_int_value() + op2.get_int_value());
     	}
     }
     
@@ -87,8 +169,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "subtract";
     	}
     	
-    	public int execute(int op1, int op2) {
-    		return java.lang.Math.abs(op1 - op2);
+    	public NodeArg execute(NodeArg op1, NodeArg op2) {
+    		return new NodeArg(java.lang.Math.abs(op1.get_int_value() - op2.get_int_value()));
     	}
     }
     
@@ -98,8 +180,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "multiply";
     	}
     	
-    	public int execute(int op1, int op2) {
-    		return op1 * op2;
+    	public NodeArg execute(NodeArg op1, NodeArg op2) {
+    		return new NodeArg(op1.get_int_value() * op2.get_int_value());
     	}
     }
     
@@ -109,9 +191,9 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "divide";
     	}
     	
-    	public int execute(int op1, int op2) {
-    		if (op2 == 0) return 0;
-    		return op1 / op2;
+    	public NodeArg execute(NodeArg op1, NodeArg op2) {
+    		if (op2.get_int_value() == 0) return new NodeArg(0);
+    		return new NodeArg(op1.get_int_value() / op2.get_int_value());
     	}
     }
     
@@ -121,8 +203,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "speed";
     	}
     	
-    	public boolean execute(boolean state) {
-    		this.action_holder.button_action(Mario.KEY_SPEED, state);
+    	public NodeArg execute(NodeArg state) {
+    		this.action_holder.button_action(Mario.KEY_SPEED, state.get_bool_value());
     		return state;
     	}
     }
@@ -133,8 +215,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "left";
     	}
     	
-    	public boolean execute(boolean state) {
-    		this.action_holder.button_action(Mario.KEY_LEFT, state);
+    	public NodeArg execute(NodeArg state) {
+    		this.action_holder.button_action(Mario.KEY_LEFT, state.get_bool_value());
     		this.action_holder.button_action(Mario.KEY_RIGHT, false);
     		return state;
     	}
@@ -146,8 +228,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "right";
     	}
     	
-    	public boolean execute(boolean state) {
-    		this.action_holder.button_action(Mario.KEY_RIGHT, state);
+    	public NodeArg execute(NodeArg state) {
+    		this.action_holder.button_action(Mario.KEY_RIGHT, state.get_bool_value());
     		this.action_holder.button_action(Mario.KEY_LEFT, false);
     		return state;
     	}
@@ -159,8 +241,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "jump";
     	}
     	
-    	public boolean execute(boolean state) {
-    		this.action_holder.button_action(Mario.KEY_JUMP, state);
+    	public NodeArg execute(NodeArg state) {
+    		this.action_holder.button_action(Mario.KEY_JUMP, state.get_bool_value());
     		return state;
     	}
     }
@@ -182,7 +264,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	
     	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
     	
-    	public abstract boolean execute(boolean state);
+    	public abstract NodeArg execute(NodeArg state);
     }
     
     public class OnGroundNode extends EnvironmentNode {
@@ -191,9 +273,9 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "on_ground";
     	}
     	
-    	public boolean execute() {
+    	public NodeArg execute() {
     		Environment env = envholder.get_environment();
-    		return env.isMarioOnGround();
+    		return new NodeArg(env.isMarioOnGround());
     	}
     }
     
@@ -203,9 +285,9 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "may_jump";
     	}
     	
-    	public boolean execute() {
+    	public NodeArg execute() {
     		Environment env = envholder.get_environment();
-    		return env.mayMarioJump();
+    		return new NodeArg(env.mayMarioJump());
     	}
     }
     
@@ -225,7 +307,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	
     	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
     	
-    	public abstract boolean execute();
+    	public abstract NodeArg execute();
     }
     
     public class LevelObservationNode extends ObservationNode {
@@ -234,13 +316,13 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "level_observation";
     	}
     	
-    	public boolean execute(Number x, Number y) {
+    	public NodeArg execute(NodeArg x, NodeArg y) {
     		Environment env = envholder.get_environment();
     		
     		byte[][] levelMap = env.getLevelSceneObservation();
-    		if (levelMap[y.intValue()][x.intValue()] != 0)
-    			return true;
-    		return false;
+    		if (levelMap[y.get_int_value()][x.get_int_value()] != 0)
+    			return new NodeArg(true);
+    		return new NodeArg(false);
     	}
     }
     
@@ -250,13 +332,13 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "enemy_observation";
     	}
     	
-    	public boolean execute(Number x, Number y) {
+    	public NodeArg execute(NodeArg x, NodeArg y) {
     		Environment env = envholder.get_environment();
     		
     		byte[][] enemyMap = env.getEnemiesObservation();
-    		if (enemyMap[y.intValue()][x.intValue()] != 0)
-    			return true;
-    		return false;
+    		if (enemyMap[y.get_int_value()][x.get_int_value()] != 0)
+    			return new NodeArg(true);
+    		return new NodeArg(false);
     	}
     }
     
@@ -278,7 +360,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	
     	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
     	
-    	public abstract boolean execute(Number x, Number y);
+    	public abstract NodeArg execute(NodeArg x, NodeArg y);
     }
     
     public class GreaterThanNode extends BinaryConditionalNode {
@@ -287,8 +369,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "greater_than";
     	}
     	
-    	public boolean execute(int x, int y) {
-    		return (x > y);
+    	public NodeArg execute(NodeArg x, NodeArg y) {
+    		return new NodeArg(x.get_int_value() > y.get_int_value());
     	}
     }
     
@@ -298,8 +380,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "equal";
     	}
     	
-    	public boolean execute(int x, int y) {
-    		return (x == y);
+    	public NodeArg execute(NodeArg x, NodeArg y) {
+    		return new NodeArg(x.get_int_value() == y.get_int_value());
     	}
     }
     
@@ -317,8 +399,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	
     	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
     	
-    	public boolean execute(boolean state) {
-    		return !state;
+    	public NodeArg execute(NodeArg state) {
+    		return new NodeArg(!state.get_bool_value());
     	}
     	
     }
@@ -329,8 +411,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.num_arguments = 2;
     	}
     	
-    	public boolean execute(boolean op1, boolean op2) {
-    		return (op1 && op2);
+    	public NodeArg execute(NodeArg op1, NodeArg op2) {
+    		return new NodeArg(op1.get_bool_value() && op2.get_bool_value());
     	}
     }
     
@@ -340,8 +422,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.num_arguments = 2;
     	}
     	
-    	public boolean execute(boolean op1, boolean op2) {
-    		return (op1 || op2);
+    	public NodeArg execute(NodeArg op1, NodeArg op2) {
+    		return new NodeArg((op1.get_bool_value() || op2.get_bool_value()));
     	}
     }
     
@@ -360,7 +442,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	
     	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
     	
-    	public abstract boolean execute(int x, int y);
+    	public abstract NodeArg execute(NodeArg x, NodeArg y);
     }
     
     public abstract class BinaryBooleanNode extends Node {
@@ -378,7 +460,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	
     	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
     	
-    	public abstract boolean execute(boolean op1, boolean op2);
+    	public abstract NodeArg execute(NodeArg op1, NodeArg op2);
     }
     
     public class StaticBooleanNode extends BooleanNode {
@@ -394,8 +476,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.set_value(value);
     	}
     	
-    	public boolean execute() {
-    		return this.value;
+    	public NodeArg execute() {
+    		return new NodeArg(this.value);
     	}
     	
     	public void set_value(boolean value) {
@@ -414,7 +496,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.num_arguments = 0;
     	}
     	
-    	public abstract boolean execute();
+    	public abstract NodeArg execute();
     	
     	public List<NodeArgType> get_argument_types() {
     		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
@@ -448,8 +530,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.set_value(rnd.nextInt(100));
     	}
     	
-    	public int execute() {
-    		return this.value;
+    	public NodeArg execute() {
+    		return new NodeArg(this.value);
     	}
     }
     
@@ -459,7 +541,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.num_arguments = 0;
     	}
     	
-    	public abstract int execute();
+    	public abstract NodeArg execute();
     	
     	public List<NodeArgType> get_argument_types() {
     		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
@@ -475,7 +557,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.num_arguments = 2;
     	}
     	
-    	public abstract int execute(int op1, int op2);
+    	public abstract NodeArg execute(NodeArg op1, NodeArg op2);
     	
     	public List<NodeArgType> get_argument_types() {
     		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
@@ -507,27 +589,67 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	}
     	
     	public int get_num_arguments() { return this.num_arguments; }
+    	
+    	public int get_num_children() {
+    		return this.children.size();
+    	}
 
-    	List<Node> get_children() {
+    	public List<Node> get_children() {
     		return this.children;
     	}
     	
-    	void set_child(int index, Node child) {
+    	public void set_child(int index, Node child) {
     		this.children.ensureCapacity(index + 1);
-    		this.children.set(index, child);
+    		this.children.add(index, child);
     		
     		child.set_parent(this);
     	}
     	
-    	Node get_parent() {
+    	public Node get_parent() {
     		return this.parent;
     	}
     	
-    	void set_parent(Node parent) {
+    	private void set_parent(Node parent) {
     		this.parent = parent;
+    	}
+    	
+    	public NodeArg execute() {
+    		return null;
+    	}
+    	
+    	public NodeArg execute(NodeArg op1) {
+    		return null;
+    	}
+    	
+    	public NodeArg execute(NodeArg op1, NodeArg op2) {
+    		return null;
     	}
     }
 
+    public class NodeArg {
+    	NodeArgType type;
+    	int int_value;
+    	boolean bool_value;
+    	
+    	public NodeArg(int value) {
+    		this.type = NodeArgType.INT;
+    		this.int_value = value;
+    	}
+    	
+    	public NodeArg(boolean value) {
+    		this.type = NodeArgType.BOOLEAN;
+    		this.bool_value = value;
+    	}
+    	
+    	public int get_int_value() {
+    		return this.int_value;
+    	}
+    	
+    	public boolean get_bool_value() {
+    		return this.bool_value;
+    	}
+    }
+    
     public enum NodeArgType {
     	INT,
     	BOOLEAN;
