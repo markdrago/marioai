@@ -97,13 +97,44 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	}
     }
     
-    public class ObservationNode extends Node {
+    public class LevelObservationNode extends ObservationNode {
+    	public LevelObservationNode(EnvironmentHolder envholder) {
+    		super(envholder);
+    		this.name = "level_observation";
+    	}
+    	
+    	public boolean execute(Number x, Number y) {
+    		Environment env = envholder.get_environment();
+    		
+    		byte[][] levelMap = env.getLevelSceneObservation();
+    		if (levelMap[y.intValue()][x.intValue()] != 0)
+    			return true;
+    		return false;
+    	}
+    }
+    
+    public class EnemyObservationNode extends ObservationNode {
+    	public EnemyObservationNode(EnvironmentHolder envholder) {
+    		super(envholder);
+    		this.name = "enemy_observation";
+    	}
+    	
+    	public boolean execute(Number x, Number y) {
+    		Environment env = envholder.get_environment();
+    		
+    		byte[][] enemyMap = env.getEnemiesObservation();
+    		if (enemyMap[y.intValue()][x.intValue()] != 0)
+    			return true;
+    		return false;
+    	}
+    }
+    
+    public abstract class ObservationNode extends Node {
     	EnvironmentHolder envholder;
     	
     	public ObservationNode(EnvironmentHolder envholder) {
     		super();
-    		this.name = "observation";
-    		this.num_arguments = 0;
+    		this.num_arguments = 2;
     		this.envholder = envholder;
     	}
     	
@@ -116,14 +147,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	
     	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
     	
-    	public boolean execute(Number x, Number y) {
-    		Environment env = envholder.get_environment();
-    		
-    		byte[][] levelScene = env.getCompleteObservation();
-    		if (levelScene[y.intValue()][x.intValue()] != 0)
-    			return true;
-    		return false;
-    	}
+    	public abstract boolean execute(Number x, Number y);
     }
     
     public class StaticIntNode extends IntNode {
