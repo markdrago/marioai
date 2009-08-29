@@ -52,6 +52,24 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	}
     }
     
+    public class ActionHolder {
+    	boolean[] action;
+    	
+    	public void set_action(boolean[] action) {
+    		this.action = action;
+    	}
+    	
+    	public boolean[] get_action() {
+    		return this.action;
+    	}
+    	
+    	public void button_action(int button, boolean press) {
+    		int buttonmod = button % 6;  /* 0 - 5 are valid keys */
+    		this.action[buttonmod] = press;
+    	}
+    	
+    }
+    
     public class AddNode extends BinaryOpNode {
     	public AddNode() {
     		super();
@@ -95,6 +113,76 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		if (op2 == 0) return 0;
     		return op1 / op2;
     	}
+    }
+    
+    public class SpeedNode extends ActionNode {
+    	public SpeedNode(ActionHolder action_holder) {
+    		super(action_holder);
+    		this.name = "speed";
+    	}
+    	
+    	public boolean execute(boolean state) {
+    		this.action_holder.button_action(Mario.KEY_SPEED, state);
+    		return state;
+    	}
+    }
+    
+    public class LeftNode extends ActionNode {
+    	public LeftNode(ActionHolder action_holder) {
+    		super(action_holder);
+    		this.name = "left";
+    	}
+    	
+    	public boolean execute(boolean state) {
+    		this.action_holder.button_action(Mario.KEY_LEFT, state);
+    		this.action_holder.button_action(Mario.KEY_RIGHT, false);
+    		return state;
+    	}
+    }
+    
+    public class RightNode extends ActionNode {
+    	public RightNode(ActionHolder action_holder) {
+    		super(action_holder);
+    		this.name = "right";
+    	}
+    	
+    	public boolean execute(boolean state) {
+    		this.action_holder.button_action(Mario.KEY_RIGHT, state);
+    		this.action_holder.button_action(Mario.KEY_LEFT, false);
+    		return state;
+    	}
+    }
+    
+    public class JumpNode extends ActionNode {
+    	public JumpNode(ActionHolder action_holder) {
+    		super(action_holder);
+    		this.name = "jump";
+    	}
+    	
+    	public boolean execute(boolean state) {
+    		this.action_holder.button_action(Mario.KEY_JUMP, state);
+    		return state;
+    	}
+    }
+    
+    public abstract class ActionNode extends Node {
+    	ActionHolder action_holder;
+    	
+    	public ActionNode(ActionHolder action_holder) {
+    		super();
+    		this.num_arguments = 1;
+    		this.action_holder = action_holder;
+    	}
+    	
+    	public List<NodeArgType> get_argument_types() {
+    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
+    		lst.add(NodeArgType.BOOLEAN);
+    		return lst;
+    	}
+    	
+    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
+    	
+    	public abstract boolean execute(boolean state);
     }
     
     public class LevelObservationNode extends ObservationNode {
