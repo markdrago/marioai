@@ -58,8 +58,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "add";
     	}
     	
-    	public int execute(Number op1, Number op2) {
-    		return op1.intValue() + op2.intValue();
+    	public int execute(int op1, int op2) {
+    		return op1 + op2;
     	}
     }
     
@@ -69,8 +69,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "subtract";
     	}
     	
-    	public int execute(Number op1, Number op2) {
-    		return op1.intValue() - op2.intValue();
+    	public int execute(int op1, int op2) {
+    		return java.lang.Math.abs(op1 - op2);
     	}
     }
     
@@ -80,8 +80,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "multiply";
     	}
     	
-    	public int execute(Number op1, Number op2) {
-    		return op1.intValue() * op2.intValue();
+    	public int execute(int op1, int op2) {
+    		return op1 * op2;
     	}
     }
     
@@ -91,9 +91,9 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.name = "divide";
     	}
     	
-    	public int execute(Number op1, Number op2) {
-    		if (op2.intValue() == 0) return 0;
-    		return op1.intValue() / op2.intValue();
+    	public int execute(int op1, int op2) {
+    		if (op2 == 0) return 0;
+    		return op1 / op2;
     	}
     }
     
@@ -140,8 +140,8 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	
     	public List<NodeArgType> get_argument_types() {
     		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
-    		lst.add(NodeArgType.NUMERIC);
-    		lst.add(NodeArgType.NUMERIC);
+    		lst.add(NodeArgType.INT);
+    		lst.add(NodeArgType.INT);
     		return lst;
     	}
     	
@@ -200,12 +200,12 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		this.num_arguments = 2;
     	}
     	
-    	public abstract int execute(Number op1, Number op2);
+    	public abstract int execute(int op1, int op2);
     	
     	public List<NodeArgType> get_argument_types() {
     		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
-    		lst.add(NodeArgType.NUMERIC);
-    		lst.add(NodeArgType.NUMERIC);
+    		lst.add(NodeArgType.INT);
+    		lst.add(NodeArgType.INT);
     		return lst;
     	}
     	
@@ -255,13 +255,6 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
 
     public enum NodeArgType {
     	INT,
-    	FLOAT,
-    	STRING,
-    	BOOLEAN,
-    	NUMERIC;
-    
-    	boolean is_numeric() {
-    		return (this == INT || this == FLOAT || this == BOOLEAN || this == NUMERIC);
-    	}
+    	BOOLEAN;
     }
 }
