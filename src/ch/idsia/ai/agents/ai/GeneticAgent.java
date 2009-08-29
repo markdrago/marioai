@@ -150,6 +150,66 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	public abstract boolean execute(Number x, Number y);
     }
     
+    public class GreaterThanNode extends BinaryConditionalNode {
+    	public GreaterThanNode() {
+    		super();
+    		this.name = "greater_than";
+    	}
+    	
+    	public boolean execute(int x, int y) {
+    		return (x > y);
+    	}
+    }
+    
+    public class EqualNode extends BinaryConditionalNode {
+    	public EqualNode() {
+    		super();
+    		this.name = "equal";
+    	}
+    	
+    	public boolean execute(int x, int y) {
+    		return (x == y);
+    	}
+    }
+    
+    public class NotNode extends Node {
+    	public NotNode() {
+    		super();
+    		this.num_arguments = 1;
+    	}
+    	
+    	public List<NodeArgType> get_argument_types() {
+    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
+    		lst.add(NodeArgType.BOOLEAN);
+    		return lst;
+    	}
+    	
+    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
+    	
+    	public boolean execute(boolean state) {
+    		return !state;
+    	}
+    	
+    }
+    
+    public abstract class BinaryConditionalNode extends Node {
+    	public BinaryConditionalNode() {
+    		super();
+    		this.num_arguments = 2;
+    	}
+    	
+    	public List<NodeArgType> get_argument_types() {
+    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
+    		lst.add(NodeArgType.INT);
+    		lst.add(NodeArgType.INT);
+    		return lst;
+    	}
+    	
+    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
+    	
+    	public abstract boolean execute(int x, int y);
+    }
+    
     public class StaticIntNode extends IntNode {
     	int value;
     	
