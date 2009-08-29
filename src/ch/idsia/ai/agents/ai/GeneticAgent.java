@@ -322,6 +322,28 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	}
     	
     }
+
+    public class AndNode extends BinaryBooleanNode {
+    	public AndNode() {
+    		super();
+    		this.num_arguments = 2;
+    	}
+    	
+    	public boolean execute(boolean op1, boolean op2) {
+    		return (op1 && op2);
+    	}
+    }
+    
+    public class OrNode extends BinaryBooleanNode {
+    	public OrNode() {
+    		super();
+    		this.num_arguments = 2;
+    	}
+    	
+    	public boolean execute(boolean op1, boolean op2) {
+    		return (op1 || op2);
+    	}
+    }
     
     public abstract class BinaryConditionalNode extends Node {
     	public BinaryConditionalNode() {
@@ -339,6 +361,24 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
     	
     	public abstract boolean execute(int x, int y);
+    }
+    
+    public abstract class BinaryBooleanNode extends Node {
+    	public BinaryBooleanNode() {
+    		super();
+    		this.num_arguments = 2;
+    	}
+    	
+    	public List<NodeArgType> get_argument_types() {
+    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
+    		lst.add(NodeArgType.BOOLEAN);
+    		lst.add(NodeArgType.BOOLEAN);
+    		return lst;
+    	}
+    	
+    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
+    	
+    	public abstract boolean execute(boolean op1, boolean op2);
     }
     
     public class StaticBooleanNode extends BooleanNode {
