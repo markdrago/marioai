@@ -36,7 +36,7 @@ public class ToolsConfigurator extends JFrame
     {
         cmdLineOptions = new CmdLineOptions(args);
         // Create an Agent here
-        MainRun.createNativeAgentsPool(cmdLineOptions);
+        MainRun.createAgentsPool();
          // TODO: more options:
         // -agent wox name, like evolvable
         // -ll digit  range [5:15], increase if succeeds.

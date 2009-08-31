@@ -179,7 +179,7 @@ public class ParameterContainer
         else
         {
             defaultOptionsHashMap = new HashMap<String, String>();
-            new HumanKeyboardAgent();
+//            new HumanKeyboardAgent();
             defaultOptionsHashMap.put("-ag","HumanKeyboardAgent"); //defaultOptionsHashMap.put("-agentName","NoAgent");
             defaultOptionsHashMap.put("-an","1"); //defaultOptionsHashMap.put("-attemptsNumber","5");
             defaultOptionsHashMap.put("-echo","off"); //defaultOptionsHashMap.put("-echo","off");

@@ -37,6 +37,7 @@ public class EvaluationInfo
     public int levelDifficulty = MagicNumberUndef;
     public int levelRandSeed = MagicNumberUndef;
     public int marioMode = MagicNumberUndef;
+    public int killsTotal = MagicNumberUndef;
 
     public double computeBasicFitness()
     {
@@ -49,6 +50,11 @@ public class EvaluationInfo
     public double computeDistancePassed()
     {
         return lengthOfLevelPassedPhys;
+    }
+
+    public int computeKillsTotal()
+    {
+        return this.killsTotal;
     }
 
     //TODO: possible fitnesses adjustments: penalize for collisions with creatures and especially for  suicide. It's a sin.

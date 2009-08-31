@@ -142,9 +142,9 @@ public class Evaluator implements Runnable
 //        }
         long currentTime = System.currentTimeMillis();
         long elapsed = currentTime - startTime;
-         LOGGER.println(startMessage, LOGGER.VERBOSE_MODE.ALL);
-         LOGGER.println("Evaluation Finished at " + GlobalOptions.getDateTime(null), LOGGER.VERBOSE_MODE.ALL);
-         LOGGER.println("Total Evaluation Duration (HH:mm:ss:ms) " + GlobalOptions.getDateTime(elapsed), LOGGER.VERBOSE_MODE.ALL);
+        LOGGER.println(startMessage, LOGGER.VERBOSE_MODE.ALL);
+        LOGGER.println("Evaluation Finished at " + GlobalOptions.getDateTime(null), LOGGER.VERBOSE_MODE.ALL);
+        LOGGER.println("Total Evaluation Duration (HH:mm:ss:ms) " + GlobalOptions.getDateTime(elapsed), LOGGER.VERBOSE_MODE.ALL);
         if (!fileName.equals(""))
             LOGGER.println("Exported to " + fileName, LOGGER.VERBOSE_MODE.ALL);
         return evaluationSummary;

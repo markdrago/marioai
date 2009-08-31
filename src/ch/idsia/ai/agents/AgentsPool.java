@@ -2,6 +2,7 @@ package ch.idsia.ai.agents;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,8 +13,13 @@ import java.util.LinkedHashMap;
  */
 public class AgentsPool
 {
-    public static void put(String name, Agent agent) {
+    public static void addAgent(Agent agent) {
         agentsHashMap.put(agent.getName(), agent);
+    }
+
+    public static Collection<Agent> getAgentsCollection()
+    {
+        return agentsHashMap.values();
     }
     
     static HashMap<String, Agent> agentsHashMap = new LinkedHashMap<String, Agent>();

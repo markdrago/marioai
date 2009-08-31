@@ -4,13 +4,8 @@ import ch.idsia.ai.agents.ai.*;
 import ch.idsia.ai.agents.human.HumanKeyboardAgent;
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.agents.RegisterableAgent;
-import ch.idsia.ai.agents.icegic.sergiolopez.AdaptiveAgent;
-import ch.idsia.ai.agents.icegic.perez.Perez;
-import ch.idsia.ai.agents.icegic.glenn.AIwesome;
-import ch.idsia.ai.agents.icegic.michal.TutchekAgent;
-import ch.idsia.ai.agents.icegic.peterlawford.SlowAgent;
+import ch.idsia.ai.agents.AgentsPool;
 import ch.idsia.ai.agents.icegic.robin.AStarAgent;
-import ch.idsia.ai.agents.icegic.rafael.RjAgent;
 import ch.idsia.tools.CmdLineOptions;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.EvaluationOptions;
@@ -27,16 +22,6 @@ import java.util.List;
  * Package: ch.idsia
  */
 
-/*
-For "quick and dirty" plays you can adjust the default parameters in ParameterContainer class, but we strongly encourage
-you to use the API proposed. Because if in the first case you are mostlikely the only person who had become resposible for
-the stability of the entire system, in the second case you can rely on our direct support as soon as possible. And(!)
-If you encounter any trouble with using API proposed, please, e-mail us {sergey, julian} @ idsia . ch immediately. Because if
-anybody encounters any trouble that implies some other person to encounter the same trouble and we cannot effort that.
-Thank you for your kind assistance and productive collaboration!
-Sergey Karakovskiy and Julian Togelius.
- */
-
 public class MainRun 
 {
     final static int numberOfTrials = 10;
@@ -44,9 +29,10 @@ public class MainRun
     public static void main(String[] args) {
         CmdLineOptions cmdLineOptions = new CmdLineOptions(args);
         EvaluationOptions evaluationOptions = cmdLineOptions;  // if none options mentioned, all defalults are used.
-        createNativeAgentsPool(cmdLineOptions);
+        createAgentsPool();
 //        score (cmdLineOptions.getAgent(), cmdLineOptions.getLevelRandSeed(), cmdLineOptions);
 
+        scoreAllAgents(cmdLineOptions);
         Evaluator evaluator = new Evaluator(evaluationOptions);
         List<EvaluationInfo> evaluationSummary = evaluator.evaluate();
 //        LOGGER.save("log.txt");
@@ -56,7 +42,7 @@ public class MainRun
     }
 
     private static boolean calledBefore = false;
-    public static void createNativeAgentsPool(CmdLineOptions cmdLineOptions)
+    public static void createAgentsPool()
     {
         if (!calledBefore)
         {
@@ -64,21 +50,29 @@ public class MainRun
             // All created agents by now are used here.
             // They can be accessed by just setting the commandline property -ag to the name of desired agent.
             calledBefore = true;
-            new ForwardAgent();
-            new HumanKeyboardAgent();
-            new RandomAgent();
-            new ForwardJumpingAgent();
-            new SimpleMLPAgent();
-//            new ServerAgent(cmdLineOptions.getServerAgentPort(), cmdLineOptions.isServerAgentEnabled());
-            new ScaredAgent();
-            new ScaredSpeedyAgent();
+            //addAgentToThePool
+            AgentsPool.addAgent(new ForwardAgent());
+            AgentsPool.addAgent(new ForwardJumpingAgent());
+            AgentsPool.addAgent(new RandomAgent());
+//            AgentsPool.addAgent(new HumanKeyboardAgent());
+            AgentsPool.addAgent(new SimpleMLPAgent());
+            AgentsPool.addAgent(new ScaredAgent());
+            AgentsPool.addAgent(new ScaredSpeedyAgent());
 //            new Perez();
 //            new AdaptiveAgent();
 //            new AIwesome();
 //            new TutchekAgent();
 //            new SlowAgent();
-            new AStarAgent();
+            AgentsPool.addAgent(new AStarAgent());
 //            new RjAgent();
+        }
+    }
+
+    public static void scoreAllAgents(CmdLineOptions cmdLineOptions)
+    {
+        for (Agent agent : AgentsPool.getAgentsCollection())
+        {
+            score(agent, 0, cmdLineOptions);
         }
     }
 
