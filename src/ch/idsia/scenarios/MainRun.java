@@ -80,8 +80,9 @@ public class MainRun
 
     public static void scoreAllAgents(CmdLineOptions cmdLineOptions)
     {
+        int startingSeed =    cmdLineOptions.getLevelRandSeed();
         for (Agent agent : AgentsPool.getAgentsCollection())
-            score(agent, 3143, cmdLineOptions);
+            score(agent, startingSeed, cmdLineOptions);
     }
 
 
