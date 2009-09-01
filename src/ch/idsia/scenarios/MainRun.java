@@ -70,8 +70,8 @@ public class MainRun
 //            AgentsPool.addAgent(new AdaptiveAgent());
 //            AgentsPool.addAgent(new AIwesome());
 //            AgentsPool.addAgent(new TutchekAgent());
-            AgentsPool.addAgent(new SlowAgent());
-            AgentsPool.addAgent(new AStarAgent());
+//            AgentsPool.addAgent(new SlowAgent());
+//            AgentsPool.addAgent(new AStarAgent());
 //            AgentsPool.addAgent(new RjAgent());
             AgentsPool.addAgent(new SergeyKarakovskiy_JumpingAgent());
         }
