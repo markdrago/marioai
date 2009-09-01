@@ -363,24 +363,19 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
         return mario.world.killedCreaturesByShell;
     }
 
-    // upcoming feature for Milano conf, unkomment this, if you would like to try it!
-    public byte[][] getCompleteObservation(/*int ZLevelScene, int ZLevelEnemies*/) {
-//        this.ZLevelScene = ZLevelScene;
-//        this.ZLevelEnemies = ZLevelEnemies;
+    public byte[][] getCompleteObservation() {
         if (scene instanceof LevelScene)
             return ((LevelScene) scene).mergedObservation(this.ZLevelScene, this.ZLevelEnemies);
         return null;
     }
 
-    public byte[][] getEnemiesObservation(/*int ZLevelEnemies*/) {
-//        this.ZLevelEnemies = ZLevelEnemies;
+    public byte[][] getEnemiesObservation() {
         if (scene instanceof LevelScene)
             return ((LevelScene) scene).enemiesObservation(this.ZLevelEnemies);
         return null;
     }
 
-    public byte[][] getLevelSceneObservation(/*int ZLevelScene*/) {
-//        this.ZLevelScene = ZLevelScene;
+    public byte[][] getLevelSceneObservation() {
         if (scene instanceof LevelScene)
             return ((LevelScene) scene).levelSceneObservation(this.ZLevelScene);
         return null;
