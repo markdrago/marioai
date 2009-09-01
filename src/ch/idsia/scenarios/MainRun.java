@@ -3,6 +3,8 @@ package ch.idsia.scenarios;
 import ch.idsia.ai.agents.ai.*;
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.agents.AgentsPool;
+import ch.idsia.ai.agents.icegic.robin.AStarAgent;
+import ch.idsia.ai.agents.icegic.peterlawford.SlowAgent;
 import ch.idsia.tools.CmdLineOptions;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.EvaluationOptions;
@@ -68,8 +70,8 @@ public class MainRun
 //            AgentsPool.addAgent(new AdaptiveAgent());
 //            AgentsPool.addAgent(new AIwesome());
 //            AgentsPool.addAgent(new TutchekAgent());
-            //AgentsPool.addAgent(new SlowAgent());
-            //AgentsPool.addAgent(new AStarAgent());
+            AgentsPool.addAgent(new SlowAgent());
+            AgentsPool.addAgent(new AStarAgent());
 //            AgentsPool.addAgent(new RjAgent());
             AgentsPool.addAgent(new SergeyKarakovskiy_JumpingAgent());
         }
@@ -137,6 +139,8 @@ public class MainRun
         options.resetCurrentTrial();
         for (int i = 0; i < numberOfTrials; i++) {
             options.setLevelRandSeed(seed + i);
+            options.setLevelLength (200 + (i * 128) + (seed % (i + 1)));
+            options.setLevelType(i % 3);
             controller.reset();
             options.setAgent(controller);
             Evaluator evaluator = new Evaluator (options);
