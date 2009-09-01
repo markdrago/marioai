@@ -59,8 +59,6 @@ public class CompetitionScore {
         System.out.println("Mario mode (small, large, fire) sum = " + marioModeSum);
 
 
-
-
     }
 
     public static double testConfig (TimingAgent controller, EvaluationOptions options, int seed, int level, boolean paused) {

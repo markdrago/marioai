@@ -31,6 +31,7 @@ public class MainRun
     private static int marioStatusSum = 0;
     private static int timeLeftSum = 0;
     private static int marioModeSum = 0;
+    private static boolean detailedStats = false;
 
     public static void main(String[] args) {
         CmdLineOptions cmdLineOptions = new CmdLineOptions(args);
@@ -60,12 +61,12 @@ public class MainRun
             // They can be accessed by just setting the commandline property -ag to the name of desired agent.
             calledBefore = true;
             //addAgentToThePool
-//            AgentsPool.addAgent(new ForwardAgent());
+            AgentsPool.addAgent(new ForwardAgent());
 //            AgentsPool.addAgent(new ForwardJumpingAgent());
 //            AgentsPool.addAgent(new RandomAgent());
 ////            AgentsPool.addAgent(new HumanKeyboardAgent());
 //            AgentsPool.addAgent(new SimpleMLPAgent());
-//            AgentsPool.addAgent(new ScaredAgent());
+            AgentsPool.addAgent(new ScaredAgent());
 //            AgentsPool.addAgent(new Perez());
 //            AgentsPool.addAgent(new AdaptiveAgent());
 //            AgentsPool.addAgent(new AIwesome());
@@ -105,11 +106,13 @@ public class MainRun
         competitionScore += testConfig (controller, options, startingSeed, 3, false);
         competitionScore += testConfig (controller, options, startingSeed, 5, false);
         competitionScore += testConfig (controller, options, startingSeed, 10, false);
-        System.out.println("Competition score: " + competitionScore);
-        System.out.println("Total kills Sum = " + killsSum);
-        System.out.println("marioStatus Sum  = " + marioStatusSum);
-        System.out.println("timeLeft Sum = " + timeLeftSum);
-        System.out.println("marioMode Sum = " + marioModeSum);
+
+        System.out.println("\nCompetition score: " + competitionScore + "\n");
+        System.out.println("Number of levels cleared = " + marioStatusSum);
+        System.out.println("Additional (tie-breaker) info: ");
+        System.out.println("Total time left = " + timeLeftSum);
+        System.out.println("Total kills = " + killsSum);
+        System.out.println("Mario mode (small, large, fire) sum = " + marioModeSum);
         System.out.println("TOTAL SUM for " + agent.getName() + " = " + (competitionScore + killsSum + marioStatusSum + marioModeSum + timeLeftSum));
     }
 
@@ -157,12 +160,16 @@ public class MainRun
             ss.add (result.computeDistancePassed());
         }
 
-        System.out.println("\n===================\nStatistics over 10 runs for " + controller.getName());
-        System.out.println("Total kills = " + kills);
-        System.out.println("marioStatus = " + marioStatus);
-        System.out.println("timeLeft = " + timeLeft);
-        System.out.println("marioMode = " + marioMode);
-        System.out.println("===================\n");
+
+        if (detailedStats)
+        {
+            System.out.println("\n===================\nStatistics over " + numberOfTrials + " trials for " + controller.getName());
+            System.out.println("Total kills = " + kills);
+            System.out.println("marioStatus = " + marioStatus);
+            System.out.println("timeLeft = " + timeLeft);
+            System.out.println("marioMode = " + marioMode);
+            System.out.println("===================\n");
+        }
 
         killsSum += kills;
         marioStatusSum += marioStatus;
