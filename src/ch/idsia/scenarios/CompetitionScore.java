@@ -51,7 +51,7 @@ public class CompetitionScore {
         competitionScore += testConfig (controller, options, startingSeed, 3, false);
         competitionScore += testConfig (controller, options, startingSeed, 5, false);
         competitionScore += testConfig (controller, options, startingSeed, 10, false);
-        System.out.println("Competition score: " + competitionScore);
+        System.out.println("Competition score: " + competitionScore + "\n\n");
         System.out.println("Number of levels cleared = " + marioStatusSum);
         System.out.println("Additional (tie-breaker) info: ");
         System.out.println("Total time left = " + timeLeftSum);
