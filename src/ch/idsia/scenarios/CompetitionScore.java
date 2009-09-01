@@ -85,6 +85,7 @@ public class CompetitionScore {
         int marioMode = 0;
         int marioStatus = 0;
         for (int i = 0; i < numberOfTrials; i++) {
+            options.setLevelLength(1024);
             options.setLevelRandSeed(seed + i);
             controller.reset();
             options.setAgent(controller);
