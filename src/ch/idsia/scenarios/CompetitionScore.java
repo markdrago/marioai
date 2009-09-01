@@ -66,6 +66,7 @@ public class CompetitionScore {
     public static double testConfig (TimingAgent controller, EvaluationOptions options, int seed, int level, boolean paused) {
         options.setLevelDifficulty(level);
         options.setPauseWorld(paused);
+
         StatisticalSummary ss = test (controller, options, seed);
         double averageTimeTaken = controller.averageTimeTaken();
         System.out.printf("Difficulty %d score %.4f (avg time %.4f)\n",
@@ -85,7 +86,7 @@ public class CompetitionScore {
         int marioMode = 0;
         int marioStatus = 0;
         for (int i = 0; i < numberOfTrials; i++) {
-            options.setLevelLength(1024);
+            options.setLevelLength (200 + (i * 128) + (seed % (i + 1)));
             options.setLevelRandSeed(seed + i);
             controller.reset();
             options.setAgent(controller);
