@@ -18,6 +18,11 @@ import ch.idsia.utils.StatisticalSummary;
 public class CompetitionScore {
 
     final static int numberOfTrials = 10;
+    private static int killsSum = 0;
+    private static int marioStatusSum = 0;
+    private static int timeLeftSum = 0;
+    private static int marioModeSum = 0;
+
 
     public static void main(String[] args) {
         Agent controller = AgentsPool.load (args[0]);
@@ -27,6 +32,10 @@ public class CompetitionScore {
     }
 
     public static void score (Agent agent, int startingSeed) {
+        killsSum = 0;
+        marioStatusSum = 0;
+        timeLeftSum = 0;
+        marioModeSum = 0;
         TimingAgent controller = new TimingAgent (agent);
 //        RegisterableAgent.registerAgent (controller);
         EvaluationOptions options = new CmdLineOptions(new String[0]);
@@ -43,6 +52,15 @@ public class CompetitionScore {
         competitionScore += testConfig (controller, options, startingSeed, 5, false);
         competitionScore += testConfig (controller, options, startingSeed, 10, false);
         System.out.println("Competition score: " + competitionScore);
+        System.out.println("Number of levels cleared = " + marioStatusSum);
+        System.out.println("Additional (tie-breaker) info: ");
+        System.out.println("Total time left = " + timeLeftSum);
+        System.out.println("Total kills = " + killsSum);
+        System.out.println("Mario mode (small, large, fire) sum = " + marioModeSum);
+
+
+
+
     }
 
     public static double testConfig (TimingAgent controller, EvaluationOptions options, int seed, int level, boolean paused) {
@@ -62,6 +80,10 @@ public class CompetitionScore {
 
     public static StatisticalSummary test (Agent controller, EvaluationOptions options, int seed) {
         StatisticalSummary ss = new StatisticalSummary ();
+        int kills = 0;
+        int timeLeft = 0;
+        int marioMode = 0;
+        int marioStatus = 0;
         for (int i = 0; i < numberOfTrials; i++) {
             options.setLevelRandSeed(seed + i);
             controller.reset();
@@ -69,7 +91,15 @@ public class CompetitionScore {
             Evaluator evaluator = new Evaluator (options);
             EvaluationInfo result = evaluator.evaluate().get(0);
             ss.add (result.computeDistancePassed());
+            kills += result.computeKillsTotal();
+            timeLeft += result.timeLeft;
+            marioMode += result.marioMode;
+            marioStatus += result.marioStatus;
         }
+        killsSum += kills;
+        marioStatusSum += marioStatus;
+        timeLeftSum += timeLeft;
+        marioModeSum += marioMode;
         return ss;
     }
 }
