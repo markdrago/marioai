@@ -21,12 +21,12 @@ public class RegisterableAgent extends BasicAIAgent
     {
         super();
         setName(s);
-//        registerAgent(this);
+        registerAgent(this);
     }
 
     public static void registerAgent(Agent agent)
     {
-//        AgentsPool.addAgent(agent);
+        AgentsPool.addAgent(agent);
     }
 
     public static void setAgent(Agent agent) {

@@ -18,14 +18,12 @@ public interface Environment
     // always the same dimensionality: 22x22
     // always centered on the agent
 
+    // KILLS
+    
 
-    // upcoming feature for CIG conf in Milano, unkomment this, if you would like to try it!
     // Chaning ZLevel during the game on-the-fly;
     // if your agent recieves too ambiguous observation, it might request for more precise one for the next step
 
-    public byte[][] getMergedObservationZ(int ZLevelScene, int ZLevelEnemies);
-    public byte[][] getLevelSceneObservationZ(int ZLevelScene);
-    public byte[][] getEnemiesObservationZ(int ZLevelEnemies);
 
     public byte[][] getCompleteObservation();   // default: ZLevelScene = 1, ZLevelEnemies = 0
 
@@ -43,6 +41,14 @@ public interface Environment
     public boolean mayMarioJump();
     public boolean isMarioCarrying();
 
+    public byte[][] getMergedObservationZ(int ZLevelScene, int ZLevelEnemies);
+    public byte[][] getLevelSceneObservationZ(int ZLevelScene);
+    public byte[][] getEnemiesObservationZ(int ZLevelEnemies);
+
+    public int getKillsTotal();
+    public int getKillsByFire();
+    public int getKillsByStomp();
+    public int getKillsbyShell();
 
     // For Server usage only, Java agents should use non-bitmap versions.
     public String getBitmapEnemiesObservation();

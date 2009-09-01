@@ -347,6 +347,22 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
         return null;
     }
 
+    public int getKillsTotal() {
+        return mario.world.killedCreaturesTotal;
+    }
+
+    public int getKillsByFire() {
+        return mario.world.killedCreaturesByFireBall;
+    }
+
+    public int getKillsByStomp() {
+        return mario.world.killedCreaturesByStomp;
+    }
+
+    public int getKillsbyShell() {
+        return mario.world.killedCreaturesByShell;
+    }
+
     // upcoming feature for Milano conf, unkomment this, if you would like to try it!
     public byte[][] getCompleteObservation(/*int ZLevelScene, int ZLevelEnemies*/) {
 //        this.ZLevelScene = ZLevelScene;

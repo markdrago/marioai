@@ -965,7 +965,7 @@ public class LevelScene extends Scene implements SpriteContext
         drawStringDropShadow(g, entirePathStr.substring(progress_str.length()), progress_str.length(), 28, 0);
         } catch (StringIndexOutOfBoundsException e)
         {
-            System.err.println("warning: progress line inaccuracy");
+//            System.err.println("warning: progress line inaccuracy");
         }
         drawStringDropShadow(g, progress_str, 0, 28, 2);
     }
