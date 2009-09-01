@@ -1,8 +1,7 @@
 package ch.idsia.utils;
 
 import ch.idsia.ai.agents.Agent;
-import ch.idsia.ai.agents.RegisterableAgent;
-import ch.idsia.ai.agents.human.HumanKeyboardAgent;
+import ch.idsia.ai.agents.AgentsPool;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +28,6 @@ public class ParameterContainer
             allowed = new String[]{
                     "-ag",
 //            "-agentName",
-                    "-an",
 //            "-attemptsNumber",
 //            "-e",
                     "-echo",
@@ -53,6 +51,7 @@ public class ParameterContainer
                     "-m",
                     "-mm",
                     "-maxFPS",
+                    "-not",
 //            "-matLabFile",
 //            "-pauseWorld",
                     "-port",
@@ -152,8 +151,8 @@ public class ParameterContainer
     {
         try
         {
-            if (RegisterableAgent.getAgentByName(a.getName()) == null)
-                RegisterableAgent.registerAgent(a);
+            if (AgentsPool.getAgentByName(a.getName()) == null)
+                AgentsPool.addAgent(a);
             return a.getName();
         }catch(NullPointerException e)
         {
@@ -164,7 +163,7 @@ public class ParameterContainer
 
     public Agent a(String s)
     {
-        return RegisterableAgent.getAgentByName(s);      
+        return AgentsPool.getAgentByName(s);
     }
 
     public boolean b(String s)
@@ -181,7 +180,6 @@ public class ParameterContainer
             defaultOptionsHashMap = new HashMap<String, String>();
 //            new HumanKeyboardAgent();
             defaultOptionsHashMap.put("-ag","HumanKeyboardAgent"); //defaultOptionsHashMap.put("-agentName","NoAgent");
-            defaultOptionsHashMap.put("-an","1"); //defaultOptionsHashMap.put("-attemptsNumber","5");
             defaultOptionsHashMap.put("-echo","off"); //defaultOptionsHashMap.put("-echo","off");
             defaultOptionsHashMap.put("-ewf","on"); //defaultOptionsHashMap.put("-exitWhenFinished","off");
             defaultOptionsHashMap.put("-fastTCP","off"); //
@@ -195,6 +193,7 @@ public class ParameterContainer
             defaultOptionsHashMap.put("-maxFPS","off"); //defaultOptionsHashMap.put("-maxFPS","off");
             defaultOptionsHashMap.put("-m",""); //defaultOptionsHashMap.put("-matLabFile","DefaultMatlabFile");
             defaultOptionsHashMap.put("-mm","2");
+            defaultOptionsHashMap.put("-not","1"); //defaultOptionsHashMap.put("-attemptsNumber","5");
             defaultOptionsHashMap.put("-pw","off"); //defaultOptionsHashMap.put("-pauseWorld","off");
             defaultOptionsHashMap.put("-port","4242"); //defaultOptionsHashMap.put("-port","4242");
             defaultOptionsHashMap.put("-pr","off"); //defaultOptionsHashMap.put("-powerRestoration","off");

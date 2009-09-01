@@ -1,7 +1,7 @@
 package ch.idsia.scenarios;
 
-import ch.idsia.ai.agents.RegisterableAgent;
 import ch.idsia.ai.agents.Agent;
+import ch.idsia.ai.agents.AgentsPool;
 import ch.idsia.ai.agents.ai.TimingAgent;
 import ch.idsia.tools.EvaluationOptions;
 import ch.idsia.tools.CmdLineOptions;
@@ -15,7 +15,7 @@ public class Stats {
 
     public static void main(String[] args) {
 
-        Agent controller = RegisterableAgent.load (args[0]);
+        Agent controller = AgentsPool.load (args[0]);
         final int startingSeed = Integer.parseInt (args[1]);
         doStats (controller, startingSeed);
         //System.exit(0);
@@ -24,10 +24,10 @@ public class Stats {
 
     public static void doStats (Agent agent, int startingSeed) {
         TimingAgent controller = new TimingAgent (agent);
-        RegisterableAgent.registerAgent (controller);
+//        RegisterableAgent.registerAgent (controller);
         EvaluationOptions options = new CmdLineOptions(new String[0]);
 
-        options.setMaxAttempts(1);
+        options.setNumberOfTrials(1);
         options.setVisualization(false);
         options.setMaxFPS(true);
         System.out.println("Testing controller " + controller + " with starting seed " + startingSeed);

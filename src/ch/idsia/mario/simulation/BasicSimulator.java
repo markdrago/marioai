@@ -52,8 +52,8 @@ public class BasicSimulator implements Simulation
         marioComponent.setZLevelEnemies(simulationOptions.getZLevelEnemies());
         marioComponent.setZLevelScene(simulationOptions.getZLevelMap());
         marioComponent.setMarioInvulnerable(simulationOptions.isMarioInvulnerable());
-        return marioComponent.run1(simulationOptions.currentAttempt++,
-                simulationOptions.getMaxAttempts()
+        return marioComponent.run1(simulationOptions.currentTrial++,
+                simulationOptions.getNumberOfTrials()
         );
     }
 }

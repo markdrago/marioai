@@ -1,7 +1,7 @@
 package ch.idsia.tools;
 
 import ch.idsia.ai.agents.Agent;
-import ch.idsia.ai.agents.RegisterableAgent;
+import ch.idsia.ai.agents.AgentsPool;
 import ch.idsia.mario.engine.GlobalOptions;
 import ch.idsia.mario.engine.MarioComponent;
 import ch.idsia.mario.engine.level.LevelGenerator;
@@ -53,7 +53,7 @@ public class ToolsConfigurator extends JFrame
         toolsConfigurator.JSpinnerLevelRandomizationSeed.setValue(cmdLineOptions.getLevelRandSeed());
         toolsConfigurator.JSpinnerLevelLength.setValue(cmdLineOptions.getLevelLength());
         toolsConfigurator.CheckboxShowVizualization.setState(cmdLineOptions.isVisualization());
-        toolsConfigurator.JSpinnerMaxAttempts.setValue(cmdLineOptions.getMaxAttempts());
+        toolsConfigurator.JSpinnerMaxAttempts.setValue(cmdLineOptions.getNumberOfTrials());
         toolsConfigurator.ChoiceAgent.select(cmdLineOptions.getAgent().getName());
         toolsConfigurator.CheckboxMaximizeFPS.setState(cmdLineOptions.isMaxFPS());
         toolsConfigurator.CheckboxPauseWorld.setState(cmdLineOptions.isPauseWorld());
@@ -188,7 +188,7 @@ public class ToolsConfigurator extends JFrame
 
         ChoiceAgent.addItemListener(toolsConfiguratorActions);
 
-        Set<String> AgentsNames = RegisterableAgent.getAgentsNames();
+        Set<String> AgentsNames = AgentsPool.getAgentsNames();
         for (String s : AgentsNames)
             ChoiceAgent.addItem(s);
 
@@ -336,7 +336,7 @@ public class ToolsConfigurator extends JFrame
     private EvaluationOptions prepareEvaluatorOptions()
     {
         EvaluationOptions evaluationOptions = cmdLineOptions;
-        Agent agent = RegisterableAgent.getAgentByName(ChoiceAgent.getSelectedItem());
+        Agent agent = AgentsPool.getAgentByName(ChoiceAgent.getSelectedItem());
         evaluationOptions.setAgent(agent);
         int type = ChoiceLevelType.getSelectedIndex();
         if (type == 4)
@@ -346,7 +346,7 @@ public class ToolsConfigurator extends JFrame
         evaluationOptions.setLevelRandSeed(Integer.parseInt(JSpinnerLevelRandomizationSeed.getValue().toString()));
         evaluationOptions.setLevelLength(Integer.parseInt(JSpinnerLevelLength.getValue().toString()));
         evaluationOptions.setVisualization(CheckboxShowVizualization.getState());
-        evaluationOptions.setMaxAttempts(Integer.parseInt(JSpinnerMaxAttempts.getValue().toString()));
+        evaluationOptions.setNumberOfTrials(Integer.parseInt(JSpinnerMaxAttempts.getValue().toString()));
         evaluationOptions.setPauseWorld(CheckboxPauseWorld.getState());
         evaluationOptions.setPowerRestoration(CheckboxPowerRestoration.getState());
         evaluationOptions.setExitProgramWhenFinished(CheckboxExitOnFinish.getState());

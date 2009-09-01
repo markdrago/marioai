@@ -2,7 +2,6 @@ package ch.idsia.tools;
 
 import ch.idsia.mario.engine.GlobalOptions;
 import ch.idsia.mario.simulation.SimulationOptions;
-import ch.idsia.tools.tcp.ServerAgent;
 
 import java.awt.*;
 
@@ -72,7 +71,7 @@ public class EvaluationOptions extends SimulationOptions
         return getParameterValue("-ag");      }
 
     public Integer getServerAgentPort() {
-        setMaxAttempts(-1);
+        setNumberOfTrials(-1);
         String value = optionsHashMap.get("-port");
         if (value == null)
         {

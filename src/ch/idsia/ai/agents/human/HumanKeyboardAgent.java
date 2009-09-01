@@ -1,7 +1,6 @@
 package ch.idsia.ai.agents.human;
 
 import ch.idsia.ai.agents.Agent;
-import ch.idsia.ai.agents.RegisterableAgent;
 import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.environments.Environment;
 
@@ -26,7 +25,7 @@ public class HumanKeyboardAgent extends KeyAdapter implements Agent
     public HumanKeyboardAgent()
     {
         this.reset ();
-        RegisterableAgent.registerAgent(this);
+//        RegisterableAgent.registerAgent(this);
     }
 
     public void reset()

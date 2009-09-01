@@ -108,7 +108,7 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
 
     }
 
-    public EvaluationInfo run1(int currentAttempt, int totalNumberOfAttempts) {
+    public EvaluationInfo run1(int currentTrial, int totalNumberOfTrials) {
         running = true;
         adjustFPS();
         EvaluationInfo evaluationInfo = new EvaluationInfo();
@@ -183,16 +183,12 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
             ((LevelScene) scene).mario.cheatKeys = cheatAgent.getAction(null);
 
             if (GlobalOptions.VisualizationOn) {
-                String msg = totalNumberOfAttempts == 1 ? "" : "Attempt: " + currentAttempt + " of " + ((totalNumberOfAttempts == -1) ? "\\infty" : totalNumberOfAttempts);
 
-                drawString(og, msg, 7, 31, 0);
-                drawString(og, msg, 6, 30, 1);
-
-                msg = "Agent: " + agent.getName();
-                LevelScene.drawStringDropShadow(og, msg, 0, 6, 5);
+                String msg = "Agent: " + agent.getName();
+                LevelScene.drawStringDropShadow(og, msg, 0, 7, 5);
 
                 msg = "Selected Actions: ";
-                LevelScene.drawStringDropShadow(og, msg, 0, 7, 6);
+                LevelScene.drawStringDropShadow(og, msg, 0, 8, 6);
 
                 msg = "";
                 if (action != null)
@@ -202,7 +198,7 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
                 }
                 else
                     msg = "NULL";                    
-                drawString(og, msg, 6, 70, 1);
+                drawString(og, msg, 6, 78, 1);
 
                 if (!this.hasFocus() && tick / 4 % 2 == 0) {
                     String msgClick = "CLICK TO PLAY";
@@ -214,6 +210,12 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
                 og.setColor(Color.DARK_GRAY);
                 LevelScene.drawStringDropShadow(og, "FPS: ", 33, 2, 7);
                 LevelScene.drawStringDropShadow(og, ((GlobalOptions.FPS > 99) ? "\\infty" : GlobalOptions.FPS.toString()), 33, 3, 7);
+
+                msg = totalNumberOfTrials == -2 ? "" : currentTrial + "(" + ((totalNumberOfTrials == -1) ? "\\infty" : totalNumberOfTrials) + ")";
+
+                LevelScene.drawStringDropShadow(og, "Trial:", 33, 4, 7);
+                LevelScene.drawStringDropShadow(og, msg, 33, 5, 7);
+
 
                 if (width != 320 || height != 240) {
                         g.drawImage(image, 0, 0, 640 * 2, 480 * 2, null);
@@ -359,7 +361,7 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
         return mario.world.killedCreaturesByStomp;
     }
 
-    public int getKillsbyShell() {
+    public int getKillsByShell() {
         return mario.world.killedCreaturesByShell;
     }
 

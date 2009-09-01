@@ -894,11 +894,12 @@ public class LevelScene extends Scene implements SpriteContext
 
 
         drawStringDropShadow(g, "DIFFICULTY:   " + df.format(this.levelDifficulty), 0, 0, this.levelDifficulty > 6 ? 1 : this.levelDifficulty > 2 ? 4 : 7 ); drawStringDropShadow(g, "CREATURES:" + (mario.world.paused ? "OFF" : "ON"), 19, 0, 7);
-        drawStringDropShadow(g, "TYPE:" + LEVEL_TYPES[this.levelType], 0, 1, 7);                  drawStringDropShadow(g, "ALL KILLS: " + killedCreaturesTotal, 19, 1, 1);
-        drawStringDropShadow(g, "LENGTH:" + (int)mario.x/16 + " of " + this.levelLength, 0, 2, 7); drawStringDropShadow(g, "by Fire  : " + killedCreaturesByFireBall, 19, 2, 1);
-        drawStringDropShadow(g,"COINS    : " + df.format(Mario.coins), 0, 3, 4);                      drawStringDropShadow(g, "by Shell : " + killedCreaturesByShell, 19, 3, 1);
-        drawStringDropShadow(g, "MUSHROOMS: " + df.format(Mario.gainedMushrooms), 0, 4, 4);                  drawStringDropShadow(g, "by Stomp : " + killedCreaturesByStomp, 19, 4, 1);
-        drawStringDropShadow(g, "FLOWERS  : " + df.format(Mario.gainedFlowers), 0, 5, 4);
+        drawStringDropShadow(g, "SEED:" + this.levelSeed, 0, 1, 7);
+        drawStringDropShadow(g, "TYPE:" + LEVEL_TYPES[this.levelType], 0, 2, 7);                  drawStringDropShadow(g, "ALL KILLS: " + killedCreaturesTotal, 19, 1, 1);
+        drawStringDropShadow(g, "LENGTH:" + (int)mario.x/16 + " of " + this.levelLength, 0, 3, 7); drawStringDropShadow(g, "by Fire  : " + killedCreaturesByFireBall, 19, 2, 1);
+        drawStringDropShadow(g,"COINS    : " + df.format(Mario.coins), 0, 4, 4);                      drawStringDropShadow(g, "by Shell : " + killedCreaturesByShell, 19, 3, 1);
+        drawStringDropShadow(g, "MUSHROOMS: " + df.format(Mario.gainedMushrooms), 0, 5, 4);                  drawStringDropShadow(g, "by Stomp : " + killedCreaturesByStomp, 19, 4, 1);
+        drawStringDropShadow(g, "FLOWERS  : " + df.format(Mario.gainedFlowers), 0, 6, 4);
 
 
         drawStringDropShadow(g, "TIME", 33, 0, 7);
