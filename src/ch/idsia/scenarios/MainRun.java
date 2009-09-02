@@ -3,8 +3,6 @@ package ch.idsia.scenarios;
 import ch.idsia.ai.agents.ai.*;
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.agents.AgentsPool;
-import ch.idsia.ai.agents.icegic.robin.AStarAgent;
-import ch.idsia.ai.agents.icegic.peterlawford.SlowAgent;
 import ch.idsia.tools.CmdLineOptions;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.EvaluationOptions;
@@ -13,7 +11,7 @@ import ch.idsia.utils.StatisticalSummary;
 
 import java.util.List;
 
-import competition.cig.sergeykarakovskiy.SergeyKarakovskiy_JumpingAgent;
+import competition.cig.trondellingsen.TrondEllingsen_LuckyAgent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -61,12 +59,12 @@ public class MainRun
             // They can be accessed by just setting the commandline property -ag to the name of desired agent.
             calledBefore = true;
             //addAgentToThePool
-            AgentsPool.addAgent(new ForwardAgent());
+//            AgentsPool.addAgent(new ForwardAgent());
 //            AgentsPool.addAgent(new ForwardJumpingAgent());
 //            AgentsPool.addAgent(new RandomAgent());
 ////            AgentsPool.addAgent(new HumanKeyboardAgent());
 //            AgentsPool.addAgent(new SimpleMLPAgent());
-            AgentsPool.addAgent(new ScaredAgent());
+//            AgentsPool.addAgent(new ScaredAgent());
 //            AgentsPool.addAgent(new Perez());
 //            AgentsPool.addAgent(new AdaptiveAgent());
 //            AgentsPool.addAgent(new AIwesome());
@@ -74,13 +72,15 @@ public class MainRun
 //            AgentsPool.addAgent(new SlowAgent());
 //            AgentsPool.addAgent(new AStarAgent());
 //            AgentsPool.addAgent(new RjAgent());
-            AgentsPool.addAgent(new SergeyKarakovskiy_JumpingAgent());
+//            AgentsPool.addAgent(new SergeyKarakovskiy_JumpingAgent());
+//            AgentsPool.addAgent(new TrondEllingsen_LuckyAgent());
         }
     }
 
     public static void scoreAllAgents(CmdLineOptions cmdLineOptions)
     {
-        int startingSeed =    cmdLineOptions.getLevelRandSeed();
+        // TODO: implement sorting with respect to CompetitionScore.
+        int startingSeed = cmdLineOptions.getLevelRandSeed();
         for (Agent agent : AgentsPool.getAgentsCollection())
             score(agent, startingSeed, cmdLineOptions);
     }

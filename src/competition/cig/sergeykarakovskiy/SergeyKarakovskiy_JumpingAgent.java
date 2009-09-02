@@ -16,7 +16,6 @@ public class SergeyKarakovskiy_JumpingAgent implements Agent
     private String name;
     private boolean[] action;
 
-
     public SergeyKarakovskiy_JumpingAgent()
     {
         setName("SergeyKarakovskiy_JumpingAgent");
@@ -32,12 +31,9 @@ public class SergeyKarakovskiy_JumpingAgent implements Agent
 
     public boolean[] getAction(Environment observation)
     {
-//        try {Thread.sleep (39);}
-//        catch (Exception e){}
         action[Mario.KEY_SPEED] = action[Mario.KEY_JUMP] =  observation.mayMarioJump() || !observation.isMarioOnGround();
         return action;
     }
-
 
     public Agent.AGENT_TYPE getType()
     {
@@ -47,5 +43,4 @@ public class SergeyKarakovskiy_JumpingAgent implements Agent
     public String getName() {        return name;    }
 
     public void setName(String Name) { this.name = Name;    }
-
 }
