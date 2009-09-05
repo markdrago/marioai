@@ -2,8 +2,14 @@ package ch.idsia.ai.agents.ai;
 
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.agents.ai.BasicAIAgent;
+import ch.idsia.ai.Evolvable;
 import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.environments.Environment;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,7 +21,7 @@ import java.util.Random;
  * Package: ch.idsia.ai.agents.ai;
  */
 
-public class GeneticAgent extends BasicAIAgent implements Agent {
+public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
 
     /* static final boolean superslow = false; */
 	Node node;
@@ -50,6 +56,33 @@ public class GeneticAgent extends BasicAIAgent implements Agent {
     	this.execute_node_tree(this.node, observation);
     	
         return this.actionholder.get_action();
+    }
+    
+    /* methods for Evolvable interface */
+    public Evolvable getNewInstance() {
+    	return this;
+    }
+    
+    public void mutate() {
+    }
+    
+    public Evolvable copy() {
+    	Object cp = null;
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(bos);
+            out.writeObject(this);
+            out.flush();
+            out.close();
+
+            ObjectInputStream in = new ObjectInputStream(
+                new ByteArrayInputStream(bos.toByteArray()));
+            cp = in.readObject();
+        } catch (Exception e) {
+        	System.out.println(e.getMessage());
+        }
+
+        return (Evolvable)cp;
     }
     
     public void execute_node_tree(Node node, Environment observation) {
