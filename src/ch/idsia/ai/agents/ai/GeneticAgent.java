@@ -1,7 +1,7 @@
 package ch.idsia.ai.agents.ai;
 
 import ch.idsia.ai.agents.Agent;
-import ch.idsia.ai.agents.RegisterableAgent;
+import ch.idsia.ai.agents.ai.BasicAIAgent;
 import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.environments.Environment;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.Random;
  * Package: ch.idsia.ai.agents.ai;
  */
 
-public class GeneticAgent extends RegisterableAgent implements Agent {
+public class GeneticAgent extends BasicAIAgent implements Agent {
 
     /* static final boolean superslow = false; */
 	Node node;
