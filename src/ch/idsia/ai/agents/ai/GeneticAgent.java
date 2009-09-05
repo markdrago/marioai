@@ -23,7 +23,6 @@ import java.util.Random;
 
 public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
 
-    /* static final boolean superslow = false; */
 	Node node;
 	ActionHolder actionholder;
 	EnvironmentHolder envholder;
@@ -47,12 +46,6 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
 
     public boolean[] getAction(Environment observation)
     {
-        /*
-    	try {Thread.sleep (39);}
-        catch (Exception e){}
-        */
-        /* action[Mario.KEY_SPEED] = action[Mario.KEY_JUMP] =  observation.mayMarioJump() || !observation.isMarioOnGround(); */
-    	
     	this.execute_node_tree(this.node, observation);
     	
         return this.actionholder.get_action();
