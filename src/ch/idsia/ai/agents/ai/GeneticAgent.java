@@ -87,6 +87,51 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	return result;
     }
     
+    public String get_dot_for_tree(Node node) {
+    	StringBuffer result = new StringBuffer("digraph geneticagent {\n");
+    	get_dot_for_node(result, node, 0);
+    	result.append("}");
+    	return result.toString();
+    }
+    
+    /* this function adds all of the dot-notation needed to draw the graph of
+     * its tree, and returns the highest numbered nodenum used in the process*/
+    public int get_dot_for_node(StringBuffer result, Node node, int nodenum) {
+    	List<Node> children;
+    	Node child;
+    	int child_count, max_used, child_num;
+    	String nodename, nodelabel, childname;
+    	
+    	/* create name and label for this node */
+    	nodename = String.format("node%d", nodenum);
+    	nodelabel = node.toString();
+    	
+    	/* add name for this node to output */
+    	result.append(nodename + " [label=\"" + nodelabel + "\"]\n");
+    	
+    	System.out.println(result);
+    	
+    	/* add links to children and get results for children */
+    	child_count = node.get_num_children();
+    	max_used = nodenum;
+    	if (child_count > 0) {
+    		children = node.get_children();
+    		for (int i = 0; i < child_count; i++) {
+    			child = children.get(i);
+    			child_num = max_used + 1;
+    			
+    			/* draw links from this node to children */
+    			childname = String.format("node%d", child_num);
+    			result.append(nodename + " -> " + childname + "\n"); 
+    			
+    			/* add results from the child tree */
+    			max_used = get_dot_for_node(result, child, child_num);
+    		}
+    	}
+    	
+    	return max_used;
+    }
+    
     /* manually create some test trees */
     public Node get_forward_agent(EnvironmentHolder envholder, ActionHolder actionholder) {
     	Node onground, not, or, mayjump, jump, speed, right, truenode, and;
@@ -389,6 +434,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	public NotNode() {
     		super();
     		this.num_arguments = 1;
+    		this.name = "not";
     	}
     	
     	public List<NodeArgType> get_argument_types() {
@@ -409,6 +455,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	public AndNode() {
     		super();
     		this.num_arguments = 2;
+    		this.name = "and";
     	}
     	
     	public NodeArg execute(NodeArg op1, NodeArg op2) {
@@ -420,6 +467,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	public OrNode() {
     		super();
     		this.num_arguments = 2;
+    		this.name = "or";
     	}
     	
     	public NodeArg execute(NodeArg op1, NodeArg op2) {
@@ -470,10 +518,17 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     		super();
     		this.num_arguments = 0;
     		this.set_random_value();
+    		this.set_name_by_value();
     	}
     	
     	public StaticBooleanNode(boolean value) {
+    		this.num_arguments = 0;
     		this.set_value(value);
+    		this.set_name_by_value();
+    	}
+    	
+    	private void set_name_by_value() {
+    		this.name = (this.value == true) ? "true" : "false";    		
     	}
     	
     	public NodeArg execute() {
@@ -511,7 +566,7 @@ public class GeneticAgent extends RegisterableAgent implements Agent {
     	
     	public StaticIntNode() {
     		super();
-    		this.name = "static_int";
+    		this.name = String.format("static_int %d", this.value);
     		this.set_random_value();
     	}
     	
