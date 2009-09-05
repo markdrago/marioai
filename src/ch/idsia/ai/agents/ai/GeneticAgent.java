@@ -10,6 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
@@ -83,16 +84,15 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	this.execute_node(node);
     }
     
-    public NodeArg execute_node(Node node) {
+    public Object execute_node(Node node) {
     	List<Node> children;
-    	ArrayList<NodeArg> child_results;
+    	ArrayList<Object> child_results;
     	Node child;
-    	NodeArg result = null;
     	int child_count;
     	
     	/* get results for all child nodes */
     	child_count = node.get_num_children();
-    	child_results = new ArrayList<NodeArg>();
+    	child_results = new ArrayList<Object>();
     	if (child_count > 0) {
     		children = node.get_children();
     		for (int i = 0; i < child_count; i++) {
@@ -101,16 +101,8 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		}
     	}
     	
-    	/* get result for this node */
-    	if (child_count == 0) {
-			result = node.execute();
-    	} else if (child_count == 1) {
-    		result = node.execute(child_results.get(0));
-    	} else if (child_count == 2) {
-    		result = node.execute(child_results.get(0), child_results.get(1));
-    	}
-    	
-    	return result;
+    	/* return result for this node */
+		return node.execute(child_results);
     }
     
     public String get_dot_for_tree(Node node) {
@@ -229,8 +221,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "add";
     	}
     	
-    	public NodeArg execute(NodeArg op1, NodeArg op2) {
-    		return new NodeArg(op1.get_int_value() + op2.get_int_value());
+    	public Object execute(List<Object> args) {
+    		return new Integer(
+    				((Integer)args.get(0)).intValue() +
+    				((Integer)args.get(1)).intValue());
     	}
     }
     
@@ -240,8 +234,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "subtract";
     	}
     	
-    	public NodeArg execute(NodeArg op1, NodeArg op2) {
-    		return new NodeArg(java.lang.Math.abs(op1.get_int_value() - op2.get_int_value()));
+    	public Object execute(List<Object> args) {
+    		return new Integer(java.lang.Math.abs(
+    				((Integer)args.get(0)).intValue() -
+    				((Integer)args.get(1)).intValue()));
     	}
     }
     
@@ -251,8 +247,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "multiply";
     	}
     	
-    	public NodeArg execute(NodeArg op1, NodeArg op2) {
-    		return new NodeArg(op1.get_int_value() * op2.get_int_value());
+    	public Object execute(List<Object> args) {
+    		return new Integer(
+    				((Integer)args.get(0)).intValue() *
+    				((Integer)args.get(1)).intValue());
     	}
     }
     
@@ -262,9 +260,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "divide";
     	}
     	
-    	public NodeArg execute(NodeArg op1, NodeArg op2) {
-    		if (op2.get_int_value() == 0) return new NodeArg(0);
-    		return new NodeArg(op1.get_int_value() / op2.get_int_value());
+    	public Object execute(List<Object> args) {
+    		return new Integer(
+    				((Integer)args.get(0)).intValue() /
+    				((Integer)args.get(1)).intValue());
     	}
     }
     
@@ -274,9 +273,9 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "speed";
     	}
     	
-    	public NodeArg execute(NodeArg state) {
-    		this.action_holder.button_action(Mario.KEY_SPEED, state.get_bool_value());
-    		return state;
+    	public Object execute(List<Object> args) {
+    		this.action_holder.button_action(Mario.KEY_SPEED, ((Boolean)args.get(0)).booleanValue());
+    		return args.get(0);
     	}
     }
     
@@ -286,10 +285,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "left";
     	}
     	
-    	public NodeArg execute(NodeArg state) {
-    		this.action_holder.button_action(Mario.KEY_LEFT, state.get_bool_value());
+    	public Object execute(List<Object> args) {
+    		this.action_holder.button_action(Mario.KEY_LEFT, ((Boolean)args.get(0)).booleanValue());
     		this.action_holder.button_action(Mario.KEY_RIGHT, false);
-    		return state;
+    		return args.get(0);
     	}
     }
     
@@ -299,10 +298,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "right";
     	}
     	
-    	public NodeArg execute(NodeArg state) {
-    		this.action_holder.button_action(Mario.KEY_RIGHT, state.get_bool_value());
+    	public Object execute(List<Object> args) {
+    		this.action_holder.button_action(Mario.KEY_RIGHT, ((Boolean)args.get(0)).booleanValue());
     		this.action_holder.button_action(Mario.KEY_LEFT, false);
-    		return state;
+    		return args.get(0);
     	}
     }
     
@@ -311,10 +310,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		super(action_holder);
     		this.name = "jump";
     	}
-    	
-    	public NodeArg execute(NodeArg state) {
-    		this.action_holder.button_action(Mario.KEY_JUMP, state.get_bool_value());
-    		return state;
+
+    	public Object execute(List<Object> args) {
+    		this.action_holder.button_action(Mario.KEY_JUMP, ((Boolean)args.get(0)).booleanValue());
+    		return args.get(0);
     	}
     }
     
@@ -327,15 +326,13 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.action_holder = action_holder;
     	}
     	
-    	public List<NodeArgType> get_argument_types() {
-    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
-    		lst.add(NodeArgType.BOOLEAN);
+    	public List<Type> get_argument_types() {
+    		ArrayList<Type> lst = new ArrayList<Type>();
+    		lst.add(this.get_type("boolean"));
     		return lst;
     	}
     	
-    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
-    	
-    	public abstract NodeArg execute(NodeArg state);
+    	public Type get_response_type() { return this.get_type("boolean"); }
     }
     
     public class OnGroundNode extends EnvironmentNode {
@@ -344,9 +341,9 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "on_ground";
     	}
     	
-    	public NodeArg execute() {
+    	public Object execute(List<Object> args) {
     		Environment env = envholder.get_environment();
-    		return new NodeArg(env.isMarioOnGround());
+    		return (Object) new Boolean(env.isMarioOnGround());
     	}
     }
     
@@ -356,9 +353,9 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "may_jump";
     	}
     	
-    	public NodeArg execute() {
+    	public Object execute(List<Object> args) {
     		Environment env = envholder.get_environment();
-    		return new NodeArg(env.mayMarioJump());
+    		return (Object) new Boolean(env.mayMarioJump());
     	}
     }
     
@@ -371,14 +368,12 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.envholder = envholder;
     	}
     	
-    	public List<NodeArgType> get_argument_types() {
-    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
+    	public List<Type> get_argument_types() {
+    		ArrayList<Type> lst = new ArrayList<Type>();
     		return lst;
     	}
     	
-    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
-    	
-    	public abstract NodeArg execute();
+    	public Type get_response_type() { return this.get_type("boolean"); }
     }
     
     public class LevelObservationNode extends ObservationNode {
@@ -387,13 +382,18 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "level_observation";
     	}
     	
-    	public NodeArg execute(NodeArg x, NodeArg y) {
+    	public Object execute(List<Object> args) {
+    		int x, y;
+    		
     		Environment env = envholder.get_environment();
     		
-    		byte[][] levelMap = env.getLevelSceneObservation();
-    		if (levelMap[y.get_int_value()][x.get_int_value()] != 0)
-    			return new NodeArg(true);
-    		return new NodeArg(false);
+    		x = ((Integer)args.get(0)).intValue();
+    		y = ((Integer)args.get(1)).intValue();
+    		
+    		byte[][] enemyMap = env.getLevelSceneObservation();
+    		if (enemyMap[y][x] != 0)
+    			return (Object) new Boolean(true);
+			return (Object) new Boolean(false);
     	}
     }
     
@@ -403,13 +403,18 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "enemy_observation";
     	}
     	
-    	public NodeArg execute(NodeArg x, NodeArg y) {
+    	public Object execute(List<Object> args) {
+    		int x, y;
+    		
     		Environment env = envholder.get_environment();
     		
+    		x = ((Integer)args.get(0)).intValue();
+    		y = ((Integer)args.get(1)).intValue();
+    		
     		byte[][] enemyMap = env.getEnemiesObservation();
-    		if (enemyMap[y.get_int_value()][x.get_int_value()] != 0)
-    			return new NodeArg(true);
-    		return new NodeArg(false);
+    		if (enemyMap[y][x] != 0)
+    			return (Object) new Boolean(true);
+			return (Object) new Boolean(false);
     	}
     }
     
@@ -422,16 +427,14 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.envholder = envholder;
     	}
     	
-    	public List<NodeArgType> get_argument_types() {
-    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
-    		lst.add(NodeArgType.INT);
-    		lst.add(NodeArgType.INT);
+    	public List<Type> get_argument_types() {
+    		ArrayList<Type> lst = new ArrayList<Type>();
+    		lst.add(this.get_type("integer"));
+    		lst.add(this.get_type("integer"));
     		return lst;
     	}
     	
-    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
-    	
-    	public abstract NodeArg execute(NodeArg x, NodeArg y);
+    	public Type get_response_type() { return this.get_type("boolean"); }
     }
     
     public class GreaterThanNode extends BinaryConditionalNode {
@@ -440,8 +443,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "greater_than";
     	}
     	
-    	public NodeArg execute(NodeArg x, NodeArg y) {
-    		return new NodeArg(x.get_int_value() > y.get_int_value());
+    	public Object execute(List<Object> args) {
+    		return new Boolean(
+    				((Integer)args.get(0)).intValue() >
+    				((Integer)args.get(1)).intValue());
     	}
     }
     
@@ -451,8 +456,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "equal";
     	}
     	
-    	public NodeArg execute(NodeArg x, NodeArg y) {
-    		return new NodeArg(x.get_int_value() == y.get_int_value());
+    	public Object execute(List<Object> args) {
+    		return new Boolean(
+    				((Integer)args.get(0)).intValue() ==
+    				((Integer)args.get(1)).intValue());
     	}
     }
     
@@ -463,18 +470,17 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "not";
     	}
     	
-    	public List<NodeArgType> get_argument_types() {
-    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
-    		lst.add(NodeArgType.BOOLEAN);
+    	public List<Type> get_argument_types() {
+    		ArrayList<Type> lst = new ArrayList<Type>();
+    		lst.add(this.get_type("boolean"));
     		return lst;
     	}
     	
-    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
+    	public Type get_response_type() { return this.get_type("boolean"); }
     	
-    	public NodeArg execute(NodeArg state) {
-    		return new NodeArg(!state.get_bool_value());
+    	public Object execute(List<Object> args) {
+    		return (Object) new Boolean( ! ((Boolean)args.get(0)).booleanValue());
     	}
-    	
     }
 
     public class AndNode extends BinaryBooleanNode {
@@ -484,8 +490,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "and";
     	}
     	
-    	public NodeArg execute(NodeArg op1, NodeArg op2) {
-    		return new NodeArg(op1.get_bool_value() && op2.get_bool_value());
+    	public Object execute(List<Object> args) {
+    		return (Object) new Boolean(
+    				((Boolean)args.get(0)).booleanValue() &&
+    				((Boolean)args.get(1)).booleanValue());
     	}
     }
     
@@ -496,8 +504,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "or";
     	}
     	
-    	public NodeArg execute(NodeArg op1, NodeArg op2) {
-    		return new NodeArg((op1.get_bool_value() || op2.get_bool_value()));
+    	public Object execute(List<Object> args) {
+    		return (Object) new Boolean(
+    				((Boolean)args.get(0)).booleanValue() ||
+    				((Boolean)args.get(1)).booleanValue());
     	}
     }
     
@@ -507,16 +517,14 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.num_arguments = 2;
     	}
     	
-    	public List<NodeArgType> get_argument_types() {
-    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
-    		lst.add(NodeArgType.INT);
-    		lst.add(NodeArgType.INT);
+    	public List<Type> get_argument_types() {
+    		ArrayList<Type> lst = new ArrayList<Type>();
+    		lst.add(this.get_type("integer"));
+    		lst.add(this.get_type("integer"));
     		return lst;
     	}
     	
-    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
-    	
-    	public abstract NodeArg execute(NodeArg x, NodeArg y);
+    	public Type get_response_type() { return this.get_type("boolean"); }
     }
     
     public abstract class BinaryBooleanNode extends Node {
@@ -525,16 +533,14 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.num_arguments = 2;
     	}
     	
-    	public List<NodeArgType> get_argument_types() {
-    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
-    		lst.add(NodeArgType.BOOLEAN);
-    		lst.add(NodeArgType.BOOLEAN);
+    	public List<Type> get_argument_types() {
+    		ArrayList<Type> lst = new ArrayList<Type>();
+    		lst.add(this.get_type("boolean"));
+    		lst.add(this.get_type("boolean"));
     		return lst;
     	}
     	
-    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
-    	
-    	public abstract NodeArg execute(NodeArg op1, NodeArg op2);
+    	public Type get_response_type() { return this.get_type("boolean"); }
     }
     
     public class StaticBooleanNode extends BooleanNode {
@@ -557,8 +563,8 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = (this.value == true) ? "true" : "false";    		
     	}
     	
-    	public NodeArg execute() {
-    		return new NodeArg(this.value);
+    	public Object execute(List<Object> args) {
+    		return (Object) new Boolean(this.value);
     	}
     	
     	public void set_value(boolean value) {
@@ -577,14 +583,12 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.num_arguments = 0;
     	}
     	
-    	public abstract NodeArg execute();
-    	
-    	public List<NodeArgType> get_argument_types() {
-    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
+    	public List<Type> get_argument_types() {
+    		ArrayList<Type> lst = new ArrayList<Type>();
     		return lst;
     	}
     	
-    	public NodeArgType get_response_type() { return NodeArgType.BOOLEAN; }
+    	public Type get_response_type() { return this.get_type("boolean"); }
     }
     
     public class StaticIntNode extends IntNode {
@@ -611,8 +615,8 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.set_value(rnd.nextInt(100));
     	}
     	
-    	public NodeArg execute() {
-    		return new NodeArg(this.value);
+    	public Object execute(List<Object> args) {
+    		return (Object) new Integer(this.value);
     	}
     }
     
@@ -622,14 +626,12 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.num_arguments = 0;
     	}
     	
-    	public abstract NodeArg execute();
-    	
-    	public List<NodeArgType> get_argument_types() {
-    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
+    	public List<Type> get_argument_types() {
+    		ArrayList<Type> lst = new ArrayList<Type>();
     		return lst;
     	}
     	
-    	public NodeArgType get_response_type() { return NodeArgType.INT; }
+    	public Type get_response_type() { return this.get_type("integer"); }
     }
     
     public abstract class BinaryOpNode extends Node {
@@ -638,16 +640,14 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.num_arguments = 2;
     	}
     	
-    	public abstract NodeArg execute(NodeArg op1, NodeArg op2);
-    	
-    	public List<NodeArgType> get_argument_types() {
-    		ArrayList<NodeArgType> lst = new ArrayList<NodeArgType>();
-    		lst.add(NodeArgType.INT);
-    		lst.add(NodeArgType.INT);
+    	public List<Type> get_argument_types() {
+    		ArrayList<Type> lst = new ArrayList<Type>();
+    		lst.add(this.get_type("integer"));
+    		lst.add(this.get_type("integer"));
     		return lst;
     	}
     	
-    	public NodeArgType get_response_type() { return NodeArgType.INT; }
+    	public Type get_response_type() { return this.get_type("integer"); }
     }
     
     public abstract class Node {
@@ -662,8 +662,8 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.name = "unknown";
     	}
     	
-    	public abstract List<NodeArgType> get_argument_types();
-    	public abstract NodeArgType get_response_type();
+    	public abstract List<Type> get_argument_types();
+    	public abstract Type get_response_type();
 
     	public String toString() {
     		return this.name;
@@ -677,6 +677,26 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
 
     	public List<Node> get_children() {
     		return this.children;
+    	}
+    	
+    	public Type get_type(String nickname) {
+    		Type result = null;
+    		
+    		try {
+    			if (nickname == "int") {
+    				result = Class.forName("java.lang.Integer");
+    			} else if (nickname == "boolean") {
+    				result = Class.forName("java.lang.Boolean");
+    			}
+    		} catch(Exception e) {
+    			System.out.println(e.getMessage());
+    		}
+    		
+    		if (result == null) {
+    			System.out.println("Unable to find class for nickname: " + nickname);
+    		}
+    		
+    		return result;
     	}
     	
     	public void set_child(int index, Node child) {
@@ -694,45 +714,8 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		this.parent = parent;
     	}
     	
-    	public NodeArg execute() {
+    	public Object execute(List<Object> args) {
     		return null;
     	}
-    	
-    	public NodeArg execute(NodeArg op1) {
-    		return null;
-    	}
-    	
-    	public NodeArg execute(NodeArg op1, NodeArg op2) {
-    		return null;
-    	}
-    }
-
-    public class NodeArg {
-    	NodeArgType type;
-    	int int_value;
-    	boolean bool_value;
-    	
-    	public NodeArg(int value) {
-    		this.type = NodeArgType.INT;
-    		this.int_value = value;
-    	}
-    	
-    	public NodeArg(boolean value) {
-    		this.type = NodeArgType.BOOLEAN;
-    		this.bool_value = value;
-    	}
-    	
-    	public int get_int_value() {
-    		return this.int_value;
-    	}
-    	
-    	public boolean get_bool_value() {
-    		return this.bool_value;
-    	}
-    }
-    
-    public enum NodeArgType {
-    	INT,
-    	BOOLEAN;
     }
 }
