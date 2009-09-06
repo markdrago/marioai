@@ -31,18 +31,28 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     public GeneticAgent()
     {
         super("GeneticAgent");
-        reset();
-    }
-
-    public void reset()
-    {
+        
+    	NodeFactory node_factory;
+    	
         action = new boolean[Environment.numberOfButtons];
 
         this.actionholder = new ActionHolder();
         this.actionholder.set_action(action);
         this.envholder = new EnvironmentHolder();
         
-        this.node = get_forward_agent(this.envholder, this.actionholder);
+        node_factory = new NodeFactory(this.envholder, this.actionholder);
+        this.node = get_random_agent(node_factory);
+        
+        System.out.println(get_dot_for_tree(this.node));
+        
+        reset();
+    }
+
+    public void reset()
+    {
+
+        
+        /* this.node = get_forward_agent(this.envholder, this.actionholder); */
     }
 
     public boolean[] getAction(Environment observation)
@@ -148,6 +158,56 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	}
     	
     	return max_used;
+    }
+    
+    public Node get_random_agent(NodeFactory node_factory) {
+    	return get_random_tree(node_factory, null, 0);
+    }
+    
+    public Node get_random_tree(NodeFactory node_factory, Node parent, int level) {
+    	ArrayList<Node> nodes = new ArrayList<Node>();
+    	List<Type> arguments;
+    	Type arg;
+    	Node child = null;
+    	
+    	if (parent == null) {
+    		/* this iteration just makes a parent */
+    		parent = node_factory.get_random_node_weighted();
+    		nodes.add(parent);
+    	} else {
+    		/* make all of the children that this node needs */
+    		arguments = parent.get_argument_types();
+    		for (int i = 0; i < arguments.size(); i++) {
+    			arg = arguments.get(i);
+    			
+    			if (level < 5) {
+    				if (arg == NodeType.get_type("boolean")) {
+    					child = node_factory.get_boolean_node_weighted();
+    				} else if (arg == NodeType.get_type("int")) {
+    					child = node_factory.get_integer_node_weighted();
+    				}
+    			} else {
+    				if (arg == NodeType.get_type("boolean")) {
+    					child = node_factory.get_boolean_leaf_node();
+    				} else if (arg == NodeType.get_type("int")) {
+    					child = node_factory.get_integer_leaf_node();
+    				}
+    			}
+
+    			/* add this child to the list of nodes we should make children for */
+    			nodes.add(child);
+    			
+        		/* attach this node to the parent node */
+    			parent.set_child(i, child);
+    		}
+    	}
+    	
+    	/* get random children for all of these nodes */
+    	for (Node loopchild: nodes) {
+    		get_random_tree(node_factory, loopchild, level + 1);
+    	}
+    	
+    	return parent;
     }
     
     /* manually create some test trees */
@@ -261,9 +321,12 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	}
     	
     	public Object execute(List<Object> args) {
-    		return new Integer(
-    				((Integer)args.get(0)).intValue() /
-    				((Integer)args.get(1)).intValue());
+    		int op1 = ((Integer)args.get(0)).intValue();
+    		int op2 = ((Integer)args.get(1)).intValue();
+    		
+    		if (op2 == 0) { return new Integer(0); }
+    		
+    		return new Integer(op1 / op2);
     	}
     }
     
@@ -328,11 +391,11 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	
     	public List<Type> get_argument_types() {
     		ArrayList<Type> lst = new ArrayList<Type>();
-    		lst.add(this.get_type("boolean"));
+    		lst.add(NodeType.get_type("boolean"));
     		return lst;
     	}
     	
-    	public Type get_response_type() { return this.get_type("boolean"); }
+    	public Type get_response_type() { return NodeType.get_type("boolean"); }
     }
     
     public class OnGroundNode extends EnvironmentNode {
@@ -373,7 +436,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		return lst;
     	}
     	
-    	public Type get_response_type() { return this.get_type("boolean"); }
+    	public Type get_response_type() { return NodeType.get_type("boolean"); }
     }
     
     public class LevelObservationNode extends ObservationNode {
@@ -383,12 +446,15 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	}
     	
     	public Object execute(List<Object> args) {
-    		int x, y;
+    		int x, y, xmax, ymax;
     		
     		Environment env = envholder.get_environment();
     		
-    		x = ((Integer)args.get(0)).intValue();
-    		y = ((Integer)args.get(1)).intValue();
+    		xmax = Environment.HalfObsWidth * 2;
+    		ymax = Environment.HalfObsHeight * 2;
+    		
+    		x = ((Integer)args.get(0)).intValue() % xmax;
+    		y = ((Integer)args.get(1)).intValue() % ymax;
     		
     		byte[][] enemyMap = env.getLevelSceneObservation();
     		if (enemyMap[y][x] != 0)
@@ -404,12 +470,15 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	}
     	
     	public Object execute(List<Object> args) {
-    		int x, y;
+    		int x, y, xmax, ymax;
     		
     		Environment env = envholder.get_environment();
     		
-    		x = ((Integer)args.get(0)).intValue();
-    		y = ((Integer)args.get(1)).intValue();
+    		xmax = Environment.HalfObsWidth * 2;
+    		ymax = Environment.HalfObsHeight * 2;
+    		
+    		x = ((Integer)args.get(0)).intValue() % xmax;
+    		y = ((Integer)args.get(1)).intValue() % ymax;
     		
     		byte[][] enemyMap = env.getEnemiesObservation();
     		if (enemyMap[y][x] != 0)
@@ -429,12 +498,12 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	
     	public List<Type> get_argument_types() {
     		ArrayList<Type> lst = new ArrayList<Type>();
-    		lst.add(this.get_type("integer"));
-    		lst.add(this.get_type("integer"));
+    		lst.add(NodeType.get_type("int"));
+    		lst.add(NodeType.get_type("int"));
     		return lst;
     	}
     	
-    	public Type get_response_type() { return this.get_type("boolean"); }
+    	public Type get_response_type() { return NodeType.get_type("boolean"); }
     }
     
     public class GreaterThanNode extends BinaryConditionalNode {
@@ -472,11 +541,11 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	
     	public List<Type> get_argument_types() {
     		ArrayList<Type> lst = new ArrayList<Type>();
-    		lst.add(this.get_type("boolean"));
+    		lst.add(NodeType.get_type("boolean"));
     		return lst;
     	}
     	
-    	public Type get_response_type() { return this.get_type("boolean"); }
+    	public Type get_response_type() { return NodeType.get_type("boolean"); }
     	
     	public Object execute(List<Object> args) {
     		return (Object) new Boolean( ! ((Boolean)args.get(0)).booleanValue());
@@ -519,12 +588,12 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	
     	public List<Type> get_argument_types() {
     		ArrayList<Type> lst = new ArrayList<Type>();
-    		lst.add(this.get_type("integer"));
-    		lst.add(this.get_type("integer"));
+    		lst.add(NodeType.get_type("int"));
+    		lst.add(NodeType.get_type("int"));
     		return lst;
     	}
     	
-    	public Type get_response_type() { return this.get_type("boolean"); }
+    	public Type get_response_type() { return NodeType.get_type("boolean"); }
     }
     
     public abstract class BinaryBooleanNode extends Node {
@@ -535,12 +604,12 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	
     	public List<Type> get_argument_types() {
     		ArrayList<Type> lst = new ArrayList<Type>();
-    		lst.add(this.get_type("boolean"));
-    		lst.add(this.get_type("boolean"));
+    		lst.add(NodeType.get_type("boolean"));
+    		lst.add(NodeType.get_type("boolean"));
     		return lst;
     	}
     	
-    	public Type get_response_type() { return this.get_type("boolean"); }
+    	public Type get_response_type() { return NodeType.get_type("boolean"); }
     }
     
     public class StaticBooleanNode extends BooleanNode {
@@ -588,7 +657,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		return lst;
     	}
     	
-    	public Type get_response_type() { return this.get_type("boolean"); }
+    	public Type get_response_type() { return NodeType.get_type("boolean"); }
     }
     
     public class StaticIntNode extends IntNode {
@@ -596,14 +665,14 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	
     	public StaticIntNode() {
     		super();
-    		this.name = String.format("static_int %d", this.value);
     		this.set_random_value();
+    		this.set_name_by_value();
     	}
     	
     	public StaticIntNode(int value) {
     		super();
-    		this.name = "static_int";
     		this.set_value(value);
+    		this.set_name_by_value();
     	}
     	
     	public void set_value(int value) {
@@ -613,6 +682,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	public void set_random_value() {
     		Random rnd = new Random();
     		this.set_value(rnd.nextInt(100));
+    	}
+    	
+    	private void set_name_by_value() {
+    		this.name = String.format("static_int %d", this.value);    		
     	}
     	
     	public Object execute(List<Object> args) {
@@ -631,7 +704,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		return lst;
     	}
     	
-    	public Type get_response_type() { return this.get_type("integer"); }
+    	public Type get_response_type() { return NodeType.get_type("int"); }
     }
     
     public abstract class BinaryOpNode extends Node {
@@ -642,12 +715,34 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	
     	public List<Type> get_argument_types() {
     		ArrayList<Type> lst = new ArrayList<Type>();
-    		lst.add(this.get_type("integer"));
-    		lst.add(this.get_type("integer"));
+    		lst.add(NodeType.get_type("int"));
+    		lst.add(NodeType.get_type("int"));
     		return lst;
     	}
     	
-    	public Type get_response_type() { return this.get_type("integer"); }
+    	public Type get_response_type() { return NodeType.get_type("int"); }
+    }
+    
+    public static class NodeType {
+    	public static Type get_type(String nickname) {
+    		Type result = null;
+    		
+    		try {
+    			if (nickname == "int") {
+    				result = Class.forName("java.lang.Integer");
+    			} else if (nickname == "boolean") {
+    				result = Class.forName("java.lang.Boolean");
+    			}
+    		} catch(Exception e) {
+    			System.out.println(e.getMessage());
+    		}
+    		
+    		if (result == null) {
+    			System.out.println("Unable to find class for nickname: " + nickname);
+    		}
+    		
+    		return result;
+    	}
     }
     
     public abstract class Node {
@@ -679,26 +774,6 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		return this.children;
     	}
     	
-    	public Type get_type(String nickname) {
-    		Type result = null;
-    		
-    		try {
-    			if (nickname == "int") {
-    				result = Class.forName("java.lang.Integer");
-    			} else if (nickname == "boolean") {
-    				result = Class.forName("java.lang.Boolean");
-    			}
-    		} catch(Exception e) {
-    			System.out.println(e.getMessage());
-    		}
-    		
-    		if (result == null) {
-    			System.out.println("Unable to find class for nickname: " + nickname);
-    		}
-    		
-    		return result;
-    	}
-    	
     	public void set_child(int index, Node child) {
     		this.children.ensureCapacity(index + 1);
     		this.children.add(index, child);
@@ -716,6 +791,182 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	
     	public Object execute(List<Object> args) {
     		return null;
+    	}
+    }
+    
+    public class NodeFactory {
+    	ArrayList<String> boolean_nodes, int_nodes, leaf_boolean_nodes;
+    	ArrayList<String> leaf_int_nodes, all_nodes, action_nodes;
+    	ArrayList<String> observation_nodes, leaf_observation_nodes;
+    	ActionHolder action_holder;
+    	EnvironmentHolder env_holder;
+    	Random rnd;
+    	
+    	public NodeFactory(EnvironmentHolder env_holder, ActionHolder action_holder) {
+    		boolean_nodes = new ArrayList<String>();
+    		int_nodes = new ArrayList<String>();
+    		leaf_boolean_nodes = new ArrayList<String>();
+    		leaf_int_nodes = new ArrayList<String>();
+    		all_nodes = new ArrayList<String>();
+    		action_nodes = new ArrayList<String>();
+    		observation_nodes = new ArrayList<String>();
+    		leaf_observation_nodes = new ArrayList<String>();
+    		this.action_holder = action_holder;
+    		this.env_holder = env_holder;
+    		rnd = new Random();
+
+    		/* all boolean nodes */
+    		action_nodes.add("SpeedNode");
+    		action_nodes.add("LeftNode");
+    		action_nodes.add("RightNode");
+    		action_nodes.add("JumpNode");
+    		leaf_observation_nodes.add("OnGroundNode");
+    		leaf_observation_nodes.add("MayJumpNode");
+    		observation_nodes.add("LevelObservationNode");
+    		observation_nodes.add("EnemyObservationNode");
+    		leaf_boolean_nodes.add("StaticBooleanNode");
+    		boolean_nodes.add("GreaterThanNode");
+    		boolean_nodes.add("EqualNode");
+    		boolean_nodes.add("NotNode");
+    		boolean_nodes.add("AndNode");
+    		boolean_nodes.add("OrNode");
+
+    		/* collect all booleans in to boolean_nodes */
+    		boolean_nodes.addAll(action_nodes);
+    		boolean_nodes.addAll(leaf_observation_nodes);
+    		boolean_nodes.addAll(observation_nodes);
+    		boolean_nodes.addAll(leaf_boolean_nodes);
+    		
+    		/* leaf obs are both leaf and obs */
+    		leaf_boolean_nodes.addAll(leaf_observation_nodes);
+    		observation_nodes.addAll(leaf_observation_nodes);
+    		
+    		/* all int nodes */
+    		int_nodes.add("AddNode");
+    		int_nodes.add("SubtractNode");
+    		int_nodes.add("MultiplyNode");
+    		int_nodes.add("DivideNode");
+    		leaf_int_nodes.add("StaticIntNode");
+    		
+    		/* add leaf int nodes to int_nodes */
+    		int_nodes.addAll(leaf_int_nodes);
+    		
+    		/* combine boolean and int nodes in to all_nodes */
+    		all_nodes.addAll(boolean_nodes);
+    		all_nodes.addAll(int_nodes);
+    	}
+    	
+    	public Node get_random_node() {
+    		return get_random_node_from_array(all_nodes);
+    	}
+    	
+    	public Node get_random_node_weighted() {
+    		double chance = rnd.nextDouble();
+    		
+    		if (chance < 0.25) {
+    			return get_integer_node_weighted();
+    		} else {
+    			return get_boolean_node_weighted();
+    		}
+    	}
+    	
+    	public Node get_boolean_node_weighted() {
+    		double chance = rnd.nextDouble();
+    		
+    		if (chance < 0.33) {
+    			return get_action_node();
+    		} else if (chance < 0.66) {
+    			return get_observation_node();
+    		} else {
+    			return get_boolean_node();
+    		}
+    	}
+    	
+    	public Node get_integer_node_weighted() {
+    		double chance = rnd.nextDouble();
+    		
+    		if (chance < 0.5) {
+    			return get_integer_leaf_node();
+    		}
+    		return get_integer_node();
+    	}
+    	
+    	public Node get_integer_node() {
+    		return get_random_node_from_array(int_nodes);
+    	}
+    	
+    	public Node get_integer_leaf_node() {
+    		return get_random_node_from_array(leaf_int_nodes);
+    	}
+    	
+    	public Node get_boolean_node() {
+    		return get_random_node_from_array(boolean_nodes);
+    	}
+    	
+    	public Node get_boolean_leaf_node() {
+    		return get_random_node_from_array(leaf_boolean_nodes);
+    	}
+    	
+    	public Node get_action_node() {
+    		return get_random_node_from_array(action_nodes);
+    	}
+    	
+    	public Node get_observation_node() {
+    		return get_random_node_from_array(observation_nodes);
+    	}
+    	
+    	private Node get_random_node_from_array(ArrayList<String> namearray) {
+    		int choice;
+    		String name;
+    		
+    		choice = rnd.nextInt(namearray.size());
+    		name = namearray.get(choice);
+			
+			return get_node_with_name(name);    		
+    	}
+    	
+    	private Node get_node_with_name(String nodename) {
+    		if (nodename.equals("StaticBooleanNode")) {
+    			return new StaticBooleanNode();
+    		} else if (nodename.equals("StaticIntNode")) {
+    			return new StaticIntNode();
+    		} else if (nodename.equals("AddNode")) {
+    		    return new AddNode();
+    		} else if (nodename.equals("SubtractNode")) {
+    		    return new SubtractNode();
+    		} else if (nodename.equals("MultiplyNode")) {
+    		    return new MultiplyNode();
+    		} else if (nodename.equals("DivideNode")) {
+    		    return new DivideNode();
+    		} else if (nodename.equals("SpeedNode")) {
+    		    return new SpeedNode(this.action_holder);
+    		} else if (nodename.equals("LeftNode")) {
+    		    return new LeftNode(this.action_holder);
+    		} else if (nodename.equals("RightNode")) {
+    		    return new RightNode(this.action_holder);
+    		} else if (nodename.equals("JumpNode")) {
+    		    return new JumpNode(this.action_holder);
+    		} else if (nodename.equals("OnGroundNode")) {
+    		    return new OnGroundNode(this.env_holder);
+    		} else if (nodename.equals("MayJumpNode")) {
+    		    return new MayJumpNode(this.env_holder);
+    		} else if (nodename.equals("LevelObservationNode")) {
+    		    return new LevelObservationNode(this.env_holder);
+    		} else if (nodename.equals("EnemyObservationNode")) {
+    		    return new EnemyObservationNode(this.env_holder);
+    		} else if (nodename.equals("GreaterThanNode")) {
+    		    return new GreaterThanNode();
+    		} else if (nodename.equals("EqualNode")) {
+    		    return new EqualNode();
+    		} else if (nodename.equals("NotNode")) {
+    		    return new NotNode();
+    		} else if (nodename.equals("AndNode")) {
+    		    return new AndNode();
+    		} else if (nodename.equals("OrNode")) {
+    		    return new OrNode();
+    		} else {
+    			return null;
+    		}
     	}
     }
 }
