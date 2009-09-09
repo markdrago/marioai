@@ -263,6 +263,26 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	return and;
     }
     
+    public Node get_jumping_agent(EnvironmentHolder envholder, ActionHolder actionholder) {
+    	Node obs, num1, num2, jump, mayjump, and;
+    	
+    	num1 = new StaticIntNode(12);
+    	num2 = new StaticIntNode(11);
+    	obs = new EnemyObservationNode(envholder);
+    	obs.set_child(0, num1);
+    	obs.set_child(1, num2);
+    	
+    	mayjump = new MayJumpNode(envholder);
+    	and = new AndNode();
+    	and.set_child(0, obs);
+    	and.set_child(1, mayjump);
+    	
+    	jump = new JumpNode(actionholder);
+    	jump.set_child(0, and);
+    	
+    	return jump;
+    }
+    
     public class EnvironmentHolder {
     	Environment environ;
     	public void set_environment(Environment environ) {
