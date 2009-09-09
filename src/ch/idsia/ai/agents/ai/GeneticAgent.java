@@ -5,6 +5,7 @@ import ch.idsia.ai.agents.ai.BasicAIAgent;
 import ch.idsia.ai.Evolvable;
 import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.environments.Environment;
+import wox.serial.Easy;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -49,6 +50,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
         }
         
         System.out.println(get_dot_for_tree(this.node));
+        Easy.save(this.node, "node.xml");
         
         reset();
     }
