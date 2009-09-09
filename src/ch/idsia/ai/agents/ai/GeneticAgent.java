@@ -681,7 +681,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	
     	public void set_random_value() {
     		Random rnd = new Random();
-    		this.set_value(rnd.nextInt(100));
+    		this.set_value(rnd.nextInt(22));
     	}
     	
     	private void set_name_by_value() {
@@ -825,8 +825,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		observation_nodes.add("LevelObservationNode");
     		observation_nodes.add("EnemyObservationNode");
     		leaf_boolean_nodes.add("StaticBooleanNode");
+    		/*
     		boolean_nodes.add("GreaterThanNode");
     		boolean_nodes.add("EqualNode");
+    		*/
     		boolean_nodes.add("NotNode");
     		boolean_nodes.add("AndNode");
     		boolean_nodes.add("OrNode");
@@ -842,10 +844,12 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     		observation_nodes.addAll(leaf_observation_nodes);
     		
     		/* all int nodes */
+    		/*
     		int_nodes.add("AddNode");
     		int_nodes.add("SubtractNode");
     		int_nodes.add("MultiplyNode");
     		int_nodes.add("DivideNode");
+    		*/
     		leaf_int_nodes.add("StaticIntNode");
     		
     		/* add leaf int nodes to int_nodes */
