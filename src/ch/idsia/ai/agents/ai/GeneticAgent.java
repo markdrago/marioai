@@ -137,8 +137,6 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	/* add name for this node to output */
     	result.append(nodename + " [label=\"" + nodelabel + "\"]\n");
     	
-    	System.out.println(result);
-    	
     	/* add links to children and get results for children */
     	child_count = node.get_num_children();
     	max_used = nodenum;
