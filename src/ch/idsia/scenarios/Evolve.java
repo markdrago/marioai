@@ -2,7 +2,6 @@ package ch.idsia.scenarios;
 
 import ch.idsia.ai.Evolvable;
 import ch.idsia.ai.agents.Agent;
-import ch.idsia.ai.agents.ai.GeneticAgent;
 import ch.idsia.ai.ea.ES;
 import ch.idsia.ai.tasks.ProgressTask;
 import ch.idsia.ai.tasks.Task;
@@ -13,6 +12,8 @@ import wox.serial.Easy;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.markdrago.marioai.geneticagent.GeneticAgent;
 
 /**
  * Created by IntelliJ IDEA.
