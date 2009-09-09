@@ -15,6 +15,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * User: Mark Drago
@@ -789,11 +790,13 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	Node parent;
     	int num_arguments;
     	String name;
+    	String uuid;
     	
     	public Node() {
     		this.children = new ArrayList<Node>();
     		this.num_arguments = 0;
     		this.name = "unknown";
+    		this.uuid = UUID.randomUUID().toString();
     	}
     	
     	public abstract List<Type> get_argument_types();
