@@ -39,9 +39,14 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
         this.actionholder = new ActionHolder();
         this.actionholder.set_action(action);
         this.envholder = new EnvironmentHolder();
+        this.node = null;
         
         node_factory = new NodeFactory(this.envholder, this.actionholder);
-        this.node = get_random_agent(node_factory);
+        
+        /* guarantee we have at least one action node in the tree */
+        while (this.node == null || !tree_contains_action_node(node)) {
+        	this.node = get_random_agent(node_factory);
+        }
         
         System.out.println(get_dot_for_tree(this.node));
         
@@ -206,6 +211,20 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	}
     	
     	return parent;
+    }
+    
+    public boolean tree_contains_action_node(Node node) {
+    	/* if this node is an action node, return true */
+    	if (node instanceof ActionNode)
+    		return true;
+    	
+    	/* if any of the trees beneath this one contain an action node return true */
+    	for (Node child: node.get_children()) {
+    		if (tree_contains_action_node(child))
+    			return true;
+    	}
+    	
+    	return false;
     }
     
     /* manually create some test trees */
