@@ -10,9 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Type;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * User: Mark Drago
@@ -44,7 +42,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
         
         /* guarantee we have at least one action node in the tree */
         while (this.node == null || !this.node.tree_contains_action_node()) {
-        	this.node = get_random_agent(node_factory);
+        	this.node = node_factory.get_random_agent();
         }
         
         System.out.println(get_dot_for_tree(this.node));
@@ -137,55 +135,5 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	}
     	
     	return max_used;
-    }
-    
-    public Node get_random_agent(NodeFactory node_factory) {
-    	return get_random_tree(node_factory, null, 0);
-    }
-    
-    public Node get_random_tree(NodeFactory node_factory, Node parent, int level) {
-    	ArrayList<Node> nodes = new ArrayList<Node>();
-    	List<Type> arguments;
-    	Type arg;
-    	Node child = null;
-    	
-    	if (parent == null) {
-    		/* this iteration just makes a parent */
-    		parent = node_factory.get_random_node_weighted();
-    		nodes.add(parent);
-    	} else {
-    		/* make all of the children that this node needs */
-    		arguments = parent.get_argument_types();
-    		for (int i = 0; i < arguments.size(); i++) {
-    			arg = arguments.get(i);
-    			
-    			if (level < 5) {
-    				if (arg == NodeType.get_type("boolean")) {
-    					child = node_factory.get_boolean_node_weighted();
-    				} else if (arg == NodeType.get_type("int")) {
-    					child = node_factory.get_integer_node_weighted();
-    				}
-    			} else {
-    				if (arg == NodeType.get_type("boolean")) {
-    					child = node_factory.get_boolean_leaf_node();
-    				} else if (arg == NodeType.get_type("int")) {
-    					child = node_factory.get_integer_leaf_node();
-    				}
-    			}
-
-    			/* add this child to the list of nodes we should make children for */
-    			nodes.add(child);
-    			
-        		/* attach this node to the parent node */
-    			parent.set_child(i, child);
-    		}
-    	}
-    	
-    	/* get random children for all of these nodes */
-    	for (Node loopchild: nodes) {
-    		get_random_tree(node_factory, loopchild, level + 1);
-    	}
-    	
-    	return parent;
     }
 }

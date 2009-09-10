@@ -1,6 +1,8 @@
 package com.markdrago.marioai.geneticagent;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class NodeFactory {
@@ -181,6 +183,56 @@ public class NodeFactory {
 			return null;
 		}
 	}
+	
+    public Node get_random_agent() {
+    	return this.get_random_tree(null, 0);
+    }
+    
+    public Node get_random_tree(Node parent, int level) {
+    	ArrayList<Node> nodes = new ArrayList<Node>();
+    	List<Type> arguments;
+    	Type arg;
+    	Node child = null;
+    	
+    	if (parent == null) {
+    		/* this iteration just makes a parent */
+    		parent = this.get_random_node_weighted();
+    		nodes.add(parent);
+    	} else {
+    		/* make all of the children that this node needs */
+    		arguments = parent.get_argument_types();
+    		for (int i = 0; i < arguments.size(); i++) {
+    			arg = arguments.get(i);
+    			
+    			if (level < 5) {
+    				if (arg == NodeType.get_type("boolean")) {
+    					child = this.get_boolean_node_weighted();
+    				} else if (arg == NodeType.get_type("int")) {
+    					child = this.get_integer_node_weighted();
+    				}
+    			} else {
+    				if (arg == NodeType.get_type("boolean")) {
+    					child = this.get_boolean_leaf_node();
+    				} else if (arg == NodeType.get_type("int")) {
+    					child = this.get_integer_leaf_node();
+    				}
+    			}
+
+    			/* add this child to the list of nodes we should make children for */
+    			nodes.add(child);
+    			
+        		/* attach this node to the parent node */
+    			parent.set_child(i, child);
+    		}
+    	}
+    	
+    	/* get random children for all of these nodes */
+    	for (Node loopchild: nodes) {
+    		this.get_random_tree(loopchild, level + 1);
+    	}
+    	
+    	return parent;
+    }
 	
     /* manually create some test trees */
     public Node get_forward_agent(EnvironmentHolder envholder, ActionHolder actionholder) {
