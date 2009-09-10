@@ -18,29 +18,26 @@ import java.io.ObjectOutputStream;
  */
 
 public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
-
 	Node node;
 	ActionHolder actionholder;
 	EnvironmentHolder envholder;
+	NodeFactory node_factory;
 
     public GeneticAgent()
     {
         super("GeneticAgent");
         
-    	NodeFactory node_factory;
-    	
         action = new boolean[Environment.numberOfButtons];
 
         this.actionholder = new ActionHolder();
         this.actionholder.set_action(action);
         this.envholder = new EnvironmentHolder();
         this.node = null;
+        this.node_factory = new NodeFactory(this.envholder, this.actionholder);
         
-        node_factory = new NodeFactory(this.envholder, this.actionholder);
-        
-        /* guarantee we have at least one action node in the tree */
+        /* guarantee we have at least one action node in the random tree */
         while (this.node == null || !this.node.tree_contains_action_node()) {
-        	this.node = node_factory.get_random_agent();
+        	this.node = this.node_factory.get_random_agent();
         }
         
         System.out.println(this.node.get_dot_for_tree());
