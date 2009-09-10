@@ -55,9 +55,6 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
 
     public void reset()
     {
-
-        
-        /* this.node = get_forward_agent(this.envholder, this.actionholder); */
     }
 
     public boolean[] getAction(Environment observation)
@@ -227,59 +224,5 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     	return false;
     }
     
-    /* manually create some test trees */
-    public Node get_forward_agent(EnvironmentHolder envholder, ActionHolder actionholder) {
-    	Node onground, not, or, mayjump, jump, speed, right, truenode, and;
-    	
-    	/* this tree is assembled children-first for ease of assembly */
-    	
-    	/* not on ground */
-    	onground = new OnGroundNode(envholder);
-    	not = new NotNode();
-    	not.set_child(0, onground);
-    	
-    	/* or may jump */
-    	mayjump = new MayJumpNode(envholder);
-    	or = new OrNode();
-    	or.set_child(0, mayjump);
-    	or.set_child(1, not);
-    	
-    	/* jump & speed */
-    	jump = new JumpNode(actionholder);
-    	speed = new SpeedNode(actionholder);
-    	jump.set_child(0, or);
-    	speed.set_child(0, jump);
-    	
-    	/* separate branch for true & right */
-    	truenode = new StaticBooleanNode(true);
-    	right = new RightNode(actionholder);
-    	right.set_child(0, truenode);
-    	
-    	/* combine right and speed */
-    	and = new AndNode();
-    	and.set_child(0, right);
-    	and.set_child(1, speed);
-    	
-    	return and;
-    }
-    
-    public Node get_jumping_agent(EnvironmentHolder envholder, ActionHolder actionholder) {
-    	Node obs, num1, num2, jump, mayjump, and;
-    	
-    	num1 = new StaticIntNode(12);
-    	num2 = new StaticIntNode(11);
-    	obs = new EnemyObservationNode(envholder);
-    	obs.set_child(0, num1);
-    	obs.set_child(1, num2);
-    	
-    	mayjump = new MayJumpNode(envholder);
-    	and = new AndNode();
-    	and.set_child(0, obs);
-    	and.set_child(1, mayjump);
-    	
-    	jump = new JumpNode(actionholder);
-    	jump.set_child(0, and);
-    	
-    	return jump;
-    }
+
 }
