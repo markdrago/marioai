@@ -2,7 +2,6 @@ package com.markdrago.marioai.geneticagent;
 
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.agents.ai.BasicAIAgent;
-import ch.idsia.ai.Evolvable;
 import ch.idsia.mario.environments.Environment;
 import wox.serial.Easy;
 
@@ -19,7 +18,7 @@ import java.util.List;
  * Package: ch.idsia.ai.agents.ai;
  */
 
-public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
+public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
 
 	Node node;
 	ActionHolder actionholder;
@@ -62,15 +61,15 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
         return this.actionholder.get_action();
     }
     
-    /* methods for Evolvable interface */
-    public Evolvable getNewInstance() {
+    /* methods for Breedable interface */
+    public Breedable getNewInstance() {
     	return this;
     }
     
     public void mutate() {
     }
     
-    public Evolvable copy() {
+    public Breedable copy() {
     	Object cp = null;
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -86,7 +85,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
         	System.out.println(e.getMessage());
         }
 
-        return (Evolvable)cp;
+        return (Breedable)cp;
+    }
+    
+    public void breedWith(Breedable spouse) {
     }
     
     public void execute_node_tree(Node node, Environment observation) {
