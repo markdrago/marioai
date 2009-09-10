@@ -56,4 +56,18 @@ public abstract class Node {
 	public Object execute(List<Object> args) {
 		return null;
 	}
+	
+    public boolean tree_contains_action_node() {
+    	/* if this node is an action node, return true */
+    	if (this instanceof ActionNode)
+    		return true;
+    	
+    	/* if any of the trees beneath this one contain an action node return true */
+    	for (Node child: this.get_children()) {
+    		if (child.tree_contains_action_node())
+    			return true;
+    	}
+    	
+    	return false;
+    }
 }
