@@ -70,4 +70,25 @@ public abstract class Node {
     	
     	return false;
     }
+    
+    public Object execute_node() {
+    	List<Node> children;
+    	ArrayList<Object> child_results;
+    	Node child;
+    	int child_count;
+    	
+    	/* get results for all child nodes */
+    	child_count = this.get_num_children();
+    	child_results = new ArrayList<Object>();
+    	if (child_count > 0) {
+    		children = this.get_children();
+    		for (int i = 0; i < child_count; i++) {
+    			child = children.get(i);
+    			child_results.add(child.execute_node());
+    		}
+    	}
+    	
+    	/* return result for this node */
+		return this.execute(child_results);
+    }
 }

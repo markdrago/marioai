@@ -93,28 +93,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Evolvable {
     
     public void execute_node_tree(Node node, Environment observation) {
     	this.envholder.set_environment(observation);
-    	this.execute_node(node);
-    }
-    
-    public Object execute_node(Node node) {
-    	List<Node> children;
-    	ArrayList<Object> child_results;
-    	Node child;
-    	int child_count;
-    	
-    	/* get results for all child nodes */
-    	child_count = node.get_num_children();
-    	child_results = new ArrayList<Object>();
-    	if (child_count > 0) {
-    		children = node.get_children();
-    		for (int i = 0; i < child_count; i++) {
-    			child = children.get(i);
-    			child_results.add(this.execute_node(child));
-    		}
-    	}
-    	
-    	/* return result for this node */
-		return node.execute(child_results);
+    	this.node.execute_node();
     }
     
     public String get_dot_for_tree(Node node) {
