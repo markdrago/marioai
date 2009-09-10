@@ -56,8 +56,8 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
 
     public boolean[] getAction(Environment observation)
     {
-    	this.execute_node_tree(this.node, observation);
-    	
+    	this.envholder.set_environment(observation);
+    	this.node.execute_node();
         return this.actionholder.get_action();
     }
     
@@ -89,11 +89,6 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
     }
     
     public void breedWith(Breedable spouse) {
-    }
-    
-    public void execute_node_tree(Node node, Environment observation) {
-    	this.envholder.set_environment(observation);
-    	this.node.execute_node();
     }
     
     public String get_dot_for_tree(Node node) {
