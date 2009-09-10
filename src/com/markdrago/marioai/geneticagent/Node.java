@@ -91,4 +91,47 @@ public abstract class Node {
     	/* return result for this node */
 		return this.execute(child_results);
     }
+    
+    public String get_dot_for_tree() {
+    	StringBuffer result = new StringBuffer("digraph geneticagent {\n");
+    	this.get_dot_for_node(result, 0);
+    	result.append("}");
+    	return result.toString();
+    }
+    
+    /* this function adds all of the dot-notation needed to draw the graph of
+     * its tree, and returns the highest numbered nodenum used in the process*/
+    public int get_dot_for_node(StringBuffer result, int nodenum) {
+    	List<Node> children;
+    	Node child;
+    	int child_count, max_used, child_num;
+    	String nodename, nodelabel, childname;
+    	
+    	/* create name and label for this node */
+    	nodename = String.format("node%d", nodenum);
+    	nodelabel = this.toString();
+    	
+    	/* add name for this node to output */
+    	result.append(nodename + " [label=\"" + nodelabel + "\"]\n");
+    	
+    	/* add links to children and get results for children */
+    	child_count = this.get_num_children();
+    	max_used = nodenum;
+    	if (child_count > 0) {
+    		children = this.get_children();
+    		for (int i = 0; i < child_count; i++) {
+    			child = children.get(i);
+    			child_num = max_used + 1;
+    			
+    			/* draw links from this node to children */
+    			childname = String.format("node%d", child_num);
+    			result.append(nodename + " -> " + childname + "\n"); 
+    			
+    			/* add results from the child tree */
+    			max_used = child.get_dot_for_node(result, child_num);
+    		}
+    	}
+    	
+    	return max_used;
+    }
 }

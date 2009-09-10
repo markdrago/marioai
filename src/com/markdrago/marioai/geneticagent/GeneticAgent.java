@@ -9,7 +9,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
 
 /**
  * User: Mark Drago
@@ -44,7 +43,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
         	this.node = node_factory.get_random_agent();
         }
         
-        System.out.println(get_dot_for_tree(this.node));
+        System.out.println(this.node.get_dot_for_tree());
         Easy.save(this.node, "node.xml");
         
         reset();
@@ -89,48 +88,5 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
     }
     
     public void breedWith(Breedable spouse) {
-    }
-    
-    public String get_dot_for_tree(Node node) {
-    	StringBuffer result = new StringBuffer("digraph geneticagent {\n");
-    	get_dot_for_node(result, node, 0);
-    	result.append("}");
-    	return result.toString();
-    }
-    
-    /* this function adds all of the dot-notation needed to draw the graph of
-     * its tree, and returns the highest numbered nodenum used in the process*/
-    public int get_dot_for_node(StringBuffer result, Node node, int nodenum) {
-    	List<Node> children;
-    	Node child;
-    	int child_count, max_used, child_num;
-    	String nodename, nodelabel, childname;
-    	
-    	/* create name and label for this node */
-    	nodename = String.format("node%d", nodenum);
-    	nodelabel = node.toString();
-    	
-    	/* add name for this node to output */
-    	result.append(nodename + " [label=\"" + nodelabel + "\"]\n");
-    	
-    	/* add links to children and get results for children */
-    	child_count = node.get_num_children();
-    	max_used = nodenum;
-    	if (child_count > 0) {
-    		children = node.get_children();
-    		for (int i = 0; i < child_count; i++) {
-    			child = children.get(i);
-    			child_num = max_used + 1;
-    			
-    			/* draw links from this node to children */
-    			childname = String.format("node%d", child_num);
-    			result.append(nodename + " -> " + childname + "\n"); 
-    			
-    			/* add results from the child tree */
-    			max_used = get_dot_for_node(result, child, child_num);
-    		}
-    	}
-    	
-    	return max_used;
     }
 }
