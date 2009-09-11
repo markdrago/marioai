@@ -34,7 +34,7 @@ public class CmdLineOptions extends EvaluationOptions
     public CmdLineOptions(String[] args)
     {
         super();
-        if (args.length > 1 && !args[0].startsWith("-") /*starts with a path to agent then*/)
+        if (args.length > 0 && !args[0].startsWith("-") /*starts with a path to agent then*/)
         {
             this.setAgent(args[0]);
 
