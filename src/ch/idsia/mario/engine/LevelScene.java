@@ -224,6 +224,10 @@ public class LevelScene extends Scene implements SpriteContext
                     case(Sprite.KIND_SPARCLE):
                     case(Sprite.KIND_MARIO):
                         return Sprite.KIND_NONE;
+                    case (Sprite.KIND_FIRE_FLOWER):
+                        return Sprite.KIND_FIRE_FLOWER;
+                    case (Sprite.KIND_MUSHROOM):
+                        return Sprite.KIND_MUSHROOM;
                     case(Sprite.KIND_FIREBALL):
                         return Sprite.KIND_FIREBALL;                    
                     case(Sprite.KIND_BULLET_BILL):
@@ -240,7 +244,7 @@ public class LevelScene extends Scene implements SpriteContext
                     case(Sprite.KIND_SPIKY_WINGED):
                         return Sprite.KIND_SPIKY;
                 }
-                System.err.println("UNKOWN el = " + el);
+                System.err.println("Z1 UNKOWN el = " + el);
                 return el;
             case(2):
                 switch(el)
@@ -250,6 +254,8 @@ public class LevelScene extends Scene implements SpriteContext
                     case(Sprite.KIND_SPARCLE):
                     case(Sprite.KIND_FIREBALL):
                     case(Sprite.KIND_MARIO):
+                    case(Sprite.KIND_FIRE_FLOWER):
+                    case(Sprite.KIND_MUSHROOM):
                         return Sprite.KIND_NONE;
                     case(Sprite.KIND_BULLET_BILL):
                     case(Sprite.KIND_GOOMBA):
@@ -902,10 +908,10 @@ public class LevelScene extends Scene implements SpriteContext
         drawStringDropShadow(g, "FLOWERS  : " + df.format(Mario.gainedFlowers), 0, 6, 4);
 
 
-        drawStringDropShadow(g, "TIME", 33, 0, 7);
+        drawStringDropShadow(g, "TIME", 32, 0, 7);
         int time = (timeLeft+15-1)/15;
         if (time<0) time = 0;
-        drawStringDropShadow(g, " "+df2.format(time), 33, 1, 7);
+        drawStringDropShadow(g, " "+df2.format(time), 32, 1, 7);
 
         drawProgress(g);
 

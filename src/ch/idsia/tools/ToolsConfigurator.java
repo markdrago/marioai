@@ -54,7 +54,7 @@ public class ToolsConfigurator extends JFrame
         toolsConfigurator.JSpinnerLevelLength.setValue(cmdLineOptions.getLevelLength());
         toolsConfigurator.CheckboxShowVizualization.setState(cmdLineOptions.isVisualization());
         toolsConfigurator.JSpinnerMaxAttempts.setValue(cmdLineOptions.getNumberOfTrials());
-        toolsConfigurator.ChoiceAgent.select(cmdLineOptions.getAgent().getName());
+        toolsConfigurator.ChoiceAgent.select(AgentsPool.getCurrentAgent().getName());
         toolsConfigurator.CheckboxMaximizeFPS.setState(cmdLineOptions.isMaxFPS());
         toolsConfigurator.CheckboxPauseWorld.setState(cmdLineOptions.isPauseWorld());
         toolsConfigurator.CheckboxPowerRestoration.setState(cmdLineOptions.isPowerRestoration());

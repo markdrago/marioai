@@ -2,6 +2,7 @@ package ch.idsia.utils;
 
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.agents.AgentsPool;
+import ch.idsia.ai.agents.human.HumanKeyboardAgent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -178,7 +179,7 @@ public class ParameterContainer
         else
         {
             defaultOptionsHashMap = new HashMap<String, String>();
-//            new HumanKeyboardAgent();
+            AgentsPool.setCurrentAgent(new HumanKeyboardAgent());
             defaultOptionsHashMap.put("-ag","HumanKeyboardAgent"); //defaultOptionsHashMap.put("-agentName","NoAgent");
             defaultOptionsHashMap.put("-echo","off"); //defaultOptionsHashMap.put("-echo","off");
             defaultOptionsHashMap.put("-ewf","on"); //defaultOptionsHashMap.put("-exitWhenFinished","off");

@@ -79,9 +79,6 @@ public class LargeMLPAgent extends BasicAIAgent implements Agent, Evolvable {
         return name;
     }
 
-    public void setName(String name) {
-    }
-
     private double probe (int x, int y, byte[][] scene) {
         int realX = x + 11;
         int realY = y + 11;

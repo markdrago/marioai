@@ -3,6 +3,7 @@ package ch.idsia.scenarios;
 import ch.idsia.ai.agents.ai.*;
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.agents.AgentsPool;
+import ch.idsia.ai.agents.human.HumanKeyboardAgent;
 import ch.idsia.tools.CmdLineOptions;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.EvaluationOptions;
@@ -12,6 +13,12 @@ import ch.idsia.utils.StatisticalSummary;
 import java.util.List;
 
 import competition.cig.trondellingsen.TrondEllingsen_LuckyAgent;
+import competition.cig.sergeypolikarpov.SergeyPolikarpov_SimpleCyberNeuronAgent;
+import competition.cig.andysloane.AndySloane_BestFirstAgent;
+import competition.cig.spencerschumann.SpencerSchumann_SlideRule;
+import competition.cig.sergeykarakovskiy.SergeyKarakovskiy_JumpingAgent;
+import competition.cig.robinbaumgarten.AStarAgent;
+import competition.icegic.peterlawford.SlowAgent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +31,7 @@ import competition.cig.trondellingsen.TrondEllingsen_LuckyAgent;
 public class MainRun 
 {
     final static int numberOfTrials = 10;
-    final static boolean scoring = true;
+    final static boolean scoring = false;
     private static int killsSum = 0;
     private static int marioStatusSum = 0;
     private static int timeLeftSum = 0;
@@ -41,6 +48,7 @@ public class MainRun
         else
         {
             Evaluator evaluator = new Evaluator(evaluationOptions);
+            evaluationOptions.setAgent(AgentsPool.getCurrentAgent());
             List<EvaluationInfo> evaluationSummary = evaluator.evaluate();
 //        LOGGER.save("log.txt");
         }
@@ -62,18 +70,26 @@ public class MainRun
 //            AgentsPool.addAgent(new ForwardAgent());
 //            AgentsPool.addAgent(new ForwardJumpingAgent());
 //            AgentsPool.addAgent(new RandomAgent());
-////            AgentsPool.addAgent(new HumanKeyboardAgent());
+//            AgentsPool.addAgent(new HumanKeyboardAgent());
 //            AgentsPool.addAgent(new SimpleMLPAgent());
 //            AgentsPool.addAgent(new ScaredAgent());
 //            AgentsPool.addAgent(new Perez());
 //            AgentsPool.addAgent(new AdaptiveAgent());
 //            AgentsPool.addAgent(new AIwesome());
 //            AgentsPool.addAgent(new TutchekAgent());
-//            AgentsPool.addAgent(new SlowAgent());
+            AgentsPool.addAgent(new SlowAgent());  
 //            AgentsPool.addAgent(new AStarAgent());
 //            AgentsPool.addAgent(new RjAgent());
 //            AgentsPool.addAgent(new SergeyKarakovskiy_JumpingAgent());
+            //CIG:
 //            AgentsPool.addAgent(new TrondEllingsen_LuckyAgent());
+//            AgentsPool.addAgent(new SergeyPolikarpov_SimpleCyberNeuronAgent());
+//            AgentsPool.addAgent(new SpencerSchumann_SlideRule());
+//            AgentsPool.addAgent(new AndySloane_BestFirstAgent());
+//            AgentsPool.addAgent(AgentsPool.load("competition/cig/matthewerickson/matthewerickson.xml"));  
+//            AgentsPool.addAgent(AgentsPool.load("competition/icegic/erek/erekspeed.xml")); // out of memory exception
+//            AgentsPool.addAgent(new PalerAgent());
+//            AgentsPool.addAgent(new PeterLawford_SlowAgent());
         }
     }
 
@@ -83,13 +99,16 @@ public class MainRun
         int startingSeed = cmdLineOptions.getLevelRandSeed();
         for (Agent agent : AgentsPool.getAgentsCollection())
             score(agent, startingSeed, cmdLineOptions);
+
+//        startingSeed = 0;
+//        for (Agent agent : AgentsPool.getAgentsCollection())
+//            score(agent, startingSeed, cmdLineOptions);
+
     }
 
 
     public static void score(Agent agent, int startingSeed, CmdLineOptions cmdLineOptions) {
         TimingAgent controller = new TimingAgent (agent);
-//        RegisterableAgent.registerAgent (controller);
-//        EvaluationOptions options = new CmdLineOptions(new String[0]);
         EvaluationOptions options = cmdLineOptions;
 
         options.setNumberOfTrials(1);
@@ -103,9 +122,9 @@ public class MainRun
         timeLeftSum = 0;
         marioModeSum = 0;
 
-        competitionScore += testConfig (controller, options, startingSeed, 0, false);
-        competitionScore += testConfig (controller, options, startingSeed, 3, false);
-        competitionScore += testConfig (controller, options, startingSeed, 5, false);
+//        competitionScore += testConfig (controller, options, startingSeed, 0, false);
+//        competitionScore += testConfig (controller, options, startingSeed, 3, false);
+//        competitionScore += testConfig (controller, options, startingSeed, 5, false);
         competitionScore += testConfig (controller, options, startingSeed, 10, false);
 
         System.out.println("\nCompetition score: " + competitionScore + "\n");
@@ -124,11 +143,11 @@ public class MainRun
         double averageTimeTaken = controller.averageTimeTaken();
         System.out.printf("Difficulty %d score %.4f (avg time %.4f)\n",
                 levelDifficulty, ss.mean(), averageTimeTaken);
-        if (averageTimeTaken > 40) {
-            System.out.println("Maximum allowed average time is 40 ms per time step.\n" +
-                    "Controller disqualified");
-            System.exit (0);
-        }
+//        if (averageTimeTaken > 40) {
+//            System.out.println("Maximum allowed average time is 40 ms per time step.\n" +
+//                    "Controller disqualified");
+//            System.exit (0);
+//        }
         return ss.mean();
     }
 
@@ -160,7 +179,6 @@ public class MainRun
 //            System.out.println("result.computeKillsTotal() = " + result.computeKillsTotal());
             ss.add (result.computeDistancePassed());
         }
-
 
         if (detailedStats)
         {

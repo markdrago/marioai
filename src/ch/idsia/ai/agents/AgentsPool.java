@@ -62,6 +62,8 @@ public class AgentsPool
 
     public static Agent getCurrentAgent()
     {
+        if (currentAgent == null)
+            currentAgent = (Agent) getAgentsCollection().toArray()[0];
         return currentAgent;
     }
 
