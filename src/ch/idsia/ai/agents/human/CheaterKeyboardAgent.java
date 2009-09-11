@@ -4,7 +4,6 @@ import ch.idsia.ai.agents.Agent;
 import ch.idsia.mario.engine.GlobalOptions;
 import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.environments.Environment;
-import ch.idsia.tools.LOGGER;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -76,7 +75,7 @@ public class CheaterKeyboardAgent extends KeyAdapter implements Agent {
             case KeyEvent.VK_P:
                 if (isPressed)
                 {
-                    LOGGER.println("Pause On/Off", LOGGER.VERBOSE_MODE.INFO);
+//                    LOGGER.println("Pause On/Off", LOGGER.VERBOSE_MODE.INFO);
                     GlobalOptions.pauseWorld = !GlobalOptions.pauseWorld;
                     Action[Mario.KEY_PAUSE] = GlobalOptions.pauseWorld;
                 }
@@ -84,28 +83,28 @@ public class CheaterKeyboardAgent extends KeyAdapter implements Agent {
             case KeyEvent.VK_L:
                 if (isPressed)
                 {
-                    LOGGER.println("Labels On/Off", LOGGER.VERBOSE_MODE.INFO);
+//                    LOGGER.println("Labels On/Off", LOGGER.VERBOSE_MODE.INFO);
                     GlobalOptions.Labels = !GlobalOptions.Labels;
                 }
                 break;
             case KeyEvent.VK_C:
                 if (isPressed)
                 {
-                    LOGGER.println("Center On/Off", LOGGER.VERBOSE_MODE.ALL);
+//                    LOGGER.println("Center On/Off", LOGGER.VERBOSE_MODE.ALL);
                     GlobalOptions.MarioAlwaysInCenter = !GlobalOptions.MarioAlwaysInCenter;
                 }
                 break;
             case 61:
                 if (isPressed)
                 {
-                    LOGGER.println("FPS increase by 1. Current FPS is " + ++GlobalOptions.FPS, LOGGER.VERBOSE_MODE.INFO);
+//                    LOGGER.println("FPS increase by 1. Current FPS is " + ++GlobalOptions.FPS, LOGGER.VERBOSE_MODE.INFO);
                     GlobalOptions.AdjustMarioComponentFPS();
                 }
                 break;
             case 45:
                 if (isPressed)
                 {
-                    LOGGER.println("FPS decrease . Current FPS is " + --GlobalOptions.FPS, LOGGER.VERBOSE_MODE.INFO);
+//                    LOGGER.println("FPS decrease . Current FPS is " + --GlobalOptions.FPS, LOGGER.VERBOSE_MODE.INFO);
                     GlobalOptions.AdjustMarioComponentFPS();
                 }
                 break;
@@ -115,8 +114,8 @@ public class CheaterKeyboardAgent extends KeyAdapter implements Agent {
                     int temp = prevFPS;
                     prevFPS = GlobalOptions.FPS;
                     GlobalOptions.FPS = (GlobalOptions.FPS == GlobalOptions.InfiniteFPS) ? temp : GlobalOptions.InfiniteFPS ;
-                    LOGGER.println("FPS has been changed. Current FPS is " +
-                            ((GlobalOptions.FPS == GlobalOptions.InfiniteFPS) ? "\\infty" : GlobalOptions.FPS), LOGGER.VERBOSE_MODE.INFO);
+//                    LOGGER.println("FPS has been changed. Current FPS is " +
+//                            ((GlobalOptions.FPS == GlobalOptions.InfiniteFPS) ? "\\infty" : GlobalOptions.FPS), LOGGER.VERBOSE_MODE.INFO);
                     GlobalOptions.AdjustMarioComponentFPS();
                 }
                 break;

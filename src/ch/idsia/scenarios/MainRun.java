@@ -3,21 +3,13 @@ package ch.idsia.scenarios;
 import ch.idsia.ai.agents.ai.*;
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.agents.AgentsPool;
-import ch.idsia.ai.agents.human.HumanKeyboardAgent;
 import ch.idsia.tools.CmdLineOptions;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.EvaluationOptions;
 import ch.idsia.tools.Evaluator;
 import ch.idsia.utils.StatisticalSummary;
+import ch.idsia.mario.simulation.SimulationOptions;
 
-import java.util.List;
-
-import competition.cig.trondellingsen.TrondEllingsen_LuckyAgent;
-import competition.cig.sergeypolikarpov.SergeyPolikarpov_SimpleCyberNeuronAgent;
-import competition.cig.andysloane.AndySloane_BestFirstAgent;
-import competition.cig.spencerschumann.SpencerSchumann_SlideRule;
-import competition.cig.sergeykarakovskiy.SergeyKarakovskiy_JumpingAgent;
-import competition.cig.robinbaumgarten.AStarAgent;
 import competition.icegic.peterlawford.SlowAgent;
 
 /**
@@ -49,7 +41,12 @@ public class MainRun
         {
             Evaluator evaluator = new Evaluator(evaluationOptions);
             evaluationOptions.setAgent(AgentsPool.getCurrentAgent());
-            List<EvaluationInfo> evaluationSummary = evaluator.evaluate();
+
+            while (cmdLineOptions.getNumberOfTrials() > SimulationOptions.currentTrial) {
+//                List<EvaluationInfo> evaluationSummary;
+                System.out.println("SimulationOptions.currentTrial = " + SimulationOptions.currentTrial);
+                evaluator.evaluate();
+            }
 //        LOGGER.save("log.txt");
         }
 

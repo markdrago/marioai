@@ -1,7 +1,6 @@
 package ch.idsia.mario.engine;
 
 import ch.idsia.tools.GameViewer;
-import ch.idsia.tools.LOGGER;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,8 +50,8 @@ public class GlobalOptions {
     {
         if (gameViewer != null)
             gameViewer.tick();
-        else
-            LOGGER.println("GameViewer is not available. Request for dump ignored.", LOGGER.VERBOSE_MODE.ERROR);
+//        else
+//            LOGGER.println("GameViewer is not available. Request for dump ignored.", LOGGER.VERBOSE_MODE.ERROR);
     }
 
     public static String getDateTime(Long d)

@@ -1,6 +1,7 @@
 package ch.idsia.mario.simulation;
 
 import ch.idsia.ai.agents.Agent;
+import ch.idsia.ai.agents.AgentsPool;
 import ch.idsia.utils.ParameterContainer;
 
 /**
@@ -49,13 +50,25 @@ public class SimulationOptions extends ParameterContainer
     }
 
     // Agent
-    public Agent getAgent() {
+    public Agent getAgent()
+    {
 //        return a(getParameterValue("-ag"));      }
-        return agent; }
+        if (agent == null)
+        {
+            System.out.println("Info: Agent not specified. Default " + AgentsPool.getCurrentAgent().getName() + " has been used instead");
+            agent = AgentsPool.getCurrentAgent();
+        }
+        return agent;
+    }
 
     public void setAgent(Agent agent) {
 //        setParameterValue("-ag", s(agent));
         this.agent = agent;
+    }
+
+    public void setAgent(String agentWOXorClassName)
+    {
+        this.agent = AgentsPool.load(agentWOXorClassName);
     }
 
     // TODO? LEVEL_TYPE enum?

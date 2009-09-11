@@ -11,7 +11,8 @@ import java.util.*;
  * Time: 8:28:06 PM
  * Package: ch.idsia.ai.agents
  */
-public class AgentsPool
+
+public final class AgentsPool
 {
     private static Agent currentAgent = null;
 
@@ -69,6 +70,11 @@ public class AgentsPool
 
     public static void setCurrentAgent(Agent agent) {
         currentAgent = agent;
+    }
+
+    public static void setCurrentAgent(String agentWOXName)
+    {
+        setCurrentAgent(AgentsPool.load(agentWOXName));
     }
 
     static HashMap<String, Agent> agentsHashMap = new LinkedHashMap<String, Agent>();
