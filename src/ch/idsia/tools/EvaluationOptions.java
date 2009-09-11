@@ -27,7 +27,7 @@ public class EvaluationOptions extends SimulationOptions
             {
                 // Basically we can push the red button to explaud the computer, since this case cannot' never happen.
                 System.err.println("Error: Wrong number of input parameters");
-//                System.err.println("It is good day to kill yourself with the yellow wall");
+//                System.err.println("It is a perfect day to kill yourself with the yellow wall");
             }
         GlobalOptions.VisualizationOn = isVisualization();
         GlobalOptions.FPS = (isMaxFPS()) ? GlobalOptions.InfiniteFPS : 24 /*GlobalOptions.FPS*/;
