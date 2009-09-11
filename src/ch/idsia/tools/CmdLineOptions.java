@@ -28,7 +28,6 @@ import java.util.Map;
  * @since   iMario1.0
  */
 
-
 public class CmdLineOptions extends EvaluationOptions
 {
     // TODO: SK Move default options to xml, properties, beans, whatever.. //relevant?
