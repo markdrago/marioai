@@ -2,6 +2,7 @@ package ch.idsia.scenarios;
 
 import ch.idsia.ai.Evolvable;
 import ch.idsia.ai.agents.Agent;
+import ch.idsia.ai.agents.ai.SimpleMLPAgent;
 import ch.idsia.ai.ea.ES;
 import ch.idsia.ai.tasks.ProgressTask;
 import ch.idsia.ai.tasks.Task;
@@ -36,7 +37,7 @@ public class Evolve {
         for (int difficulty = 0; difficulty < 11; difficulty++)
         {
             System.out.println("New Evolve phase with difficulty = " + difficulty + " started.");
-            Evolvable initial = new GeneticAgent();
+            Evolvable initial = new SimpleMLPAgent();
 
             options.setLevelDifficulty(difficulty);
             options.setAgent((Agent)initial);
