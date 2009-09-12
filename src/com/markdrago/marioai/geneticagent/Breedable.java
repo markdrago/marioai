@@ -1,8 +1,11 @@
 package com.markdrago.marioai.geneticagent;
 
-import ch.idsia.ai.Evolvable;
-
-public interface Breedable extends Evolvable {
-	/* crossover some genetic material from the spouse in to this Breedable */
-	public void breedWith(Breedable spouse);
+public interface Breedable {
+	
+	public Breedable get_random_breedable();
+	
+    public Breedable mutate();
+    
+    public Breedable breed(GeneticAgent parent2);
+    
 }

@@ -1,22 +1,32 @@
 package com.markdrago.marioai.geneticagent;
 
-import ch.idsia.ai.EA;
+import ch.idsia.ai.tasks.Task;
 
-public class GenePool implements EA {
+import java.util.ArrayList;
 
-	public double[] getBestFitnesses() {
-		// TODO Auto-generated method stub
-		return null;
+public class GenePool {
+	ArrayList<Breedable> generation;
+	private final Task task;
+	private final int gen_size;
+	
+	public GenePool(Task task, Breedable adam, int gen_size) {
+		this.task = task;
+		this.gen_size = gen_size;
+		this.generation = new ArrayList<Breedable>();
+		fillGeneration(adam);
 	}
-
-	public Breedable[] getBests() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public void fillGeneration(Breedable adam) {
+		while (generation.size() < gen_size) {
+			add_agent(adam.get_random_breedable());
+		}
 	}
-
-	public void nextGeneration() throws Exception {
-		// TODO Auto-generated method stub
-
+	
+	public void nextGeneration() {
+		/* TODO evolve next generation */
 	}
-
+	
+	private void add_agent(Breedable agent) {
+		this.generation.add(agent);
+	}
 }

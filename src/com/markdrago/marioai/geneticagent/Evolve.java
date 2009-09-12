@@ -1,18 +1,10 @@
-package ch.idsia.scenarios;
+package com.markdrago.marioai.geneticagent;
 
-import ch.idsia.ai.Evolvable;
 import ch.idsia.ai.agents.Agent;
-import ch.idsia.ai.agents.ai.SimpleMLPAgent;
-import ch.idsia.ai.ea.ES;
 import ch.idsia.ai.tasks.ProgressTask;
 import ch.idsia.ai.tasks.Task;
 import ch.idsia.tools.CmdLineOptions;
 import ch.idsia.tools.EvaluationOptions;
-import wox.serial.Easy;
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,31 +15,30 @@ import java.util.List;
 public class Evolve {
 
     final static int generations = 100;
-    final static int populationSize = 100;
-
-
+    final static int population_size = 32;
+    
     public static void main(String[] args) {
         EvaluationOptions options = new CmdLineOptions(args);
         options.setNumberOfTrials(1);
         options.setPauseWorld(true);
-        List<Agent> bestAgents = new ArrayList<Agent>();
-        DecimalFormat df = new DecimalFormat("0000");
-        for (int difficulty = 0; difficulty < 11; difficulty++)
-        {
-            System.out.println("New Evolve phase with difficulty = " + difficulty + " started.");
-            Evolvable initial = new SimpleMLPAgent();
+        
+        Breedable initial = new GeneticAgent();
+        
+        for (int i = 0; i < generations; i++) {
+        	System.out.println("New Evolve phase started.");
 
-            options.setLevelDifficulty(difficulty);
+            options.setLevelDifficulty(3);
             options.setAgent((Agent)initial);
-
             options.setMaxFPS(true);
             options.setVisualization(false);
 
             Task task = new ProgressTask(options);
-            ES es = new ES (task, initial, populationSize);
+            GenePool pool = new GenePool(task, initial, population_size);
 
             for (int gen = 0; gen < generations; gen++) {
-                es.nextGeneration();
+                pool.nextGeneration();
+                
+/*
                 double bestResult = es.getBestFitnesses()[0];
 //                LOGGER.println("Generation " + gen + " best " + bestResult, LOGGER.VERBOSE_MODE.INFO);
                 System.out.println("Generation " + gen + " best " + bestResult);
@@ -64,8 +55,10 @@ public class Evolve {
                 Easy.save (es.getBests()[0], "evolved.xml");
                 if (result > 4000)
                     break; // Go to next difficulty.
+*/
             }
         }
+        
         /*// TODO: log dir / log dump dir option
         // TODO: reduce number of different
         // TODO: -fq 30, -ld 1:15, 8 

@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.UUID;
 
 /**
  * User: Mark Drago
@@ -22,6 +23,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
 	ActionHolder actionholder;
 	EnvironmentHolder envholder;
 	NodeFactory node_factory;
+	String uuid;
 
     public GeneticAgent()
     {
@@ -34,6 +36,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
         this.envholder = new EnvironmentHolder();
         this.node = null;
         this.node_factory = new NodeFactory(this.envholder, this.actionholder);
+        this.uuid = UUID.randomUUID().toString();
         
         /* guarantee we have at least one action node in the random tree */
         while (this.node == null || !this.node.tree_contains_action_node()) {
@@ -45,7 +48,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
         
         reset();
     }
-
+    
     public void reset()
     {
     }
@@ -56,16 +59,29 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
     	this.node.execute_node();
         return this.actionholder.get_action();
     }
-    
+
     /* methods for Breedable interface */
-    public Breedable getNewInstance() {
-    	return this;
+    public Breedable breed(GeneticAgent parent2) {
+    	GeneticAgent child = this.copy();
+    	
+    	/* TODO: merge child w/ parent 2 */
+    	
+    	return child;
     }
     
-    public void mutate() {
+    public Breedable mutate() {
+    	Breedable freak = this.copy();
+    	
+    	/* TODO: mutate freak */
+    	
+    	return freak;
     }
     
-    public Breedable copy() {
+    public Breedable get_random_breedable() {
+    	return new GeneticAgent();
+    }
+    
+    private GeneticAgent copy() {
     	Object cp = null;
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -81,9 +97,6 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
         	System.out.println(e.getMessage());
         }
 
-        return (Breedable)cp;
-    }
-    
-    public void breedWith(Breedable spouse) {
+        return (GeneticAgent)cp;
     }
 }
