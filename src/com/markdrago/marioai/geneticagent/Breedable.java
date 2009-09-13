@@ -1,6 +1,8 @@
 package com.markdrago.marioai.geneticagent;
 
-public interface Breedable {
+import ch.idsia.ai.agents.Agent;
+
+public interface Breedable extends Agent {
 	
 	public Breedable get_random_breedable();
 	
