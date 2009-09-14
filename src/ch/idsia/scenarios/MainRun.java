@@ -10,20 +10,20 @@ import ch.idsia.tools.Evaluator;
 import ch.idsia.utils.StatisticalSummary;
 import ch.idsia.mario.simulation.SimulationOptions;
 
-import competition.icegic.peterlawford.SlowAgent;
-import competition.icegic.rafael.RjAgent;
-import competition.icegic.michal.TutchekAgent;
-import competition.icegic.glenn.AIwesome;
-import competition.icegic.sergiolopez.AdaptiveAgent;
-import competition.icegic.perez.Perez;
-import competition.icegic.robin.AStarAgent;
+//import competition.icegic.peterlawford.SlowAgent;
+//import competition.icegic.rafael.RjAgent;
+//import competition.icegic.michal.TutchekAgent;
+//import competition.icegic.glenn.AIwesome;
+//import competition.icegic.sergiolopez.AdaptiveAgent;
+//import competition.icegic.perez.Perez;
+//import competition.icegic.robin.AStarAgent;
 import competition.cig.sergeykarakovskiy.SergeyKarakovskiy_JumpingAgent;
-import competition.cig.trondellingsen.TrondEllingsen_LuckyAgent;
-import competition.cig.sergeypolikarpov.SergeyPolikarpov_SimpleCyberNeuronAgent;
-import competition.cig.spencerschumann.SpencerSchumann_SlideRule;
-import competition.cig.andysloane.AndySloane_BestFirstAgent;
-import competition.cig.alexandrupaler.PalerAgent;
-import competition.cig.peterlawford.PeterLawford_SlowAgent;
+//import competition.cig.trondellingsen.TrondEllingsen_LuckyAgent;
+//import competition.cig.sergeypolikarpov.SergeyPolikarpov_SimpleCyberNeuronAgent;
+//import competition.cig.spencerschumann.SpencerSchumann_SlideRule;
+//import competition.cig.andysloane.AndySloane_BestFirstAgent;
+//import competition.cig.alexandrupaler.PalerAgent;
+//import competition.cig.peterlawford.PeterLawford_SlowAgent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -55,7 +55,7 @@ public class MainRun
             Evaluator evaluator = new Evaluator(evaluationOptions);
             evaluationOptions.setAgent(AgentsPool.getCurrentAgent());
 
-            while (cmdLineOptions.getNumberOfTrials() > SimulationOptions.currentTrial) {
+            while (cmdLineOptions.getNumberOfTrials() >= SimulationOptions.currentTrial) {
 //                List<EvaluationInfo> evaluationSummary;
                 System.out.println("SimulationOptions.currentTrial = " + SimulationOptions.currentTrial);
                 evaluator.evaluate();
@@ -81,23 +81,23 @@ public class MainRun
 //            AgentsPool.addAgent(new ForwardJumpingAgent());
             //ice-gic:
             AgentsPool.addAgent(new ScaredAgent());
-            AgentsPool.addAgent(new Perez());
-            AgentsPool.addAgent(new AdaptiveAgent());
-            AgentsPool.addAgent(new AIwesome());
-            AgentsPool.addAgent(new TutchekAgent());
-            AgentsPool.addAgent(new SlowAgent());  
-            AgentsPool.addAgent(new AStarAgent());
-            AgentsPool.addAgent(new RjAgent());
+//            AgentsPool.addAgent(new Perez());
+//            AgentsPool.addAgent(new AdaptiveAgent());
+//            AgentsPool.addAgent(new AIwesome());
+//            AgentsPool.addAgent(new TutchekAgent());
+//            AgentsPool.addAgent(new SlowAgent());
+//            AgentsPool.addAgent(new AStarAgent());
+//            AgentsPool.addAgent(new RjAgent());
             AgentsPool.addAgent(new SergeyKarakovskiy_JumpingAgent());
             //CIG:
-            AgentsPool.addAgent(new TrondEllingsen_LuckyAgent());
-            AgentsPool.addAgent(new SergeyPolikarpov_SimpleCyberNeuronAgent());
-            AgentsPool.addAgent(new SpencerSchumann_SlideRule());
-            AgentsPool.addAgent(new AndySloane_BestFirstAgent());
-            AgentsPool.addAgent(AgentsPool.load("competition/cig/matthewerickson/matthewerickson.xml"));
-            AgentsPool.addAgent(AgentsPool.load("competition/icegic/erek/erekspeed.xml")); // out of memory exception
-            AgentsPool.addAgent(new PalerAgent());
-            AgentsPool.addAgent(new PeterLawford_SlowAgent());
+//            AgentsPool.addAgent(new TrondEllingsen_LuckyAgent());
+//            AgentsPool.addAgent(new SergeyPolikarpov_SimpleCyberNeuronAgent());
+//            AgentsPool.addAgent(new SpencerSchumann_SlideRule());
+//            AgentsPool.addAgent(new AndySloane_BestFirstAgent());
+//            AgentsPool.addAgent(AgentsPool.load("competition/cig/matthewerickson/matthewerickson.xml"));
+//            AgentsPool.addAgent(AgentsPool.load("competition/icegic/erek/erekspeed.xml")); // out of memory exception
+//            AgentsPool.addAgent(new PalerAgent());
+//            AgentsPool.addAgent(new PeterLawford_SlowAgent());
         }
     }
 
