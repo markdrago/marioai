@@ -61,7 +61,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
     }
 
     /* methods for Breedable interface */
-    public Breedable breed(GeneticAgent parent2) {
+    public Breedable breed(Breedable parent2) {
     	GeneticAgent child = this.copy();
     	
     	/* TODO: merge child w/ parent 2 */

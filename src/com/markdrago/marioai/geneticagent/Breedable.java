@@ -8,6 +8,6 @@ public interface Breedable extends Agent {
 	
     public Breedable mutate();
     
-    public Breedable breed(GeneticAgent parent2);
+    public Breedable breed(Breedable parent2);
     
 }
