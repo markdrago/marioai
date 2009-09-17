@@ -98,21 +98,56 @@ public abstract class Node {
 		return this.execute(child_results);
     }
     
-    public boolean mutate_tree(double chance, NodeFactory factory, Random rnd) {
+    public Node pick_random_branch() {
+    	Node choice = null;
+    	Random rnd = new Random();
+    	
+    	while (choice == null)
+    		choice = pick_random_node(rnd);
+    	
+    	return choice;
+    }
+    
+    public Node pick_random_node(Random rnd) {
+    	Node choice = null;
+    	
+    	if (rnd.nextDouble() > 0.1) {
+    		/* randomly pick a child */
+    		for (Node child: this.children) {
+    			choice = child.pick_random_node(rnd);
+    			if (choice != null) {
+    				return choice;
+    			}
+    		}
+    	}
+    	
+    	return this;
+    }
+    
+    public void mutate_tree(NodeFactory factory) {
+    	Random rnd = new Random();
+    	boolean did_mutate = false;
+    	
+    	while (!did_mutate) {
+    		did_mutate = this.mutate_node(factory, rnd);
+    	}
+    }
+    
+    public boolean mutate_node(NodeFactory factory, Random rnd) {
     	boolean did_mutate = false;
     	Node newtree;
     	
-    	if (rnd == null) { rnd = new Random(); }
-    	
-    	if (rnd.nextDouble() > chance) {
+    	if (rnd.nextDouble() > 0.1) {
     		/* mutate the children */
     		for (Node child: this.children) {
-    			did_mutate = child.mutate_tree(chance, factory, rnd);
+    			did_mutate = child.mutate_node(factory, rnd);
     			if (did_mutate)
     				break;
     		}
     		return did_mutate;
     	}
+    	
+    	/* TODO: handle case where 'this' is top of tree */
     	
     	/* mutate this node */
     	newtree = factory.get_random_tree(this.parent, 0);
