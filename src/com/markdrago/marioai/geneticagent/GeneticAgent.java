@@ -70,9 +70,13 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
     }
     
     public Breedable mutate() {
-    	Breedable freak = this.copy();
+    	GeneticAgent freak = this.copy();
+    	double chance = 0.1;
+    	boolean did_mutate = false;
     	
-    	/* TODO: mutate freak */
+    	while (!did_mutate) {
+    		did_mutate = freak.node.mutate_tree(chance, this.node_factory, null);
+    	}
     	
     	return freak;
     }

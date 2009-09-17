@@ -4,8 +4,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-/* import com.markdrago.marioai.geneticagent.GeneticAgent.Node; */
+import java.util.Random;
 
 public abstract class Node {
 	ArrayList<Node> children;
@@ -40,9 +39,16 @@ public abstract class Node {
 	
 	public void set_child(int index, Node child) {
 		this.children.ensureCapacity(index + 1);
-		this.children.add(index, child);
+		this.children.set(index, child);
 		
 		child.set_parent(this);
+	}
+	
+	public void replace_child(Node child, Node newchild) {
+		int index;
+		
+		index = this.children.indexOf(child);
+		this.set_child(index, newchild);
 	}
 	
 	public Node get_parent() {
@@ -90,6 +96,29 @@ public abstract class Node {
     	
     	/* return result for this node */
 		return this.execute(child_results);
+    }
+    
+    public boolean mutate_tree(double chance, NodeFactory factory, Random rnd) {
+    	boolean did_mutate = false;
+    	Node newtree;
+    	
+    	if (rnd == null) { rnd = new Random(); }
+    	
+    	if (rnd.nextDouble() > chance) {
+    		/* mutate the children */
+    		for (Node child: this.children) {
+    			did_mutate = child.mutate_tree(chance, factory, rnd);
+    			if (did_mutate)
+    				break;
+    		}
+    		return did_mutate;
+    	}
+    	
+    	/* mutate this node */
+    	newtree = factory.get_random_tree(this.parent, 0);
+    	this.parent.replace_child(this, newtree);
+    	
+    	return true;
     }
     
     public String get_dot_for_tree() {
