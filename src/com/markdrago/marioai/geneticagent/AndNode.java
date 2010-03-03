@@ -9,9 +9,8 @@ public class AndNode extends BinaryBooleanNode {
 		this.name = "and";
 	}
 	
-	public Object execute(List<Object> args) {
-		return (Object) new Boolean(
-				((Boolean)args.get(0)).booleanValue() &&
-				((Boolean)args.get(1)).booleanValue());
+	public Boolean execute(List<Boolean> args) {
+		return new Boolean(args.get(0).booleanValue() &&
+						   args.get(1).booleanValue());
 	}
 }

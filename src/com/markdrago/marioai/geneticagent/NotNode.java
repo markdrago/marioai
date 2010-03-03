@@ -1,7 +1,5 @@
 package com.markdrago.marioai.geneticagent;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 public class NotNode extends Node {
@@ -11,15 +9,7 @@ public class NotNode extends Node {
 		this.name = "not";
 	}
 	
-	public List<Type> get_argument_types() {
-		ArrayList<Type> lst = new ArrayList<Type>();
-		lst.add(NodeType.get_type("boolean"));
-		return lst;
-	}
-	
-	public Type get_response_type() { return NodeType.get_type("boolean"); }
-	
-	public Object execute(List<Object> args) {
-		return (Object) new Boolean( ! ((Boolean)args.get(0)).booleanValue());
+	public Boolean execute(List<Boolean> args) {
+		return new Boolean( ! args.get(0).booleanValue());
 	}
 }

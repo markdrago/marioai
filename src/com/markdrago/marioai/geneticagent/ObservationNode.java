@@ -1,24 +1,31 @@
 package com.markdrago.marioai.geneticagent;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
+
+import ch.idsia.mario.environments.Environment;
 
 public abstract class ObservationNode extends Node {
 	EnvironmentHolder envholder;
+	int x, y;
 	
 	public ObservationNode(EnvironmentHolder envholder) {
 		super();
-		this.num_arguments = 2;
+		this.num_arguments = 0;
 		this.envholder = envholder;
+		pickRandomXY();
 	}
 	
-	public List<Type> get_argument_types() {
-		ArrayList<Type> lst = new ArrayList<Type>();
-		lst.add(NodeType.get_type("int"));
-		lst.add(NodeType.get_type("int"));
-		return lst;
+	public void pickRandomXY() {
+		Random rnd = new Random();
+		this.x = rnd.nextInt() % Environment.HalfObsWidth;
+		this.y = rnd.nextInt() % Environment.HalfObsHeight;
 	}
 	
-	public Type get_response_type() { return NodeType.get_type("boolean"); }
+	public void setX(int x) {
+		this.x = x;
+	}
+	
+	public void setY(int y) {
+		this.y = y;
+	}
 }

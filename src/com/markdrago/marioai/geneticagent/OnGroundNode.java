@@ -9,8 +9,8 @@ public class OnGroundNode extends EnvironmentNode {
 		this.name = "on_ground";
 	}
 	
-	public Object execute(List<Object> args) {
+	public Boolean execute(List<Boolean> args) {
 		Environment env = envholder.get_environment();
-		return (Object) new Boolean(env.isMarioOnGround());
+		return new Boolean(env.isMarioOnGround());
 	}
 }

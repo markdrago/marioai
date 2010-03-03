@@ -1,6 +1,5 @@
 package com.markdrago.marioai.geneticagent;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,9 +19,6 @@ public abstract class Node {
 		this.uuid = UUID.randomUUID().toString();
 	}
 	
-	public abstract List<Type> get_argument_types();
-	public abstract Type get_response_type();
-
 	public String toString() {
 		return this.name;
 	}
@@ -59,7 +55,7 @@ public abstract class Node {
 		this.parent = parent;
 	}
 	
-	public Object execute(List<Object> args) {
+	public Boolean execute(List<Boolean> args) {
 		return null;
 	}
 	
@@ -77,15 +73,15 @@ public abstract class Node {
     	return false;
     }
     
-    public Object execute_node() {
+    public Boolean execute_node() {
     	List<Node> children;
-    	ArrayList<Object> child_results;
+    	ArrayList<Boolean> child_results;
     	Node child;
     	int child_count;
     	
     	/* get results for all child nodes */
     	child_count = this.get_num_children();
-    	child_results = new ArrayList<Object>();
+    	child_results = new ArrayList<Boolean>();
     	if (child_count > 0) {
     		children = this.get_children();
     		for (int i = 0; i < child_count; i++) {

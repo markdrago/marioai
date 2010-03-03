@@ -10,8 +10,8 @@ public class JumpNode extends ActionNode {
 		this.name = "jump";
 	}
 
-	public Object execute(List<Object> args) {
-		this.action_holder.button_action(Mario.KEY_JUMP, ((Boolean)args.get(0)).booleanValue());
+	public Boolean execute(List<Boolean> args) {
+		this.action_holder.button_action(Mario.KEY_JUMP, args.get(0).booleanValue());
 		return args.get(0);
 	}
 }

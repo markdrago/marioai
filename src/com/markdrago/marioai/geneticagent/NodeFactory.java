@@ -1,24 +1,18 @@
 package com.markdrago.marioai.geneticagent;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class NodeFactory {
-	ArrayList<String> boolean_nodes, int_nodes, leaf_boolean_nodes;
-	ArrayList<String> leaf_int_nodes, all_nodes, action_nodes;
+	ArrayList<String> all_nodes, leaf_nodes, action_nodes;
 	ArrayList<String> observation_nodes, leaf_observation_nodes;
 	ActionHolder action_holder;
 	EnvironmentHolder env_holder;
 	Random rnd;
 	
 	public NodeFactory(EnvironmentHolder env_holder, ActionHolder action_holder) {
-		boolean_nodes = new ArrayList<String>();
-		int_nodes = new ArrayList<String>();
-		leaf_boolean_nodes = new ArrayList<String>();
-		leaf_int_nodes = new ArrayList<String>();
 		all_nodes = new ArrayList<String>();
+		leaf_nodes = new ArrayList<String>();
 		action_nodes = new ArrayList<String>();
 		observation_nodes = new ArrayList<String>();
 		leaf_observation_nodes = new ArrayList<String>();
@@ -26,7 +20,6 @@ public class NodeFactory {
 		this.env_holder = env_holder;
 		rnd = new Random();
 
-		/* all boolean nodes */
 		action_nodes.add("SpeedNode");
 		action_nodes.add("LeftNode");
 		action_nodes.add("RightNode");
@@ -35,40 +28,20 @@ public class NodeFactory {
 		leaf_observation_nodes.add("MayJumpNode");
 		observation_nodes.add("LevelObservationNode");
 		observation_nodes.add("EnemyObservationNode");
-		leaf_boolean_nodes.add("StaticBooleanNode");
-		/*
-		boolean_nodes.add("GreaterThanNode");
-		boolean_nodes.add("EqualNode");
-		*/
-		boolean_nodes.add("NotNode");
-		boolean_nodes.add("AndNode");
-		boolean_nodes.add("OrNode");
+		leaf_nodes.add("StaticBooleanNode");
+		all_nodes.add("NotNode");
+		all_nodes.add("AndNode");
+		all_nodes.add("OrNode");
 
-		/* collect all booleans in to boolean_nodes */
-		boolean_nodes.addAll(action_nodes);
-		boolean_nodes.addAll(leaf_observation_nodes);
-		boolean_nodes.addAll(observation_nodes);
-		boolean_nodes.addAll(leaf_boolean_nodes);
+		/* collect all nodes in to all_nodes */
+		all_nodes.addAll(action_nodes);
+		all_nodes.addAll(leaf_observation_nodes);
+		all_nodes.addAll(observation_nodes);
+		all_nodes.addAll(leaf_nodes);
 		
 		/* leaf obs are both leaf and obs */
-		leaf_boolean_nodes.addAll(leaf_observation_nodes);
+		leaf_nodes.addAll(leaf_observation_nodes);
 		observation_nodes.addAll(leaf_observation_nodes);
-		
-		/* all int nodes */
-		/*
-		int_nodes.add("AddNode");
-		int_nodes.add("SubtractNode");
-		int_nodes.add("MultiplyNode");
-		int_nodes.add("DivideNode");
-		*/
-		leaf_int_nodes.add("StaticIntNode");
-		
-		/* add leaf int nodes to int_nodes */
-		int_nodes.addAll(leaf_int_nodes);
-		
-		/* combine boolean and int nodes in to all_nodes */
-		all_nodes.addAll(boolean_nodes);
-		all_nodes.addAll(int_nodes);
 	}
 	
 	public Node get_random_node() {
@@ -78,48 +51,17 @@ public class NodeFactory {
 	public Node get_random_node_weighted() {
 		double chance = rnd.nextDouble();
 		
-		if (chance < 0.25) {
-			return get_integer_node_weighted();
-		} else {
-			return get_boolean_node_weighted();
-		}
-	}
-	
-	public Node get_boolean_node_weighted() {
-		double chance = rnd.nextDouble();
-		
 		if (chance < 0.33) {
 			return get_action_node();
 		} else if (chance < 0.66) {
 			return get_observation_node();
 		} else {
-			return get_boolean_node();
+			return get_random_node();
 		}
 	}
 	
-	public Node get_integer_node_weighted() {
-		double chance = rnd.nextDouble();
-		
-		if (chance < 0.5) {
-			return get_integer_leaf_node();
-		}
-		return get_integer_node();
-	}
-	
-	public Node get_integer_node() {
-		return get_random_node_from_array(int_nodes);
-	}
-	
-	public Node get_integer_leaf_node() {
-		return get_random_node_from_array(leaf_int_nodes);
-	}
-	
-	public Node get_boolean_node() {
-		return get_random_node_from_array(boolean_nodes);
-	}
-	
-	public Node get_boolean_leaf_node() {
-		return get_random_node_from_array(leaf_boolean_nodes);
+	public Node get_leaf_node() {
+		return get_random_node_from_array(leaf_nodes);
 	}
 	
 	public Node get_action_node() {
@@ -143,16 +85,6 @@ public class NodeFactory {
 	private Node get_node_with_name(String nodename) {
 		if (nodename.equals("StaticBooleanNode")) {
 			return new StaticBooleanNode();
-		} else if (nodename.equals("StaticIntNode")) {
-			return new StaticIntNode();
-		} else if (nodename.equals("AddNode")) {
-		    return new AddNode();
-		} else if (nodename.equals("SubtractNode")) {
-		    return new SubtractNode();
-		} else if (nodename.equals("MultiplyNode")) {
-		    return new MultiplyNode();
-		} else if (nodename.equals("DivideNode")) {
-		    return new DivideNode();
 		} else if (nodename.equals("SpeedNode")) {
 		    return new SpeedNode(this.action_holder);
 		} else if (nodename.equals("LeftNode")) {
@@ -169,10 +101,6 @@ public class NodeFactory {
 		    return new LevelObservationNode(this.env_holder);
 		} else if (nodename.equals("EnemyObservationNode")) {
 		    return new EnemyObservationNode(this.env_holder);
-		} else if (nodename.equals("GreaterThanNode")) {
-		    return new GreaterThanNode();
-		} else if (nodename.equals("EqualNode")) {
-		    return new EqualNode();
 		} else if (nodename.equals("NotNode")) {
 		    return new NotNode();
 		} else if (nodename.equals("AndNode")) {
@@ -190,8 +118,6 @@ public class NodeFactory {
     
     public Node get_random_tree(Node parent, int level) {
     	ArrayList<Node> nodes = new ArrayList<Node>();
-    	List<Type> arguments;
-    	Type arg;
     	Node child = null;
     	
     	if (parent == null) {
@@ -200,22 +126,11 @@ public class NodeFactory {
     		nodes.add(parent);
     	} else {
     		/* make all of the children that this node needs */
-    		arguments = parent.get_argument_types();
-    		for (int i = 0; i < arguments.size(); i++) {
-    			arg = arguments.get(i);
-    			
+    		for (int i = 0; i < parent.get_num_arguments(); i++) {
     			if (level < 5) {
-    				if (arg == NodeType.get_type("boolean")) {
-    					child = this.get_boolean_node_weighted();
-    				} else if (arg == NodeType.get_type("int")) {
-    					child = this.get_integer_node_weighted();
-    				}
+   					child = this.get_random_node_weighted();
     			} else {
-    				if (arg == NodeType.get_type("boolean")) {
-    					child = this.get_boolean_leaf_node();
-    				} else if (arg == NodeType.get_type("int")) {
-    					child = this.get_integer_leaf_node();
-    				}
+   					child = this.get_leaf_node();
     			}
 
     			/* add this child to the list of nodes we should make children for */
@@ -271,13 +186,9 @@ public class NodeFactory {
     }
     
     public Node get_jumping_agent(EnvironmentHolder envholder, ActionHolder actionholder) {
-    	Node obs, num1, num2, jump, mayjump, and;
+    	Node obs, jump, mayjump, and;
     	
-    	num1 = new StaticIntNode(12);
-    	num2 = new StaticIntNode(11);
-    	obs = new EnemyObservationNode(envholder);
-    	obs.set_child(0, num1);
-    	obs.set_child(1, num2);
+    	obs = new EnemyObservationNode(envholder, 12, 11);
     	
     	mayjump = new MayJumpNode(envholder);
     	and = new AndNode();

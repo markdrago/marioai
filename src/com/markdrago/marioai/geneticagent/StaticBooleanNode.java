@@ -23,8 +23,8 @@ public class StaticBooleanNode extends BooleanNode {
 		this.name = (this.value == true) ? "true" : "false";    		
 	}
 	
-	public Object execute(List<Object> args) {
-		return (Object) new Boolean(this.value);
+	public Boolean execute(List<Boolean> args) {
+		return new Boolean(this.value);
 	}
 	
 	public void set_value(boolean value) {

@@ -9,8 +9,8 @@ public class RightNode extends ActionNode {
 		this.name = "right";
 	}
 	
-	public Object execute(List<Object> args) {
-		this.action_holder.button_action(Mario.KEY_RIGHT, ((Boolean)args.get(0)).booleanValue());
+	public Boolean execute(List<Boolean> args) {
+		this.action_holder.button_action(Mario.KEY_RIGHT, args.get(0).booleanValue());
 		this.action_holder.button_action(Mario.KEY_LEFT, false);
 		return args.get(0);
 	}

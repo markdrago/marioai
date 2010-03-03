@@ -9,8 +9,8 @@ public class MayJumpNode extends EnvironmentNode {
 		this.name = "may_jump";
 	}
 	
-	public Object execute(List<Object> args) {
+	public Boolean execute(List<Boolean> args) {
 		Environment env = envholder.get_environment();
-		return (Object) new Boolean(env.mayMarioJump());
+		return new Boolean(env.mayMarioJump());
 	}
 }
