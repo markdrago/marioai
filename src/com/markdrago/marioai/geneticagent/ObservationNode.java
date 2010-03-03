@@ -17,8 +17,8 @@ public abstract class ObservationNode extends Node {
 	
 	public void pickRandomXY() {
 		Random rnd = new Random();
-		this.x = rnd.nextInt() % Environment.HalfObsWidth;
-		this.y = rnd.nextInt() % Environment.HalfObsHeight;
+		this.x = Math.abs(rnd.nextInt()) % Environment.HalfObsWidth;
+		this.y = Math.abs(rnd.nextInt()) % Environment.HalfObsHeight;
 	}
 	
 	public void setX(int x) {

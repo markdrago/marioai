@@ -29,10 +29,9 @@ public class GenePool {
 	
 	public void score_generation() {
 		scores.clear();
-		scores.ensureCapacity(generation.size());
 		
 		for (int i = 0; i < generation.size(); i++) {
-			scores.set(i, score_agent(generation.get(i)));
+			scores.add(score_agent(generation.get(i)));
 		}
 	}
 	
@@ -59,23 +58,22 @@ public class GenePool {
 	}
 	
 	public void evolve_generation() {
-		int done = 0;
 		ArrayList<Breedable> nextgen = new ArrayList<Breedable>();
 
 		/* top 8 move on */
 		for (int i = 0; i < 8; i++) {
-			nextgen.set(done++, generation.get(i));
+			nextgen.add(generation.get(i));
 		}
 		
 		/* top 4 move on mutated */
 		for (int i = 0; i < 4; i++) {
-			nextgen.set(done++, generation.get(i).mutate());
+			nextgen.add(generation.get(i).mutate());
 		}
 		
 		/* random 4 out of 8 b/w 4-11 move on mutated */
 		int rand[] = random_from_range(4, 11, 4);
 		for (int i = 0; i < 4; i++) {
-			nextgen.set(done++, generation.get(rand[i]).mutate());
+			nextgen.add(generation.get(rand[i]).mutate());
 		}
 		
 		/* top 8 randomly breed creating 4 */
@@ -84,7 +82,7 @@ public class GenePool {
 			Breedable lucky1, lucky2;
 			lucky1 = generation.get(rand[i]);
 			lucky2 = generation.get(rand[i + 4]);
-			nextgen.set(done++, lucky1.breed(lucky2));
+			nextgen.add(lucky1.breed(lucky2));
 		}
 		
 		/* top 16 randomly breed creating 8 */
@@ -93,7 +91,7 @@ public class GenePool {
 			Breedable lucky1, lucky2;
 			lucky1 = generation.get(rand[i]);
 			lucky2 = generation.get(rand[i + 8]);
-			nextgen.set(done++, lucky1.breed(lucky2));
+			nextgen.add(lucky1.breed(lucky2));
 		}
 		
 		/* bottom 16 randomly breed creating 4 */
@@ -102,7 +100,7 @@ public class GenePool {
 			Breedable lucky1, lucky2;
 			lucky1 = generation.get(rand[i]);
 			lucky2 = generation.get(rand[i + 4]);
-			nextgen.set(done++, lucky1.breed(lucky2));
+			nextgen.add(lucky1.breed(lucky2));
 		}
 		
 		this.generation = nextgen;

@@ -34,8 +34,10 @@ public abstract class Node {
 	}
 	
 	public void set_child(int index, Node child) {
-		this.children.ensureCapacity(index + 1);
-		this.children.set(index, child);
+		if (this.children.size() <= index)
+			this.children.add(child);
+		else
+			this.children.set(index, child);
 		
 		child.set_parent(this);
 	}

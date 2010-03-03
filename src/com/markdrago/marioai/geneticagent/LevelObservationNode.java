@@ -17,8 +17,8 @@ public class LevelObservationNode extends ObservationNode {
 		xmax = Environment.HalfObsWidth * 2;
 		ymax = Environment.HalfObsHeight * 2;
 		
-		x = this.x % xmax;
-		y = this.y % ymax;
+		x = Math.abs(this.x) % xmax;
+		y = Math.abs(this.y) % ymax;
 		
 		byte[][] enemyMap = env.getLevelSceneObservation();
 		if (enemyMap[y][x] != 0)
