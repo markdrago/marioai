@@ -145,13 +145,28 @@ public abstract class Node {
     		return did_mutate;
     	}
     	
-    	/* TODO: handle case where 'this' is top of tree */
-    	
-    	/* mutate this node */
-    	newtree = factory.get_random_tree(this.parent, 0);
-    	this.parent.replace_child(this, newtree);
+    	/* handle case where this is the top of the tree */
+    	if (this.parent == null)
+    		return false;
+    	else {
+    		/* mutate this node */
+    		newtree = factory.get_random_tree(this.parent, 0);
+    		this.parent.replace_child(this, newtree);
+    	}
     	
     	return true;
+    }
+    
+    public Node copy(NodeFactory factory) {
+    	Node cp = factory.get_node_with_name(this.name);
+
+    	for (Node child: this.children) {
+    		Node childcp = child.copy(factory);
+    		cp.children.add(childcp);
+    		childcp.parent = cp;
+    	}
+    	
+    	return cp;
     }
     
     public String get_dot_for_tree() {

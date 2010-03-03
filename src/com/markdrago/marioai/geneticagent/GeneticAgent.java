@@ -4,11 +4,6 @@ import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.agents.ai.BasicAIAgent;
 import ch.idsia.mario.environments.Environment;
 import wox.serial.Easy;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.UUID;
 
 /**
@@ -82,21 +77,8 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
     }
     
     private GeneticAgent copy() {
-    	Object cp = null;
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream out = new ObjectOutputStream(bos);
-            out.writeObject(this);
-            out.flush();
-            out.close();
-
-            ObjectInputStream in = new ObjectInputStream(
-                new ByteArrayInputStream(bos.toByteArray()));
-            cp = in.readObject();
-        } catch (Exception e) {
-        	System.out.println(e.getMessage());
-        }
-
-        return (GeneticAgent)cp;
+    	GeneticAgent cp = new GeneticAgent();
+    	cp.node = this.node.copy(cp.node_factory);
+    	return cp;
     }
 }

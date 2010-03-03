@@ -20,18 +20,18 @@ public class NodeFactory {
 		this.env_holder = env_holder;
 		rnd = new Random();
 
-		action_nodes.add("SpeedNode");
-		action_nodes.add("LeftNode");
-		action_nodes.add("RightNode");
-		action_nodes.add("JumpNode");
-		leaf_observation_nodes.add("OnGroundNode");
-		leaf_observation_nodes.add("MayJumpNode");
-		observation_nodes.add("LevelObservationNode");
-		observation_nodes.add("EnemyObservationNode");
-		leaf_nodes.add("StaticBooleanNode");
-		all_nodes.add("NotNode");
-		all_nodes.add("AndNode");
-		all_nodes.add("OrNode");
+		action_nodes.add("speed");
+		action_nodes.add("left");
+		action_nodes.add("right");
+		action_nodes.add("jump");
+		leaf_observation_nodes.add("on_ground");
+		leaf_observation_nodes.add("may_jump");
+		observation_nodes.add("level_observation");
+		observation_nodes.add("enemy_observation");
+		leaf_nodes.add("static_boolean");
+		all_nodes.add("not");
+		all_nodes.add("and");
+		all_nodes.add("or");
 
 		/* collect all nodes in to all_nodes */
 		all_nodes.addAll(action_nodes);
@@ -82,30 +82,34 @@ public class NodeFactory {
 		return get_node_with_name(name);    		
 	}
 	
-	private Node get_node_with_name(String nodename) {
-		if (nodename.equals("StaticBooleanNode")) {
+	protected Node get_node_with_name(String nodename) {
+		if (nodename.equals("static_boolean")) {
 			return new StaticBooleanNode();
-		} else if (nodename.equals("SpeedNode")) {
+		} else if (nodename.equals("true")) {
+			return new StaticBooleanNode(true);
+		} else if (nodename.equals("false")) {
+			return new StaticBooleanNode(false);
+		} else if (nodename.equals("speed")) {
 		    return new SpeedNode(this.action_holder);
-		} else if (nodename.equals("LeftNode")) {
+		} else if (nodename.equals("left")) {
 		    return new LeftNode(this.action_holder);
-		} else if (nodename.equals("RightNode")) {
+		} else if (nodename.equals("right")) {
 		    return new RightNode(this.action_holder);
-		} else if (nodename.equals("JumpNode")) {
+		} else if (nodename.equals("jump")) {
 		    return new JumpNode(this.action_holder);
-		} else if (nodename.equals("OnGroundNode")) {
+		} else if (nodename.equals("on_ground")) {
 		    return new OnGroundNode(this.env_holder);
-		} else if (nodename.equals("MayJumpNode")) {
+		} else if (nodename.equals("may_jump")) {
 		    return new MayJumpNode(this.env_holder);
-		} else if (nodename.equals("LevelObservationNode")) {
+		} else if (nodename.equals("level_observation")) {
 		    return new LevelObservationNode(this.env_holder);
-		} else if (nodename.equals("EnemyObservationNode")) {
+		} else if (nodename.equals("enemy_observation")) {
 		    return new EnemyObservationNode(this.env_holder);
-		} else if (nodename.equals("NotNode")) {
+		} else if (nodename.equals("not")) {
 		    return new NotNode();
-		} else if (nodename.equals("AndNode")) {
+		} else if (nodename.equals("and")) {
 		    return new AndNode();
-		} else if (nodename.equals("OrNode")) {
+		} else if (nodename.equals("or")) {
 		    return new OrNode();
 		} else {
 			return null;
