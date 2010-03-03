@@ -4,6 +4,8 @@ import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.agents.ai.BasicAIAgent;
 import ch.idsia.mario.environments.Environment;
 import wox.serial.Easy;
+
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -57,9 +59,22 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
 
     /* methods for Breedable interface */
     public Breedable breed(Breedable parent2) {
-    	GeneticAgent child = this.copy();
-    	
-    	/* TODO: merge child w/ parent 2 */
+    	Random rnd = new Random();
+    	GeneticAgent child, copyfrom;
+    	Node remove, add;
+
+    	if (rnd.nextDouble() < 0.5) {
+    		child = this.copy();
+    		copyfrom = (GeneticAgent)parent2;
+    	} else {
+    		child = ((GeneticAgent)parent2).copy();
+    		copyfrom = this;
+    	}
+
+    	remove = child.node.pick_random_branch();
+    	add = copyfrom.node.pick_random_branch();
+
+    	remove.parent.replace_child(remove, add);
     	
     	return child;
     }
@@ -67,7 +82,7 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
     public Breedable mutate() {
     	GeneticAgent freak = this.copy();
     	
-    	freak.node.mutate_tree(this.node_factory);
+    	freak.node = freak.node.mutate_tree(this.node_factory);
     	
     	return freak;
     }

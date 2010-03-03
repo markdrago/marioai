@@ -32,6 +32,7 @@ public class GenePool {
 		
 		for (int i = 0; i < generation.size(); i++) {
 			scores.add(score_agent(generation.get(i)));
+			System.out.println("score: " + scores.get(i));
 		}
 	}
 	
@@ -56,7 +57,27 @@ public class GenePool {
 			}
 		}
 	}
-	
+
+    public void replace_deadbeats() {
+    	Breedable adam = generation.get(0);
+    	
+    	int orig_size = generation.size();
+    	for (int i = 0; i < orig_size; i++) {
+
+    		/* if we find an agent with a score of 0, remove
+    		 * all of the agents underneath that one b/c they
+    		 * are ordered by their score */
+    		if (scores.get(i) <= 0) {
+    			for (int j = i; j < orig_size; j++) {
+    				scores.remove(i);
+    				generation.remove(i);
+    			}
+    			break;
+    		}
+    	}
+		fill_generation(adam);
+	}
+
 	public void evolve_generation() {
 		ArrayList<Breedable> nextgen = new ArrayList<Breedable>();
 
@@ -140,6 +161,7 @@ public class GenePool {
 	public void nextGeneration() {
 		score_generation();
 		order_generation();
+		replace_deadbeats();
 		evolve_generation();
 	}
 	

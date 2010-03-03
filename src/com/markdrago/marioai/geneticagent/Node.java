@@ -17,6 +17,7 @@ public abstract class Node {
 		this.num_arguments = 0;
 		this.name = "unknown";
 		this.uuid = UUID.randomUUID().toString();
+		this.parent = null;
 	}
 	
 	public String toString() {
@@ -122,39 +123,38 @@ public abstract class Node {
     	return this;
     }
     
-    public void mutate_tree(NodeFactory factory) {
+    public Node mutate_tree(NodeFactory factory) {
     	Random rnd = new Random();
-    	boolean did_mutate = false;
+    	Node newtree = null;
     	
-    	while (!did_mutate) {
-    		did_mutate = this.mutate_node(factory, rnd);
+    	while (newtree == null) {
+    		newtree = this.mutate_node(factory, rnd);
     	}
+    	
+    	return newtree;
     }
     
-    public boolean mutate_node(NodeFactory factory, Random rnd) {
-    	boolean did_mutate = false;
-    	Node newtree;
+    public Node mutate_node(NodeFactory factory, Random rnd) {
+    	Node newtree = null;
     	
     	if (rnd.nextDouble() > 0.1) {
     		/* mutate the children */
     		for (Node child: this.children) {
-    			did_mutate = child.mutate_node(factory, rnd);
-    			if (did_mutate)
+    			newtree = child.mutate_node(factory, rnd);
+    			if (newtree != null)
     				break;
     		}
-    		return did_mutate;
+    		return (newtree == null) ? null : this;
     	}
     	
-    	/* handle case where this is the top of the tree */
-    	if (this.parent == null)
-    		return false;
-    	else {
-    		/* mutate this node */
+    	if (this.parent == null) {
+    		newtree = factory.get_random_tree(null, 0);
+    		return newtree;
+    	} else {
     		newtree = factory.get_random_tree(this.parent, 0);
     		this.parent.replace_child(this, newtree);
+    		return this;
     	}
-    	
-    	return true;
     }
     
     public Node copy(NodeFactory factory) {
