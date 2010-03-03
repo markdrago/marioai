@@ -45,7 +45,16 @@
       </classpath>
     </java>
   </target>
-
+  <target name="evolve" depends="compile" description="start evolving">
+	<java classname="com.markdrago.marioai.geneticagent.Evolve" dir="${build}" failonerror="false" fork="true">
+      <classpath>
+        <fileset dir="${lib}">
+          <include name="**/*.jar" />
+        </fileset>
+        <pathelement location="${build}" />
+      </classpath>
+    </java>
+  </target>
   <target name="clean"
         description="clean up" >
     <!-- Delete the ${build} and ${dist} directory trees -->
