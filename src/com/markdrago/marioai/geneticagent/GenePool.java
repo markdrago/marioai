@@ -10,7 +10,8 @@ public class GenePool {
 	ArrayList<Double> scores;
 	private final Task task;
 	private final int gen_size;
-	
+	Random rnd;
+	int generation_number;
 	private static final int iterations = 5;
 	
 	public GenePool(Task task, Breedable adam, int gen_size) {
@@ -18,6 +19,8 @@ public class GenePool {
 		this.gen_size = gen_size;
 		this.generation = new ArrayList<Breedable>();
 		this.scores = new ArrayList<Double>(gen_size);
+		this.rnd = new Random();
+		this.generation_number = 0;
 		fill_generation(adam);
 	}
 	
@@ -28,18 +31,30 @@ public class GenePool {
 	}
 	
 	public void score_generation() {
+		double high, avg, curr;
 		scores.clear();
 		
+		high = avg = 0;
 		for (int i = 0; i < generation.size(); i++) {
-			scores.add(score_agent(generation.get(i)));
-			System.out.println("score: " + scores.get(i));
+			curr = score_agent(generation.get(i));
+			scores.add(curr);
+			
+			if (curr > high)
+				high = curr;
+
+			avg += curr;
 		}
+		
+		avg /= scores.size();
+		System.out.println("gen: " + this.generation_number + " high: " + (int)high + " avg: " + (int)avg);
+		this.generation_number++;
 	}
 	
 	public double score_agent(Breedable agent) {
 		double sum = 0;
 		for (int i = 0; i < iterations; i++) {
 			agent.reset();
+			task.getOptions().setLevelRandSeed(rnd.nextInt());
 			sum += task.evaluate(agent)[0];
 		}
 		return (sum / iterations);
@@ -64,10 +79,12 @@ public class GenePool {
     	int orig_size = generation.size();
     	for (int i = 0; i < orig_size; i++) {
 
-    		/* if we find an agent with a score of 0, remove
+    		/* if we find an agent with a score of 32, remove
     		 * all of the agents underneath that one b/c they
-    		 * are ordered by their score */
-    		if (scores.get(i) <= 0) {
+    		 * are ordered by their score.  A 32 is the score
+    		 * if mario stands still, less than 32 indicates
+    		 * a left-walker */
+    		if (scores.get(i) <= 32) {
     			for (int j = i; j < orig_size; j++) {
     				scores.remove(i);
     				generation.remove(i);

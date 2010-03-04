@@ -40,8 +40,8 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
         	this.node = this.node_factory.get_random_agent();
         }
         
-        System.out.println(this.node.get_dot_for_tree());
-        Easy.save(this.node, "node.xml");
+        //System.out.println(this.node.get_dot_for_tree());
+        //Easy.save(this.node, "node.xml");
         
         reset();
     }
