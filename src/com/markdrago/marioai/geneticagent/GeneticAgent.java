@@ -74,7 +74,10 @@ public class GeneticAgent extends BasicAIAgent implements Agent, Breedable {
     	remove = child.node.pick_random_branch();
     	add = copyfrom.node.pick_random_branch();
 
-    	remove.parent.replace_child(remove, add);
+    	/* if remove is the head of child, just replace the child nodes with add */
+    	if (remove.parent == null) {
+    		child.node = add;
+    	}
     	
     	return child;
     }

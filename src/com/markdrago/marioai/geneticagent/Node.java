@@ -152,7 +152,6 @@ public abstract class Node {
     		return newtree;
     	} else {
     		newtree = factory.get_random_tree(this.parent, 0);
-    		this.parent.replace_child(this, newtree);
     		return this;
     	}
     }
