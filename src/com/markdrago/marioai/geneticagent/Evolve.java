@@ -14,7 +14,7 @@ import ch.idsia.tools.EvaluationOptions;
  */
 public class Evolve {
 
-    final static int generations = 100;
+    final static int generations = 250;
     final static int population_size = 32;
     
     public static void main(String[] args) {
@@ -24,19 +24,19 @@ public class Evolve {
         
         Breedable initial = new GeneticAgent();
         
-        for (int i = 0; i < generations; i++) {
-        	System.out.println("New Evolve phase started.");
+       	System.out.println("New Evolve phase started.");
 
-            options.setLevelDifficulty(3);
-            options.setAgent((Agent)initial);
-            options.setMaxFPS(true);
-            options.setVisualization(false);
+       	options.setLevelDifficulty(3);
+       	options.setAgent((Agent)initial);
+       	options.setMaxFPS(true);
+       	options.setVisualization(false);
 
-            Task task = new ProgressTask(options);
-            GenePool pool = new GenePool(task, initial, population_size);
+       	Task task = new ProgressTask(options);
+       	GenePool pool = new GenePool(task, initial, population_size);
 
-            for (int gen = 0; gen < generations; gen++) {
-                pool.nextGeneration();
+       	for (int gen = 0; gen < generations; gen++) {
+       		pool.nextGeneration();
+       	}
                 
 /*
                 double bestResult = es.getBestFitnesses()[0];
@@ -56,8 +56,6 @@ public class Evolve {
                 if (result > 4000)
                     break; // Go to next difficulty.
 */
-            }
-        }
         
         /*// TODO: log dir / log dump dir option
         // TODO: reduce number of different

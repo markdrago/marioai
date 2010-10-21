@@ -55,7 +55,15 @@ public class GenePool {
 		for (int i = 0; i < iterations; i++) {
 			agent.reset();
 			task.getOptions().setLevelRandSeed(rnd.nextInt());
+			
+			if (i == iterations - 1 &&
+				sum / i >= 2500) {
+				task.getOptions().setVisualization(true);
+			}
+			
 			sum += task.evaluate(agent)[0];
+			
+			task.getOptions().setVisualization(false);
 		}
 		return (sum / iterations);
 	}

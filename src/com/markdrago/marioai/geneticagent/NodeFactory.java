@@ -10,6 +10,8 @@ public class NodeFactory {
 	EnvironmentHolder env_holder;
 	Random rnd;
 	
+	private static final int max_tree_depth = 20;
+	
 	public NodeFactory(EnvironmentHolder env_holder, ActionHolder action_holder) {
 		all_nodes = new ArrayList<String>();
 		leaf_nodes = new ArrayList<String>();
@@ -131,7 +133,7 @@ public class NodeFactory {
     	} else {
     		/* make all of the children that this node needs */
     		for (int i = 0; i < parent.get_num_arguments(); i++) {
-    			if (level < 5) {
+    			if (level < max_tree_depth) {
    					child = this.get_random_node_weighted();
     			} else {
    					child = this.get_leaf_node();
